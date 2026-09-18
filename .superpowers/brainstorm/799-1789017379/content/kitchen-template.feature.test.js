@@ -63,7 +63,7 @@ assert.match(source, /statIds\('need'\)[\s\S]{0,120}classList\.add\('need-item'\
 assert.match(source, /\.item\.discarded-item[\s\S]{0,300}linear-gradient\(145deg, #a17d58, #79583d\)[\s\S]{0,100}color: #f3e4ca/, '已废弃项目应使用较浅木制底色和奶白色文字');
 assert.match(source, /\.item\.discarded-item \.item-time[\s\S]{0,100}rgba\(243,228,202,0\.82\)/, '已废弃项目日期文字应保持柔和奶白色');
 assert.match(source, /statIds\('discarded'\)[\s\S]{0,140}classList\.add\('discarded-item'\)/, '项目应根据已废弃状态使用深色样式');
-assert.match(source, /\.item-name[\s\S]{0,180}letter-spacing: 0\.06em/, '项目名称文字应增加字间距');
+assert.match(source, /\.item-name[\s\S]{0,180}letter-spacing: 0\.12em/, '项目名称文字应使用明显字间距');
 assert.match(source, /\.item-time[\s\S]{0,220}letter-spacing: 0\.04em/, '项目日期文字应增加字间距');
 assert.match(source, /querySelector\('\.stat-count'\)[\s\S]{0,80}countFor\(key\)/, '勾选状态变化后应立即更新顶部统计');
 assert.match(source, /class="section-title wood-surface wood-3d"/, '厨具名称应使用木制按钮视觉');
