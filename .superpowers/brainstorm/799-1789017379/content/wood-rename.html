@@ -196,7 +196,7 @@
            <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub1b')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub1b')" ontouchend="cancelTimer()" onclick="openKitchenTemplate(event)"><span class="bar-label" id="sub1b">食材厨具</span><span class="bar-arrow">›</span></div>
            <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub1c')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub1c')" ontouchend="cancelTimer()" onclick="openBathTemplate(event)"><span class="bar-label" id="sub1c">洗浴清洁</span><span class="bar-arrow">›</span></div>
            <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub1d')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub1d')" ontouchend="cancelTimer()" onclick="openWardrobeTemplate(event)"><span class="bar-label" id="sub1d">衣橱管理</span><span class="bar-arrow">›</span></div>
-           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub1e')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub1e')" ontouchend="cancelTimer()"><span class="bar-label" id="sub1e">其他</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub1e')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub1e')" ontouchend="cancelTimer()" onclick="openOtherTemplate(event)"><span class="bar-label" id="sub1e">其他</span><span class="bar-arrow">›</span></div>
            <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub1f')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub1f')" ontouchend="cancelTimer()"><span class="bar-label" id="sub1f"></span><span class="bar-arrow">›</span></div>
         </div>
       </div>
@@ -328,6 +328,12 @@ function openWardrobeTemplate(e) {
   if (justDragged || isEditing) return;
   if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; }
   navigateWithWoodClick('wood-kitchen-template.html?type=wardrobe&return=sub1d');
+}
+function openOtherTemplate(e) {
+  if (justDragged || isEditing) return;
+  if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; }
+  e.stopPropagation();
+  navigateWithWoodClick('wood-kitchen-template.html?type=other&return=sub1e');
 }
 
 function openPersonalTemplate(e) {

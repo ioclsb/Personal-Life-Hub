@@ -37,9 +37,14 @@
   .header { display: flex; align-items: center; gap: 8px; padding: 4px 2px 10px; }
   .back { font-size: 22px; cursor: pointer; }
   .title { font-size: 18px; font-weight: 800; }
-  .layout { min-height: 0; flex: 1; display: flex; gap: 8px; }
+  .layout { min-height: 0; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+  .control-panel { flex: 0 0 auto; display: flex; gap: 8px; }
+  .control-main { min-width: 0; flex: 1; }
   .sidebar { width: 70px; display: flex; flex-direction: column; gap: 7px; }
+  .lower-panel { min-height: 0; flex: 1; display: flex; gap: 8px; margin-top: 10px; transform: translateX(5px); }
+  .lower-sidebar-spacer { flex: 0 0 70px; }
   #categories { display: flex; flex-direction: column; gap: 7px; }
+  .category-add { width: 100%; min-height: 28px; align-self: center; padding: 0; border: 0; border-radius: 9px; color: #5a4632; font-size: 20px; font-weight: 800; line-height: 1; }
   .category {
     padding: 15px 4px;
     border-radius: 9px;
@@ -49,48 +54,78 @@
     user-select: none;
   }
   .category.active { color: #3e2d1e; box-shadow: inset 0 0 0 2px rgba(90,70,50,0.28), 0 2px 4px rgba(0,0,0,0.1); }
-  .category:active, .stat:active, .item:active { transform: scale(0.97); }
-  .content { min-width: 0; flex: 1; overflow-y: auto; padding: 1px 1px 10px; }
+  .category.touch-dragging { opacity: 0.5; }
+  .category.insert-before { box-shadow: inset 0 3px 0 #8d785c, 0 2px 4px rgba(0,0,0,0.12); }
+  .category.insert-after { box-shadow: inset 0 -3px 0 #8d785c, 0 2px 4px rgba(0,0,0,0.12); }
+  .category-name-input { width: 100%; min-width: 0; padding: 2px 3px; border: 1px solid rgba(90,70,50,0.35); border-radius: 4px; background: rgba(255,255,255,0.5); color: #5a4632; font: inherit; text-align: center; outline: none; }
+  .category:active, .item:active { transform: scale(0.97); }
+  .content { min-width: 0; flex: 1; min-height: 0; overflow-y: auto; padding: 1px 1px 10px; }
   .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 9px; overflow: visible; }
   .stat { position: relative; min-height: 69px; padding: 5px 3px; border-radius: 8px; transition: transform 0.12s; }
-  .stat-head { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 58px; }
+  .stat-head { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 58px; }
   .stat-label { display: contents; }
-  .stat-name { order: 2; max-width: 100%; overflow: hidden; font-size: 9px; color: #806b52; text-overflow: ellipsis; white-space: nowrap; }
+  .stat-name { order: 2; max-width: 100%; overflow: hidden; color: #806b52; font-size: 9px; letter-spacing: 0.06em; text-overflow: ellipsis; transform: translateY(3px); white-space: nowrap; }
   .stat-count { order: 1; font-size: 22px; font-weight: 800; line-height: 1; }
-  .stat-toggle { position: absolute; top: -2px; right: -1px; width: 19px; height: 19px; border: 0; border-radius: 5px; background: rgba(255,255,255,0.08); color: #8d785c; cursor: pointer; font-size: 14px; line-height: 1; }
-  .stat-toggle::before { content: ''; display: block; width: 11px; height: 8px; margin: 0 auto; background: linear-gradient(rgba(90,70,50,0.5) 0 0) 0 0 / 100% 1px, linear-gradient(rgba(90,70,50,0.5) 0 0) 0 3.5px / 100% 1px, linear-gradient(rgba(90,70,50,0.5) 0 0) 0 7px / 100% 1px; background-repeat: no-repeat; }
-  .stat.open .stat-toggle::before { transform: none; }
-  .stat-detail { display: none; position: absolute; top: calc(100% - 1px); left: 0; right: 0; z-index: 4; min-height: 42px; padding: 7px; border-top: 1px solid rgba(255,235,205,0.24); border-radius: 0 0 9px 9px; background: linear-gradient(145deg, #765b40, #62482f); color: #f3e4ca; box-shadow: 0 5px 9px rgba(45,30,18,0.28), inset 0 1px 0 rgba(255,245,220,0.16); }
+  .stat-detail { display: none; position: absolute; top: calc(100% - 1px); left: 0; right: 0; z-index: 4; max-height: 180px; overflow-y: auto; padding: 5px; border-radius: 0 0 8px 8px; background: linear-gradient(145deg, #d2b183, #b99165); box-shadow: 0 5px 9px rgba(45,30,18,0.2); }
+  .stat-detail { scrollbar-width: none; -ms-overflow-style: none; }
+  .stat-detail::-webkit-scrollbar { display: none; }
   .stat.open { z-index: 5; }
-  .stat.open .stat-detail { display: flex; flex-wrap: wrap; gap: 4px; }
-  .stat.drop-active { box-shadow: inset 0 0 0 2px rgba(90,70,50,0.35), 0 2px 4px rgba(0,0,0,0.12); }
-  .stat.insert-before { box-shadow: inset 0 2px 0 #8d785c, 0 2px 4px rgba(0,0,0,0.12); }
-  .stat.insert-after { box-shadow: inset 0 -2px 0 #8d785c, 0 2px 4px rgba(0,0,0,0.12); }
+  .stat.open .stat-detail { display: grid; gap: 3px; }
+  .stat-detail-item { display: block; width: 100%; overflow: hidden; padding: 6px 5px; border-radius: 4px; background: rgba(255,240,215,0.38); color: #5a4632; font-size: 10px; letter-spacing: 0.06em; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
+  .stat-detail-item.selected, .stat-detail-item:hover { background: rgba(90,70,50,0.18); }
+  .annual-modal .editor { width: 340px; max-height: 85vh; overflow-y: auto; }
+  .annual-head { display: flex; align-items: center; justify-content: flex-start; gap: 8px; margin-bottom: 10px; }
+  .annual-head h3 { margin: 12px 0 0; letter-spacing: 0.12em; }
+  .annual-year-control { position: relative; margin-left: 0; }
+  .annual-year-button { min-width: 0; padding: 0; border: 0; background: transparent; color: #5a4632; cursor: pointer; font-size: 14px; font-weight: 800; transform: translateX(-2px); }
+  .annual-year-picker { position: absolute; top: calc(100% + 4px); left: 50%; z-index: 6; width: 82px; padding: 4px; border-radius: 6px; transform: translateX(-50%); }
+  .annual-year-picker[hidden] { display: none; }
+  .annual-year-list { display: grid; max-height: 170px; gap: 3px; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+  .annual-year-list::-webkit-scrollbar { display: none; }
+  .annual-year-option { width: 100%; padding: 5px 3px; border: 0; border-radius: 4px; background: rgba(255,240,215,0.32); color: #5a4632; cursor: pointer; font-size: 11px; }
+  .annual-year-option.active, .annual-year-option:hover { background: rgba(90,70,50,0.2); font-weight: 800; }
+  .year-stepper { display: flex; flex-direction: column; gap: 0; padding-left: 3px; border-left: 1px solid rgba(90,70,50,0.18); }
+  .year-step { width: 14px; height: 10px; padding: 0; border: 0; border-radius: 3px; background: transparent; color: rgba(90,70,50,0.58); font-size: 8px; line-height: 8px; transition: color 0.12s, background 0.12s, transform 0.12s; }
+  .year-step:hover, .year-step:active { background: rgba(184,81,73,0.12); color: #b85149; transform: scale(1.12); }
+  .annual-table { display: grid; grid-template-columns: 44px repeat(4, minmax(0, 1fr)); gap: 3px; font-size: 10px; }
+  .annual-cell { min-height: 28px; display: flex; align-items: center; justify-content: center; padding: 4px 2px; border-radius: 4px; background: rgba(255,240,215,0.28); text-align: center; }
+  .annual-cell.head { min-height: 34px; color: #5a4632; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; }
   .mini-item { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 4px 7px; border-radius: 5px; background: rgba(255,240,215,0.14); color: #f3e4ca; font-size: 10px; text-shadow: 0 1px 1px rgba(40,25,12,0.28); }
   .mini-time { color: #ead5b4; font-size: 8px; font-weight: 500; }
   .mini-remove { padding: 0 2px; border: 0; background: transparent; color: #8d785c; cursor: pointer; font-size: 12px; line-height: 1; }
-  .section-head { display: flex; justify-content: space-between; align-items: center; margin: 7px 2px; }
-  .section-title { font-size: 13px; font-weight: 800; }
+  .section-head { position: sticky; top: 0; z-index: 3; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; gap: 6px; margin: 0 2px 7px; padding: 7px 0 5px; background: #c0af89; }
+  .section-title { display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 31px; padding: 5px 4px; border-radius: 6px; font-size: 13px; font-weight: 800; letter-spacing: 0.16em; }
+  .section-add { display: inline-flex; align-items: center; justify-content: center; width: 28px; min-height: 28px; padding: 0; border: 0; border-radius: 6px; color: #5a4632; cursor: pointer; font-size: 20px; font-weight: 800; line-height: 1; }
   .add { padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; }
   .items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-  .item { min-height: 43px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 6px 4px; border-radius: 7px; cursor: grab; font-size: 11px; font-weight: 700; text-align: center; transition: transform 0.12s, opacity 0.12s; }
-  .item-name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .item-time { max-width: 100%; overflow: hidden; color: #806b52; font-size: 9px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+  .item { min-height: 43px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 6px 4px; border-radius: 7px; cursor: grab; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-align: center; transition: transform 0.12s, opacity 0.12s; }
+  .item-name { max-width: 100%; overflow: hidden; letter-spacing: 0.06em; text-overflow: ellipsis; white-space: nowrap; }
+  .item-time { max-width: 100%; overflow: hidden; color: #806b52; font-size: 9px; font-weight: 500; letter-spacing: 0.04em; text-overflow: ellipsis; white-space: nowrap; }
   .item.dragging, .item.touch-dragging { opacity: 0.5; }
   .item.insert-before { box-shadow: inset 3px 0 0 #8d785c, 0 2px 4px rgba(0,0,0,0.12); }
   .item.insert-after { box-shadow: inset -3px 0 0 #8d785c, 0 2px 4px rgba(0,0,0,0.12); }
+  .item.need-item { outline: 1px dashed rgba(90,70,50,0.7); outline-offset: 1px; }
+  .item.discarded-item { background: repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(75,50,30,0.1) 2px, rgba(75,50,30,0.1) 3px), linear-gradient(145deg, #a17d58, #79583d); color: #f3e4ca; text-shadow: 0 1px 1px rgba(40,25,12,0.2); }
+  .item.discarded-item .item-time { color: rgba(243,228,202,0.82); }
   .item.empty { color: #a18e72; font-weight: 500; border-style: dashed; }
-  .drop-hint { margin-top: 10px; padding: 7px; border: 1px dashed rgba(90,70,50,0.25); border-radius: 7px; text-align: center; color: #8d785c; font-size: 10px; }
   .modal { position: fixed; inset: 0; display: none; place-items: center; background: rgba(40,25,12,0.32); z-index: 5; }
   .modal.show { display: grid; }
   .editor { width: 300px; padding: 16px; border-radius: 12px; }
   .editor h3 { margin-bottom: 12px; font-size: 16px; }
   .editor input, .editor textarea { width: 100%; margin-bottom: 10px; padding: 9px; border: 1px solid rgba(90,70,50,0.2); border-radius: 6px; background: rgba(255,255,255,0.5); color: #5a4632; outline: none; font: inherit; }
-  .editor textarea { min-height: 90px; resize: vertical; }
+  .editor-primary-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .editor-primary-row .details-label { margin-bottom: 3px; font-size: 10px; }
+  .editor-primary-row input { margin-bottom: 8px; padding: 6px 7px; font-size: 12px; }
+  .editor textarea { min-height: 108px; margin-bottom: 10px; padding: 7px 8px; font-size: 12px; resize: vertical; }
   .details-panel[hidden] { display: none; }
   .details-label { display: block; margin-bottom: 5px; color: #806b52; font-size: 11px; }
+  .editor-stat-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 10px; }
+  .editor-stat-option { display: flex; align-items: center; justify-content: center; gap: 4px; min-height: 36px; padding: 5px 3px; border-radius: 7px; color: #5a4632; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; cursor: pointer; }
+  .editor-stat-option:has(input:checked) { box-shadow: inset 0 0 0 2px rgba(90,70,50,0.32), 0 2px 4px rgba(0,0,0,0.12); }
+  .editor-stat-option input { width: 15px; height: 15px; margin: 0; padding: 0; accent-color: #8d785c; }
   .editor-actions { display: flex; gap: 7px; }
   .editor-actions button { flex: 1; padding: 8px; border: 0; border-radius: 6px; color: #5a4632; cursor: pointer; }
+  .category-editor { width: 270px; }
   @media (max-width: 430px) { .phone-frame { width: 100%; height: 100vh; border-radius: 0; } }
 </style>
 
@@ -98,25 +133,57 @@
   <div class="screen">
     <div class="header"><span class="back">‹</span><span class="title"></span></div>
     <div class="layout">
-      <aside class="sidebar">
-        <div id="categories"></div>
-      </aside>
-      <main class="content">
-        <div class="stats" id="stats"></div>
-        <div class="section-head"><span class="section-title" id="sectionTitle">厨具</span><button class="add wood-surface wood-3d" id="addButton">＋ 新增</button></div>
-        <div class="items" id="items"></div>
-        <div class="drop-hint">长按并拖动小方块，可放入「已废弃」或「需添置」</div>
-      </main>
+      <div class="control-panel">
+        <aside class="sidebar">
+          <div id="categories"></div>
+          <button class="category-add wood-surface wood-3d" id="addCategoryButton" aria-label="新增序列">＋</button>
+        </aside>
+        <div class="control-main">
+          <div class="stats" id="stats"></div>
+        </div>
+      </div>
+      <div class="lower-panel">
+        <div class="lower-sidebar-spacer" aria-hidden="true"></div>
+        <main class="content">
+          <div class="section-head"><span class="section-title wood-surface wood-3d" id="sectionTitle">厨具</span><button class="section-add wood-surface wood-3d" id="sectionAddButton" type="button" aria-label="新增项目">＋</button></div>
+          <div class="items" id="items"></div>
+        </main>
+      </div>
     </div>
+  </div>
+</div>
+
+<div class="modal" id="categoryModal">
+  <div class="editor category-editor wood-surface wood-3d">
+    <h3 id="categoryEditorTitle">新增序列</h3>
+    <input id="categoryNameInput" maxlength="20" placeholder="输入序列名称">
+    <div class="editor-actions"><button id="categoryCancelButton">取消</button><button id="categoryDeleteButton" hidden>删除</button><button id="categorySaveButton">保存</button></div>
+  </div>
+</div>
+
+<div class="modal annual-modal" id="annualModal">
+  <div class="editor wood-surface wood-3d">
+    <div class="annual-head"><h3>年度明细</h3><div class="annual-year-control"><button class="annual-year-button" id="annualYearButton" type="button"><span id="annualYearLabel"></span></button><div class="annual-year-picker wood-surface wood-3d" id="annualYearPicker" hidden></div></div></div>
+    <div class="annual-table" id="annualTable"></div>
+    <div class="editor-actions"><button id="annualCloseButton">关闭</button></div>
   </div>
 </div>
 
 <div class="modal" id="modal">
   <div class="editor wood-surface wood-3d">
     <h3 id="editorTitle">编辑记录</h3>
-    <input id="nameInput" maxlength="30" placeholder="输入名称">
-    <div class="editor-actions"><button id="cancelButton">取消</button><button id="deleteButton" hidden>删除</button><button id="remarkButton">备注</button><button id="saveButton">保存</button></div>
-    <div class="details-panel" id="detailsPanel" hidden><label class="details-label" for="timeInput">时间</label><input id="timeInput" type="date"><label class="details-label" for="noteInput">备注</label><textarea id="noteInput" maxlength="500" placeholder="填写使用方法、纪念记录等"></textarea></div>
+    <div class="editor-primary-row">
+      <div><label class="details-label" for="timeInput">日期</label><input id="timeInput" type="date"></div>
+      <div><label class="details-label" for="nameInput">名称</label><input id="nameInput" maxlength="30" placeholder="输入名称"></div>
+    </div>
+    <div class="editor-stat-options">
+      <label class="editor-stat-option wood-surface wood-3d"><input id="editNewInput" type="checkbox"><span>新增</span></label>
+      <label class="editor-stat-option wood-surface wood-3d"><input id="editDiscardedInput" type="checkbox"><span>废弃</span></label>
+      <label class="editor-stat-option wood-surface wood-3d"><input id="editNeedInput" type="checkbox"><span>添置</span></label>
+    </div>
+    <label class="details-label" for="noteInput">使用记录</label>
+    <textarea id="noteInput" maxlength="500" placeholder="填写使用记录"></textarea>
+    <div class="editor-actions"><button id="deleteButton" hidden>删除</button><button id="cancelButton">取消</button><button id="saveButton">保存</button></div>
   </div>
 </div>
 
@@ -161,11 +228,18 @@ var pageConfigs = {
       { id: 303, category: '证件', name: '身份证', created: '2026-09-08', status: 'normal' },
       { id: 304, category: '衣物', name: '外套', created: '2026-08-12', status: 'normal' }
     ]
+  },
+  other: {
+    title: '其他物品', categories: ['其他'], storageKey: 'personal-life-hub-other-template-v1', returnSub: 'sub1e', records: [
+      { id: 401, category: '其他', name: '待整理物品', created: '2026-09-02', status: 'normal' },
+      { id: 402, category: '其他', name: '纪念物', created: '2026-09-04', status: 'normal' },
+      { id: 403, category: '其他', name: '螺丝刀', created: '2026-09-08', status: 'normal' }
+    ]
   }
 };
 var pageConfig = pageConfigs[pageType] || pageConfigs.kitchen;
 var pageTitle = pageConfig.title;
-var categoryNames = pageConfig.categories;
+var categoryNames = pageConfig.categories.slice();
 var storageKey = pageConfig.storageKey;
 var returnSub = new URLSearchParams(window.location.search).get('return') || pageConfig.returnSub;
 var records = pageConfig.records;
@@ -176,12 +250,22 @@ var dragId = null;
 var dragMode = null;
 var dragTargetId = null;
 var dragInsertBefore = true;
-var statAssignments = { discarded: [], need: [] };
-var statOrder = ['total', 'new', 'discarded', 'need'];
+var statAssignments = { new: [], discarded: [], need: [] };
 var touchDragTimer = null;
 var touchDragging = false;
 var suppressClick = false;
+var categoryPressTimer = null;
+var categoryLongPressed = false;
+var categoryTouchDragging = false;
+var categoryDragName = null;
+var categoryDragTarget = null;
+var categoryDragBefore = true;
+var editingCategory = null;
+var annualSelectedYear = new Date().getFullYear();
+var newAssignmentsByMonth = {};
+var monthlyStats = {};
 var audioContext = null;
+var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 var statTypes = [
   { key: 'total', name: '厨具总数' },
   { key: 'new', name: '本月新增' },
@@ -219,104 +303,316 @@ function playWoodClick() {
 document.querySelector('h2').textContent = pageTitle + ' — 记录模板';
 document.querySelector('.title').textContent = pageTitle;
 var categoryContainer = document.getElementById('categories');
-categoryNames.forEach(function(name, index) {
-  var button = document.createElement('div');
-  button.className = 'category wood-surface wood-3d' + (index === 0 ? ' active' : '');
-  button.dataset.category = name;
-  button.textContent = name;
-  categoryContainer.appendChild(button);
-});
+function renderCategories() {
+  categoryContainer.textContent = '';
+  categoryNames.forEach(function(name) {
+    var button = document.createElement('div');
+    button.className = 'category wood-surface wood-3d' + (name === currentCategory ? ' active' : '');
+    button.dataset.category = name;
+    button.textContent = name;
+    button.addEventListener('click', function() {
+      if (categoryLongPressed) { categoryLongPressed = false; return; }
+      currentCategory = name;
+      renderCategories();
+      render();
+    });
+    button.addEventListener('dblclick', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      startCategoryRename(name, button);
+    });
+    button.addEventListener('pointerdown', function() {
+      clearTimeout(categoryPressTimer);
+      categoryPressTimer = setTimeout(function() {
+        categoryLongPressed = true;
+        categoryTouchDragging = true;
+        categoryDragName = name;
+        button.classList.add('touch-dragging');
+      }, 500);
+    });
+    button.addEventListener('pointermove', function(event) {
+      if (!categoryTouchDragging) return;
+      event.preventDefault();
+      var target = document.elementFromPoint(event.clientX, event.clientY);
+      var targetButton = target && target.closest ? target.closest('.category') : null;
+      if (!targetButton || targetButton.dataset.category === categoryDragName) return;
+      categoryDragTarget = targetButton.dataset.category;
+      categoryDragBefore = event.clientY < targetButton.getBoundingClientRect().top + targetButton.offsetHeight / 2;
+      document.querySelectorAll('.category').forEach(function(item) { item.classList.remove('insert-before', 'insert-after'); });
+      targetButton.classList.add(categoryDragBefore ? 'insert-before' : 'insert-after');
+    });
+    button.addEventListener('pointerup', function(event) {
+      cancelCategoryPress();
+      if (!categoryTouchDragging) return;
+      event.preventDefault();
+      finishCategoryDrag(button);
+    });
+    button.addEventListener('pointerleave', cancelCategoryPress);
+    button.addEventListener('pointercancel', function() {
+      cancelCategoryPress();
+      if (categoryTouchDragging) finishCategoryDrag(button);
+    });
+    button.addEventListener('contextmenu', function(event) { event.preventDefault(); });
+    categoryContainer.appendChild(button);
+  });
+}
+function cancelCategoryPress() { clearTimeout(categoryPressTimer); }
+function startCategoryRename(name, button) {
+  if (button.querySelector('.category-name-input')) return;
+  var input = document.createElement('input');
+  input.className = 'category-name-input';
+  input.maxLength = 20;
+  input.value = name;
+  button.textContent = '';
+  button.appendChild(input);
+  input.addEventListener('click', function(event) { event.stopPropagation(); });
+  input.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') input.blur();
+    if (event.key === 'Escape') { input.value = name; input.blur(); }
+  });
+  input.addEventListener('blur', function() {
+    var nextName = input.value.trim() || name;
+    if (nextName !== name && !renameCategory(name, nextName)) nextName = name;
+    if (nextName !== name) saveState();
+    renderCategories();
+    render();
+  }, { once: true });
+  input.focus();
+  input.select();
+}
+function finishCategoryDrag(button) {
+  button.classList.remove('touch-dragging');
+  document.querySelectorAll('.category').forEach(function(item) { item.classList.remove('insert-before', 'insert-after'); });
+  if (categoryDragTarget && categoryDragTarget !== categoryDragName) reorderCategory(categoryDragName, categoryDragTarget, categoryDragBefore);
+  categoryTouchDragging = false;
+  categoryDragName = null;
+  categoryDragTarget = null;
+}
 
-function currentMonth() { return new Date().toISOString().slice(0, 7); }
 function visibleRecords() { return records.filter(function(record) { return record.category === currentCategory; }); }
+function dateKey(year, month) { return year + '-' + String(month).padStart(2, '0'); }
+function currentMonthKey() { var now = new Date(); return dateKey(now.getFullYear(), now.getMonth() + 1); }
+function currentMonthName() { return monthNames[new Date().getMonth()]; }
+function activeRecords() {
+  var discardedIds = statIds('discarded');
+  var needIds = statIds('need');
+  return visibleRecords().filter(function(record) {
+    return discardedIds.indexOf(record.id) === -1 && needIds.indexOf(record.id) === -1;
+  });
+}
+function countRecordsByMonth(year, month) {
+  var key = dateKey(year, month);
+  var ids = Array.isArray(newAssignmentsByMonth[key]) ? newAssignmentsByMonth[key] : [];
+  return visibleRecords().filter(function(record) { return ids.indexOf(record.id) !== -1; }).length;
+}
+function refreshCurrentMonthSnapshot() {
+  if (!monthlyStats[currentCategory]) monthlyStats[currentCategory] = {};
+  var ids = function(key) { return statIds(key); };
+  var list = visibleRecords();
+  monthlyStats[currentCategory][currentMonthKey()] = {
+    total: activeRecords().length,
+    new: list.filter(function(record) { return ids('new').indexOf(record.id) !== -1; }).length,
+    discarded: list.filter(function(record) { return ids('discarded').indexOf(record.id) !== -1; }).length,
+    need: list.filter(function(record) { return ids('need').indexOf(record.id) !== -1; }).length
+  };
+}
+function renderAnnualDetail() {
+  document.getElementById('annualYearLabel').textContent = annualSelectedYear;
+  var table = document.getElementById('annualTable');
+  table.textContent = '';
+  ['月份', '厨具总数', '本月新增', '已废弃', '需添置'].forEach(function(label) {
+    var header = document.createElement('div');
+    header.className = 'annual-cell head wood-surface wood-3d';
+    header.textContent = label;
+    table.appendChild(header);
+  });
+  var categoryStats = monthlyStats[currentCategory] || {};
+  monthNames.forEach(function(name, index) {
+    var snapshot = categoryStats[dateKey(annualSelectedYear, index + 1)] || { total: 0, new: 0, discarded: 0, need: 0 };
+    [name, snapshot.total, snapshot.new, snapshot.discarded, snapshot.need].forEach(function(value) {
+      var cell = document.createElement('div');
+      cell.className = 'annual-cell';
+      cell.textContent = value;
+      table.appendChild(cell);
+    });
+  });
+}
+function renderAnnualYears() {
+  var picker = document.getElementById('annualYearPicker');
+  picker.textContent = '';
+  var list = document.createElement('div');
+  list.className = 'annual-year-list';
+  var firstYear = 2025;
+  var lastYear = 2100;
+  for (var year = firstYear; year <= lastYear; year += 1) {
+    var option = document.createElement('button');
+    option.type = 'button';
+    option.className = 'annual-year-option' + (year === annualSelectedYear ? ' active' : '');
+    option.textContent = year;
+    option.addEventListener('click', function() {
+      annualSelectedYear = Number(this.textContent);
+      picker.hidden = true;
+      renderAnnualDetail();
+    });
+    list.appendChild(option);
+  }
+  picker.appendChild(list);
+}
+function openAnnualDetail() {
+  annualSelectedYear = new Date().getFullYear();
+  refreshCurrentMonthSnapshot();
+  saveState();
+  renderAnnualDetail();
+  renderAnnualYears();
+  document.getElementById('annualYearPicker').hidden = true;
+  document.getElementById('annualModal').classList.add('show');
+}
+function closeAnnualDetail() { document.getElementById('annualModal').classList.remove('show'); }
+function removeFromNewStats(id) {
+  Object.keys(newAssignmentsByMonth).forEach(function(key) {
+    newAssignmentsByMonth[key] = newAssignmentsByMonth[key].filter(function(recordId) { return recordId !== id; });
+    if (!newAssignmentsByMonth[key].length) delete newAssignmentsByMonth[key];
+  });
+}
 function saveState() {
-  try { localStorage.setItem(storageKey, JSON.stringify({ records: records, statAssignments: statAssignments, statOrder: statOrder })); } catch (error) {}
+  refreshCurrentMonthSnapshot();
+  try { localStorage.setItem(storageKey, JSON.stringify({ records: records, categories: categoryNames, statAssignments: statAssignments, newAssignmentsByMonth: newAssignmentsByMonth, monthlyStats: monthlyStats })); } catch (error) {}
 }
 function loadState() {
   try {
     var saved = JSON.parse(localStorage.getItem(storageKey));
     if (saved && Array.isArray(saved.records)) records = saved.records;
-    if (saved && saved.statAssignments) statAssignments = { discarded: saved.statAssignments.discarded || [], need: saved.statAssignments.need || [] };
-    if (saved && Array.isArray(saved.statOrder)) statOrder = saved.statOrder;
+    if (saved && pageType === 'kitchen' && Array.isArray(saved.categories) && saved.categories.length) categoryNames = saved.categories;
+    if (saved && saved.statAssignments) statAssignments = { new: saved.statAssignments.new || [], discarded: saved.statAssignments.discarded || [], need: saved.statAssignments.need || [] };
+    if (saved && saved.newAssignmentsByMonth && typeof saved.newAssignmentsByMonth === 'object') newAssignmentsByMonth = saved.newAssignmentsByMonth;
+    if (saved && saved.monthlyStats && typeof saved.monthlyStats === 'object') monthlyStats = saved.monthlyStats;
+    else if (saved && saved.statAssignments && Array.isArray(saved.statAssignments.new) && saved.statAssignments.new.length) newAssignmentsByMonth[currentMonthKey()] = saved.statAssignments.new.slice();
+    if (pageType === 'other') {
+      categoryNames = ['其他'];
+      records.forEach(function(record) { record.category = '其他'; });
+    }
   } catch (error) {}
 }
-function statTitle(stat) { return stat.key === 'total' ? currentCategory + '总数' : stat.name; }
-function orderedStats() { return statOrder.map(function(key) { return statTypes.find(function(stat) { return stat.key === key; }); }); }
+function openCategoryEditor(category) {
+  if (pageType !== 'kitchen') return;
+  editingCategory = category || null;
+  document.getElementById('categoryEditorTitle').textContent = category ? '编辑序列' : '新增序列';
+  document.getElementById('categoryNameInput').value = category || '';
+  document.getElementById('categoryDeleteButton').hidden = !category;
+  document.getElementById('categoryModal').classList.add('show');
+  document.getElementById('categoryNameInput').focus();
+}
+function closeCategoryEditor() {
+  editingCategory = null;
+  document.getElementById('categoryModal').classList.remove('show');
+}
+function renameCategory(oldName, newName) {
+  var index = categoryNames.indexOf(oldName);
+  if (index < 0 || !newName || (newName !== oldName && categoryNames.indexOf(newName) !== -1)) return false;
+  categoryNames[index] = newName;
+  records.forEach(function(record) { if (record.category === oldName) record.category = newName; });
+  if (currentCategory === oldName) currentCategory = newName;
+  return true;
+}
+function reorderCategory(name, targetName, before) {
+  var from = categoryNames.indexOf(name);
+  var target = categoryNames.indexOf(targetName);
+  if (from < 0 || target < 0 || from === target) return;
+  categoryNames.splice(from, 1);
+  if (from < target) target -= 1;
+  categoryNames.splice(before ? target : target + 1, 0, name);
+  saveState();
+  renderCategories();
+}
+function deleteCategory(category) {
+  if (categoryNames.length <= 1) return false;
+  categoryNames = categoryNames.filter(function(name) { return name !== category; });
+  var removedIds = records.filter(function(record) { return record.category === category; }).map(function(record) { return record.id; });
+  records = records.filter(function(record) { return record.category !== category; });
+  Object.keys(statAssignments).forEach(function(key) { statAssignments[key] = statAssignments[key].filter(function(id) { return removedIds.indexOf(id) === -1; }); });
+  removedIds.forEach(removeFromNewStats);
+  if (currentCategory === category) currentCategory = categoryNames[0];
+  saveState();
+  renderCategories();
+  render();
+  return true;
+}
+function statTitle(stat) { if (stat.key === 'total') return currentCategory + '总数'; if (stat.key === 'new') return currentMonthName() + '新增'; return stat.name; }
+function orderedStats() { return statTypes.slice(); }
 function countFor(key) {
   var list = visibleRecords();
-  if (key === 'total') return list.length;
-  if (key === 'new') return list.filter(function(record) { return record.created.slice(0, 7) === currentMonth(); }).length;
+  if (key === 'total') return activeRecords().length;
+  if (key === 'new') return list.filter(function(record) { return statIds(key).indexOf(record.id) !== -1; }).length;
   return list.filter(function(record) { return statAssignments[key].indexOf(record.id) !== -1; }).length;
 }
-function recordsFor(key) {
-  var list = visibleRecords();
-  if (key === 'total') return list;
-  if (key === 'new') return list.filter(function(record) { return record.created.slice(0, 7) === currentMonth(); });
-  return list.filter(function(record) { return statAssignments[key].indexOf(record.id) !== -1; });
+function statIds(key) {
+  if (key === 'new') return Array.isArray(newAssignmentsByMonth[currentMonthKey()]) ? newAssignmentsByMonth[currentMonthKey()] : [];
+  return statAssignments[key];
+}
+function setStatAssignment(key, id, checked) {
+  if (key === 'new') {
+    var monthKey = currentMonthKey();
+    if (!Array.isArray(newAssignmentsByMonth[monthKey])) newAssignmentsByMonth[monthKey] = [];
+    if (checked && newAssignmentsByMonth[monthKey].indexOf(id) === -1) newAssignmentsByMonth[monthKey].push(id);
+    if (!checked) newAssignmentsByMonth[monthKey] = newAssignmentsByMonth[monthKey].filter(function(recordId) { return recordId !== id; });
+    if (!newAssignmentsByMonth[monthKey].length) delete newAssignmentsByMonth[monthKey];
+  } else if (['discarded', 'need'].indexOf(key) !== -1) {
+    if (checked && statAssignments[key].indexOf(id) === -1) statAssignments[key].push(id);
+    if (!checked) statAssignments[key] = statAssignments[key].filter(function(recordId) { return recordId !== id; });
+  }
+  saveState();
+  var card = document.querySelector('.stat[data-key="' + key + '"]');
+  if (card) card.querySelector('.stat-count').textContent = countFor(key);
 }
 function render() {
   document.getElementById('sectionTitle').textContent = currentCategory;
   var stats = document.getElementById('stats');
   stats.textContent = '';
-  orderedStats().forEach(function(stat) {
-    var card = document.createElement('div');
-    card.className = 'stat wood-surface wood-3d';
-    card.draggable = true;
-    card.dataset.key = stat.key;
-    card.innerHTML = '<div class="stat-head"><div class="stat-label"><span class="stat-name">' + statTitle(stat) + '</span><span class="stat-count">' + countFor(stat.key) + '</span></div><button class="stat-toggle" aria-label="展开' + statTitle(stat) + '"></button></div><div class="stat-detail"></div>';
-    card.querySelector('.stat-toggle').addEventListener('click', function(event) {
-      event.stopPropagation();
-      card.classList.toggle('open');
-      var detail = card.querySelector('.stat-detail');
-      detail.textContent = '';
-      recordsFor(stat.key).forEach(function(record) {
-         var mini = document.createElement('span');
-         mini.className = 'mini-item';
-         var miniName = document.createElement('span');
-         miniName.textContent = record.name;
-         mini.appendChild(miniName);
-         if (record.time) {
-           var miniTime = document.createElement('span');
-           miniTime.className = 'mini-time';
-           miniTime.textContent = record.time;
-           mini.appendChild(miniTime);
-         }
-        mini.addEventListener('click', function(event) { event.stopPropagation(); });
-        mini.addEventListener('dblclick', function(event) { event.preventDefault(); event.stopPropagation(); openEditor(record.id, stat.key === 'discarded' || stat.key === 'need' ? stat.key : null); });
-        detail.appendChild(mini);
-      });
-    });
-    card.addEventListener('dragstart', function() { dragMode = 'stat'; dragId = stat.key; card.classList.add('dragging'); });
-    card.addEventListener('dragend', function() { card.classList.remove('dragging'); clearDropIndicators(); dragMode = null; dragId = null; });
-    card.addEventListener('pointerdown', function() {
-      touchDragTimer = setTimeout(function() { touchDragging = true; dragMode = 'stat'; dragId = stat.key; card.classList.add('touch-dragging'); }, 350);
-    });
-    card.addEventListener('pointermove', function(event) {
-      if (touchDragging) { event.preventDefault(); showTouchTarget(document.elementFromPoint(event.clientX, event.clientY), event); }
-    });
-    card.addEventListener('pointerup', function(event) { finishTouchDrag(event, card); });
-    card.addEventListener('pointercancel', function(event) { finishTouchDrag(event, card); });
-    stats.appendChild(card);
+   orderedStats().forEach(function(stat) {
+     var card = document.createElement('div');
+     card.className = 'stat wood-surface wood-3d';
+     card.dataset.key = stat.key;
+     card.innerHTML = '<div class="stat-head"><div class="stat-label"><span class="stat-name">' + statTitle(stat) + '</span><span class="stat-count">' + countFor(stat.key) + '</span></div></div><div class="stat-detail"></div>';
+      {
+        var detail = card.querySelector('.stat-detail');
+        var detailRecords = stat.key === 'total' ? activeRecords() : visibleRecords().filter(function(record) {
+          return statIds(stat.key).indexOf(record.id) !== -1;
+        });
+        detailRecords.forEach(function(record) {
+          var detailItem = document.createElement('span');
+          detailItem.className = 'stat-detail-item';
+          detailItem.textContent = record.name;
+          detail.appendChild(detailItem);
+        });
+        if (detail.children.length) card.addEventListener('click', function() { card.classList.toggle('open'); });
+        detail.addEventListener('click', function(event) { event.stopPropagation(); });
+      }
+     stats.appendChild(card);
   });
   var items = document.getElementById('items');
   items.textContent = '';
-  visibleRecords().forEach(function(record) {
+   visibleRecords().forEach(function(record) {
     var item = document.createElement('div');
     item.className = 'item wood-surface wood-3d';
+    if (statIds('need').indexOf(record.id) !== -1) item.classList.add('need-item');
+    if (statIds('discarded').indexOf(record.id) !== -1) item.classList.add('discarded-item');
     var itemName = document.createElement('span');
     itemName.className = 'item-name';
     itemName.textContent = record.name;
     item.appendChild(itemName);
-    if (record.time) {
+     if (record.time) {
       var itemTime = document.createElement('span');
       itemTime.className = 'item-time';
       itemTime.textContent = record.time;
-      item.appendChild(itemTime);
-    }
-    item.draggable = true;
+       item.appendChild(itemTime);
+     }
+     item.draggable = true;
     item.dataset.id = record.id;
-    item.addEventListener('click', function() { suppressClick = false; });
-    item.addEventListener('dblclick', function(event) { event.preventDefault(); if (!suppressClick) openEditor(record.id); suppressClick = false; });
+     item.addEventListener('click', function(event) {
+       event.stopPropagation();
+       if (suppressClick) { suppressClick = false; return; }
+       openEditor(record.id);
+     });
     item.addEventListener('dragstart', function() { dragMode = 'item'; dragId = record.id; item.classList.add('dragging'); });
     item.addEventListener('dragend', function() { item.classList.remove('dragging'); clearDropIndicators(); dragMode = null; dragId = null; });
     item.addEventListener('pointerdown', function() {
@@ -329,8 +625,8 @@ function render() {
     });
     item.addEventListener('pointerup', function(event) { finishTouchDrag(event, item); });
     item.addEventListener('pointercancel', function(event) { finishTouchDrag(event, item); });
-    items.appendChild(item);
-  });
+     items.appendChild(item);
+   });
 }
 function removeAssignment(key, id) {
   statAssignments[key] = statAssignments[key].filter(function(recordId) { return recordId !== id; });
@@ -343,27 +639,17 @@ function clearDropIndicators() {
 function showTouchTarget(target, event) {
   clearDropIndicators();
   if (!target || !target.closest) return;
-  var statCard = target.closest('.stat');
-  var item = target.closest('.item');
-  if (dragMode === 'item' && statCard && ['discarded', 'need'].indexOf(statCard.dataset.key) !== -1) statCard.classList.add('drop-active');
+   var item = target.closest('.item');
   if (dragMode === 'item' && item && String(item.dataset.id) !== String(dragId)) {
     dragTargetId = Number(item.dataset.id);
     dragInsertBefore = !event || event.clientX < item.getBoundingClientRect().left + item.offsetWidth / 2;
     item.classList.add(dragInsertBefore ? 'insert-before' : 'insert-after');
   }
-  if (dragMode === 'stat' && statCard && statCard.dataset.key !== dragId) {
-    dragTargetId = statCard.dataset.key;
-    dragInsertBefore = !event || event.clientY < statCard.getBoundingClientRect().top + statCard.offsetHeight / 2;
-    statCard.classList.add(dragInsertBefore ? 'insert-before' : 'insert-after');
-  }
 }
 function finishTouchDrag(event, item) {
   clearTimeout(touchDragTimer);
   if (!touchDragging) return;
-  var target = document.elementFromPoint(event.clientX, event.clientY);
-  if (dragMode === 'item' && target && target.closest && target.closest('.stat')) assignToStat(target.closest('.stat'));
-  else if (dragMode === 'item' && dragTargetId) reorderRecord(dragId, dragTargetId, dragInsertBefore);
-  else if (dragMode === 'stat' && dragTargetId) reorderStat(dragId, dragTargetId, dragInsertBefore);
+   if (dragMode === 'item' && dragTargetId) reorderRecord(dragId, dragTargetId, dragInsertBefore);
   clearDropIndicators();
   item.classList.remove('touch-dragging');
   touchDragging = false;
@@ -371,12 +657,6 @@ function finishTouchDrag(event, item) {
   dragMode = null;
   dragTargetId = null;
   dragId = null;
-}
-function assignToStat(target) {
-  var status = target.dataset.key;
-  if ((status === 'discarded' || status === 'need') && statAssignments[status].indexOf(dragId) === -1) statAssignments[status].push(dragId);
-  saveState();
-  render();
 }
 function reorderRecord(id, targetId, before) {
   if (id === targetId) return;
@@ -390,57 +670,75 @@ function reorderRecord(id, targetId, before) {
   saveState();
   render();
 }
-function reorderStat(key, targetKey, before) {
-  var from = statOrder.indexOf(key);
-  var target = statOrder.indexOf(targetKey);
-  if (from < 0 || target < 0 || from === target) return;
-  statOrder.splice(from, 1);
-  if (from < target) target -= 1;
-  statOrder.splice(before ? target : target + 1, 0, key);
-  saveState();
-  render();
-}
 function openEditor(id, assignmentKey) {
   editingId = id;
-  editingAssignment = assignmentKey || null;
+  editingAssignment = null;
   var record = records.find(function(item) { return item.id === id; });
   document.getElementById('nameInput').value = record ? record.name : '';
   document.getElementById('timeInput').value = record && record.time ? record.time : '';
   document.getElementById('noteInput').value = record && record.note ? record.note : '';
-  document.getElementById('detailsPanel').hidden = true;
-  document.getElementById('editorTitle').textContent = assignmentKey ? '统计明细' : '编辑记录';
+  document.getElementById('editNewInput').checked = record ? statIds('new').indexOf(record.id) !== -1 : false;
+  document.getElementById('editDiscardedInput').checked = record ? statIds('discarded').indexOf(record.id) !== -1 : false;
+  document.getElementById('editNeedInput').checked = record ? statIds('need').indexOf(record.id) !== -1 : false;
+  document.getElementById('editorTitle').textContent = record ? '编辑记录' : '新增记录';
   document.getElementById('deleteButton').hidden = !record;
   document.getElementById('deleteButton').textContent = '删除';
   document.getElementById('modal').classList.add('show');
   document.getElementById('nameInput').focus();
 }
 function closeEditor() { editingId = null; editingAssignment = null; document.getElementById('modal').classList.remove('show'); }
-document.querySelectorAll('.category').forEach(function(button) {
-  button.addEventListener('click', function() {
-    currentCategory = button.dataset.category;
-    document.querySelectorAll('.category').forEach(function(item) { item.classList.toggle('active', item === button); });
-    render();
-  });
-});
 document.querySelector('.back').addEventListener('click', function() { window.location.href = 'wood-rename.html#' + encodeURIComponent(returnSub); });
 document.addEventListener('click', function(event) {
   var target = event.target.closest('button, .category, .item, .mini-item, .stat, .back');
   if (target) playWoodClick();
 });
-document.getElementById('addButton').addEventListener('click', function() { editingId = null; document.getElementById('nameInput').value = ''; document.getElementById('timeInput').value = ''; document.getElementById('noteInput').value = ''; document.getElementById('detailsPanel').hidden = true; document.getElementById('modal').classList.add('show'); document.getElementById('nameInput').focus(); });
+document.getElementById('sectionTitle').addEventListener('click', openAnnualDetail);
+document.getElementById('sectionAddButton').addEventListener('click', function() { openEditor(null); });
+document.getElementById('annualYearButton').addEventListener('click', function(event) {
+  event.stopPropagation();
+  var picker = document.getElementById('annualYearPicker');
+  picker.hidden = !picker.hidden;
+  if (!picker.hidden) renderAnnualYears();
+});
+document.getElementById('annualCloseButton').addEventListener('click', closeAnnualDetail);
+document.getElementById('annualModal').addEventListener('click', function(event) { if (event.target === this) closeAnnualDetail(); });
+document.getElementById('addCategoryButton').hidden = pageType !== 'kitchen';
+document.getElementById('addCategoryButton').addEventListener('click', function() { openCategoryEditor(null); });
+document.getElementById('categoryCancelButton').addEventListener('click', closeCategoryEditor);
+document.getElementById('categorySaveButton').addEventListener('click', function() {
+  var name = document.getElementById('categoryNameInput').value.trim();
+  if (!name) return;
+  if (editingCategory) {
+    if (!renameCategory(editingCategory, name)) return;
+  } else if (categoryNames.indexOf(name) !== -1) return;
+  else { categoryNames.push(name); currentCategory = name; }
+  closeCategoryEditor();
+  saveState();
+  renderCategories();
+  render();
+});
+document.getElementById('categoryDeleteButton').addEventListener('click', function() {
+  if (deleteCategory(editingCategory)) closeCategoryEditor();
+});
 document.getElementById('cancelButton').addEventListener('click', closeEditor);
-document.getElementById('remarkButton').addEventListener('click', function() { document.getElementById('detailsPanel').hidden = !document.getElementById('detailsPanel').hidden; if (!document.getElementById('detailsPanel').hidden) document.getElementById('timeInput').focus(); });
 document.getElementById('saveButton').addEventListener('click', function() {
   var name = document.getElementById('nameInput').value.trim();
   var time = document.getElementById('timeInput').value;
   var note = document.getElementById('noteInput').value.trim();
   if (!name) return;
+  var savedId = editingId;
   if (editingId) {
     var editingRecord = records.find(function(item) { return item.id === editingId; });
     editingRecord.name = name;
     editingRecord.time = time;
     editingRecord.note = note;
-  } else records.push({ id: Date.now(), category: currentCategory, name: name, time: time, note: note, created: new Date().toISOString().slice(0, 10), status: 'normal' });
+  } else {
+    savedId = Date.now();
+    records.push({ id: savedId, category: currentCategory, name: name, time: time, note: note, created: time || '', status: 'normal' });
+  }
+  setStatAssignment('new', savedId, document.getElementById('editNewInput').checked);
+  setStatAssignment('discarded', savedId, document.getElementById('editDiscardedInput').checked);
+  setStatAssignment('need', savedId, document.getElementById('editNeedInput').checked);
   closeEditor();
   saveState();
   render();
@@ -462,41 +760,21 @@ document.getElementById('items').addEventListener('drop', function(event) {
   reorderRecord(dragId, dragTargetId, dragInsertBefore);
   clearDropIndicators();
 });
-document.getElementById('stats').addEventListener('dragover', function(event) {
-  event.preventDefault();
-  var target = event.target.closest('.stat');
-  clearDropIndicators();
-  if (!target) return;
-  if (dragMode === 'item' && ['discarded', 'need'].indexOf(target.dataset.key) !== -1) target.classList.add('drop-active');
-  if (dragMode === 'stat' && target.dataset.key !== dragId) {
-    dragTargetId = target.dataset.key;
-    dragInsertBefore = event.clientY < target.getBoundingClientRect().top + target.offsetHeight / 2;
-    target.classList.add(dragInsertBefore ? 'insert-before' : 'insert-after');
-  }
-});
-document.getElementById('stats').addEventListener('drop', function(event) {
-  event.preventDefault();
-  var target = event.target.closest('.stat');
-  if (!target || !dragId) return;
-  if (dragMode === 'item') assignToStat(target);
-  if (dragMode === 'stat' && dragTargetId) reorderStat(dragId, dragTargetId, dragInsertBefore);
-  clearDropIndicators();
-  dragMode = null;
-  dragTargetId = null;
-  dragId = null;
-});
 document.getElementById('deleteButton').addEventListener('click', function() {
   if (!editingId) return;
   if (editingAssignment) removeAssignment(editingAssignment, editingId);
   else {
     records = records.filter(function(record) { return record.id !== editingId; });
-    statAssignments.discarded = statAssignments.discarded.filter(function(id) { return id !== editingId; });
-    statAssignments.need = statAssignments.need.filter(function(id) { return id !== editingId; });
+    Object.keys(statAssignments).forEach(function(key) { statAssignments[key] = statAssignments[key].filter(function(id) { return id !== editingId; }); });
+    removeFromNewStats(editingId);
     saveState();
     render();
   }
   closeEditor();
 });
 loadState();
+if (categoryNames.indexOf(currentCategory) === -1) currentCategory = categoryNames[0];
+saveState();
+renderCategories();
 render();
 </script>
