@@ -21,6 +21,8 @@ assert.match(source, /\.stat-head[\s\S]{0,180}gap: 6px/, '统计数字和简介�
 assert.match(source, /\.stat-name[\s\S]{0,220}letter-spacing:[\s\S]{0,180}transform: translateY\(3px\)/, '统计简介应下移并增加字间距');
 assert.match(source, /function countRecordsByMonth/, '应提供按年月统计记录的函数');
 assert.match(source, /monthNames = \['Jan', 'Feb'/, '月份明细应使用英文缩写');
+assert.match(source, /monthChineseNames = \['一月', '二月', '三月'/, '本月新增标题应使用中文月份');
+assert.match(source, /if \(stat\.key === 'new'\) return currentMonthChineseName\(\) \+ '新增'/, '本月新增标题应显示中文月份');
 assert.match(source, /function countRecordsByMonth[\s\S]{0,450}newAssignmentsByMonth/, '本月新增应按月份统计');
 assert.match(source, /newAssignmentsByMonth/, '新增统计应按年月保存');
 assert.match(source, /id="annualYearLabel"/, '年度明细应包含年份选择器');

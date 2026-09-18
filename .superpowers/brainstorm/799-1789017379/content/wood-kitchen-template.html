@@ -262,6 +262,7 @@ var newAssignmentsByMonth = {};
 var monthlyStats = {};
 var audioContext = null;
 var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+var monthChineseNames = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
 var statTypes = [
   { key: 'total', name: '厨具总数' },
   { key: 'new', name: '本月新增' },
@@ -365,6 +366,7 @@ function visibleRecords() { return records.filter(function(record) { return reco
 function dateKey(year, month) { return year + '-' + String(month).padStart(2, '0'); }
 function currentMonthKey() { var now = new Date(); return dateKey(now.getFullYear(), now.getMonth() + 1); }
 function currentMonthName() { return monthNames[new Date().getMonth()]; }
+function currentMonthChineseName() { return monthChineseNames[new Date().getMonth()]; }
 function activeRecords() {
   var discardedIds = statIds('discarded');
   var needIds = statIds('need');
@@ -509,7 +511,7 @@ function deleteCategory(category) {
   render();
   return true;
 }
-function statTitle(stat) { if (stat.key === 'total') return currentCategory + '总数'; if (stat.key === 'new') return currentMonthName() + '新增'; return stat.name; }
+function statTitle(stat) { if (stat.key === 'total') return currentCategory + '总数'; if (stat.key === 'new') return currentMonthChineseName() + '新增'; return stat.name; }
 function orderedStats() { return statTypes.slice(); }
 function countFor(key) {
   var list = visibleRecords();
