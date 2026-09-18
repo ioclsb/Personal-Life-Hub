@@ -37,12 +37,12 @@
   .header { display: flex; align-items: center; gap: 8px; padding: 4px 2px 10px; }
   .back { font-size: 22px; cursor: pointer; }
   .title { font-size: 18px; font-weight: 800; }
-  .layout { min-height: 0; flex: 1; display: flex; flex-direction: column; gap: 8px; }
-  .control-panel { flex: 0 0 auto; display: flex; gap: 8px; }
-  .control-main { min-width: 0; flex: 1; }
-  .sidebar { width: 70px; display: flex; flex-direction: column; gap: 7px; }
-  .lower-panel { min-height: 0; flex: 1; display: flex; gap: 8px; margin-top: 10px; transform: translateX(5px); }
-  .lower-sidebar-spacer { flex: 0 0 70px; }
+  .layout { min-height: 0; flex: 1; display: grid; grid-template-columns: 70px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); column-gap: 8px; row-gap: 10px; }
+  .control-panel { display: contents; }
+  .control-main { min-width: 0; grid-column: 2; grid-row: 1; }
+  .sidebar { width: 70px; display: flex; flex-direction: column; gap: 7px; grid-column: 1; grid-row: 1 / span 2; }
+  .lower-panel { min-height: 0; display: flex; gap: 8px; margin-top: 10px; grid-column: 2; grid-row: 2; }
+  .lower-sidebar-spacer { display: none; }
   #categories { display: flex; flex-direction: column; gap: 7px; }
   .category-add { width: 100%; min-height: 28px; align-self: center; padding: 0; border: 0; border-radius: 9px; color: #5a4632; font-size: 20px; font-weight: 800; line-height: 1; }
   .category {
@@ -54,26 +54,22 @@
     user-select: none;
   }
   .category.active { color: #3e2d1e; box-shadow: inset 0 0 0 2px rgba(90,70,50,0.28), 0 2px 4px rgba(0,0,0,0.1); }
+  .category.need-category { background-color: #ead8bc; background-blend-mode: multiply; color: #f3e4ca; text-shadow: 0 1px 1px rgba(40,25,12,0.2); }
   .category.touch-dragging { opacity: 0.5; }
   .category.insert-before { box-shadow: inset 0 3px 0 #8d785c, 0 2px 4px rgba(0,0,0,0.12); }
   .category.insert-after { box-shadow: inset 0 -3px 0 #8d785c, 0 2px 4px rgba(0,0,0,0.12); }
   .category-name-input { width: 100%; min-width: 0; padding: 2px 3px; border: 1px solid rgba(90,70,50,0.35); border-radius: 4px; background: rgba(255,255,255,0.5); color: #5a4632; font: inherit; text-align: center; outline: none; }
   .category:active, .item:active { transform: scale(0.97); }
-  .content { min-width: 0; flex: 1; min-height: 0; overflow-y: auto; padding: 1px 1px 10px; }
+  .content { min-width: 0; flex: 1; min-height: 0; overflow-y: auto; padding: 1px 1px 10px; scrollbar-width: none; -ms-overflow-style: none; }
+  .content::-webkit-scrollbar { display: none; }
   .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 9px; overflow: visible; }
   .stat { position: relative; min-height: 69px; padding: 5px 3px; border-radius: 8px; transition: transform 0.12s; }
   .stat-head { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 58px; }
   .stat-label { display: contents; }
   .stat-name { order: 2; max-width: 100%; overflow: hidden; color: #806b52; font-size: 9px; letter-spacing: 0.06em; text-overflow: ellipsis; transform: translateY(3px); white-space: nowrap; }
   .stat-count { order: 1; font-size: 22px; font-weight: 800; line-height: 1; }
-  .stat-detail { display: none; position: absolute; top: calc(100% - 1px); left: 0; right: 0; z-index: 4; max-height: 180px; overflow-y: auto; padding: 5px; border-radius: 0 0 8px 8px; background: linear-gradient(145deg, #d2b183, #b99165); box-shadow: 0 5px 9px rgba(45,30,18,0.2); }
-  .stat-detail { scrollbar-width: none; -ms-overflow-style: none; }
-  .stat-detail::-webkit-scrollbar { display: none; }
-  .stat.open { z-index: 5; }
-  .stat.open .stat-detail { display: grid; gap: 3px; }
-  .stat-detail-item { display: block; width: 100%; overflow: hidden; padding: 6px 5px; border-radius: 4px; background: rgba(255,240,215,0.38); color: #5a4632; font-size: 10px; letter-spacing: 0.06em; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
-  .stat-detail-item.selected, .stat-detail-item:hover { background: rgba(90,70,50,0.18); }
   .annual-modal .editor { width: 340px; max-height: 85vh; overflow-y: auto; }
+  .annual-modal .editor-actions { transform: translateY(5px); }
   .annual-head { display: flex; align-items: center; justify-content: flex-start; gap: 8px; margin-bottom: 10px; }
   .annual-head h3 { margin: 12px 0 0; letter-spacing: 0.12em; }
   .annual-year-control { position: relative; margin-left: 0; }
@@ -104,9 +100,9 @@
   .item.dragging, .item.touch-dragging { opacity: 0.5; }
   .item.insert-before { box-shadow: inset 3px 0 0 #8d785c, 0 2px 4px rgba(0,0,0,0.12); }
   .item.insert-after { box-shadow: inset -3px 0 0 #8d785c, 0 2px 4px rgba(0,0,0,0.12); }
-  .item.need-item { outline: 1px dashed rgba(90,70,50,0.7); outline-offset: 1px; }
-  .item.discarded-item { background: repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(75,50,30,0.1) 2px, rgba(75,50,30,0.1) 3px), linear-gradient(145deg, #a17d58, #79583d); color: #f3e4ca; text-shadow: 0 1px 1px rgba(40,25,12,0.2); }
-  .item.discarded-item .item-time { color: rgba(243,228,202,0.82); }
+  .item.need-item { background-color: #ead8bc; background-blend-mode: multiply; color: #f3e4ca; text-shadow: 0 1px 1px rgba(40,25,12,0.2); }
+  .item.need-item .item-time { color: rgba(243,228,202,0.82); }
+  .item.discarded-item { outline: 1px dashed #b85149; outline-offset: 1px; }
   .item.empty { color: #a18e72; font-weight: 500; border-style: dashed; }
   .modal { position: fixed; inset: 0; display: none; place-items: center; background: rgba(40,25,12,0.32); z-index: 5; }
   .modal.show { display: grid; }
@@ -125,7 +121,7 @@
   .editor-stat-option input { width: 15px; height: 15px; margin: 0; padding: 0; accent-color: #8d785c; }
   .editor-actions { display: flex; gap: 7px; }
   .editor-actions button { flex: 1; padding: 8px; border: 0; border-radius: 6px; color: #5a4632; cursor: pointer; }
-  .category-editor { width: 270px; }
+  .category-editor { width: 270px; padding: 12px; }
   @media (max-width: 430px) { .phone-frame { width: 100%; height: 100vh; border-radius: 0; } }
 </style>
 
@@ -157,7 +153,7 @@
   <div class="editor category-editor wood-surface wood-3d">
     <h3 id="categoryEditorTitle">新增序列</h3>
     <input id="categoryNameInput" maxlength="20" placeholder="输入序列名称">
-    <div class="editor-actions"><button id="categoryCancelButton">取消</button><button id="categoryDeleteButton" hidden>删除</button><button id="categorySaveButton">保存</button></div>
+    <div class="editor-actions"><button id="categoryDeleteButton" hidden>删除</button><button id="categoryCancelButton">取消</button><button id="categorySaveButton">保存</button></div>
   </div>
 </div>
 
@@ -307,19 +303,18 @@ function renderCategories() {
   categoryContainer.textContent = '';
   categoryNames.forEach(function(name) {
     var button = document.createElement('div');
-    button.className = 'category wood-surface wood-3d' + (name === currentCategory ? ' active' : '');
+     button.className = 'category wood-surface wood-3d' + (name === currentCategory ? ' active' : '') + (categoryHasNeed(name) ? ' need-category' : '');
     button.dataset.category = name;
     button.textContent = name;
     button.addEventListener('click', function() {
-      if (categoryLongPressed) { categoryLongPressed = false; return; }
-      currentCategory = name;
-      renderCategories();
-      render();
+       if (categoryLongPressed) { categoryLongPressed = false; return; }
+       currentCategory = name;
+       render();
     });
     button.addEventListener('dblclick', function(event) {
       event.preventDefault();
       event.stopPropagation();
-      startCategoryRename(name, button);
+      openCategoryEditor(name);
     });
     button.addEventListener('pointerdown', function() {
       clearTimeout(categoryPressTimer);
@@ -357,29 +352,6 @@ function renderCategories() {
   });
 }
 function cancelCategoryPress() { clearTimeout(categoryPressTimer); }
-function startCategoryRename(name, button) {
-  if (button.querySelector('.category-name-input')) return;
-  var input = document.createElement('input');
-  input.className = 'category-name-input';
-  input.maxLength = 20;
-  input.value = name;
-  button.textContent = '';
-  button.appendChild(input);
-  input.addEventListener('click', function(event) { event.stopPropagation(); });
-  input.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') input.blur();
-    if (event.key === 'Escape') { input.value = name; input.blur(); }
-  });
-  input.addEventListener('blur', function() {
-    var nextName = input.value.trim() || name;
-    if (nextName !== name && !renameCategory(name, nextName)) nextName = name;
-    if (nextName !== name) saveState();
-    renderCategories();
-    render();
-  }, { once: true });
-  input.focus();
-  input.select();
-}
 function finishCategoryDrag(button) {
   button.classList.remove('touch-dragging');
   document.querySelectorAll('.category').forEach(function(item) { item.classList.remove('insert-before', 'insert-after'); });
@@ -549,6 +521,10 @@ function statIds(key) {
   if (key === 'new') return Array.isArray(newAssignmentsByMonth[currentMonthKey()]) ? newAssignmentsByMonth[currentMonthKey()] : [];
   return statAssignments[key];
 }
+function categoryHasNeed(category) {
+  var needIds = statIds('need');
+  return records.some(function(record) { return record.category === category && needIds.indexOf(record.id) !== -1; });
+}
 function setStatAssignment(key, id, checked) {
   if (key === 'new') {
     var monthKey = currentMonthKey();
@@ -565,6 +541,7 @@ function setStatAssignment(key, id, checked) {
   if (card) card.querySelector('.stat-count').textContent = countFor(key);
 }
 function render() {
+  renderCategories();
   document.getElementById('sectionTitle').textContent = currentCategory;
   var stats = document.getElementById('stats');
   stats.textContent = '';
@@ -572,22 +549,8 @@ function render() {
      var card = document.createElement('div');
      card.className = 'stat wood-surface wood-3d';
      card.dataset.key = stat.key;
-     card.innerHTML = '<div class="stat-head"><div class="stat-label"><span class="stat-name">' + statTitle(stat) + '</span><span class="stat-count">' + countFor(stat.key) + '</span></div></div><div class="stat-detail"></div>';
-      {
-        var detail = card.querySelector('.stat-detail');
-        var detailRecords = stat.key === 'total' ? activeRecords() : visibleRecords().filter(function(record) {
-          return statIds(stat.key).indexOf(record.id) !== -1;
-        });
-        detailRecords.forEach(function(record) {
-          var detailItem = document.createElement('span');
-          detailItem.className = 'stat-detail-item';
-          detailItem.textContent = record.name;
-          detail.appendChild(detailItem);
-        });
-        if (detail.children.length) card.addEventListener('click', function() { card.classList.toggle('open'); });
-        detail.addEventListener('click', function(event) { event.stopPropagation(); });
-      }
-     stats.appendChild(card);
+      card.innerHTML = '<div class="stat-head"><div class="stat-label"><span class="stat-name">' + statTitle(stat) + '</span><span class="stat-count">' + countFor(stat.key) + '</span></div></div>';
+      stats.appendChild(card);
   });
   var items = document.getElementById('items');
   items.textContent = '';
