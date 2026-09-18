@@ -1,0 +1,194 @@
+<h2>个人生活台 — 实木四宫格方案</h2>
+<p class="subtitle">点击任意方块可展开查看子选项</p>
+
+<style>
+  .wood-card {
+    position: relative;
+    border-radius: 12px;
+    padding: 24px 20px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+    min-height: 120px;
+  }
+  .wood-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+  .wood-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+  .wood-light {
+    background: linear-gradient(145deg, #c9a87c, #b8956a, #d4b896);
+    color: #3e2c1a;
+  }
+  .wood-light::before {
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 8px,
+      rgba(139,90,43,0.15) 8px,
+      rgba(139,90,43,0.15) 9px
+    );
+  }
+  .wood-medium {
+    background: linear-gradient(145deg, #a07850, #8b6540, #b8895e);
+    color: #fff;
+  }
+  .wood-medium::before {
+    background: repeating-linear-gradient(
+      85deg,
+      transparent,
+      transparent 10px,
+      rgba(60,30,0,0.12) 10px,
+      rgba(60,30,0,0.12) 11px
+    );
+  }
+  .wood-dark {
+    background: linear-gradient(145deg, #6b4226, #5a3620, #7d4e30);
+    color: #f5e6d3;
+  }
+  .wood-dark::before {
+    background: repeating-linear-gradient(
+      92deg,
+      transparent,
+      transparent 6px,
+      rgba(255,220,180,0.08) 6px,
+      rgba(255,220,180,0.08) 7px
+    );
+  }
+  .wood-warm {
+    background: linear-gradient(145deg, #d4a574, #c49464, #e0b68a);
+    color: #3e2c1a;
+  }
+  .wood-warm::before {
+    background: repeating-linear-gradient(
+      88deg,
+      transparent,
+      transparent 12px,
+      rgba(139,90,43,0.1) 12px,
+      rgba(139,90,43,0.1) 13px
+    );
+  }
+  .wood-card .icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+  .wood-card .title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    position: relative;
+  }
+  .wood-card .subtitle {
+    font-size: 12px;
+    opacity: 0.7;
+    position: relative;
+  }
+  .wood-card .sub-items {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    position: relative;
+  }
+  .wood-card .sub-item {
+    font-size: 13px;
+    padding: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .wood-card .sub-item .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.5;
+  }
+  .wood-card .edit-hint {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .wood-card:hover .edit-hint {
+    opacity: 0.5;
+  }
+</style>
+
+<div style="max-width:360px;margin:0 auto;">
+  <div style="text-align:center;margin-bottom:20px;">
+    <div style="font-size:22px;font-weight:700;color:#3e2c1a;">我的生活台</div>
+    <div style="font-size:12px;color:#999;margin-top:4px;">点击方块展开 · 长按编辑主题</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+
+    <!-- 方块 1：衣食住行 -->
+    <div class="wood-card wood-light" onclick="this.classList.toggle('expanded')">
+      <span class="edit-hint">✏️</span>
+      <div class="icon">🏠</div>
+      <div class="title">衣食住行</div>
+      <div class="subtitle">日常生活管理</div>
+      <div class="sub-items">
+        <div class="sub-item"><span class="dot"></span>衣橱管理</div>
+        <div class="sub-item"><span class="dot"></span>生活消耗</div>
+        <div class="sub-item"><span class="dot"></span>食材库存</div>
+        <div class="sub-item"><span class="dot"></span>出行记录</div>
+      </div>
+    </div>
+
+    <!-- 方块 2：个人成长 -->
+    <div class="wood-card wood-medium" onclick="this.classList.toggle('expanded')">
+      <span class="edit-hint">✏️</span>
+      <div class="icon">🌱</div>
+      <div class="title">个人成长</div>
+      <div class="subtitle">习惯与目标追踪</div>
+      <div class="sub-items">
+        <div class="sub-item"><span class="dot"></span>每日打卡</div>
+        <div class="sub-item"><span class="dot"></span>习惯追踪</div>
+        <div class="sub-item"><span class="dot"></span>目标进度</div>
+        <div class="sub-item"><span class="dot"></span>成长日志</div>
+      </div>
+    </div>
+
+    <!-- 方块 3：未来计划 -->
+    <div class="wood-card wood-warm" onclick="this.classList.toggle('expanded')">
+      <span class="edit-hint">✏️</span>
+      <div class="icon">📅</div>
+      <div class="title">未来计划</div>
+      <div class="subtitle">规划与提醒</div>
+      <div class="sub-items">
+        <div class="sub-item"><span class="dot"></span>节日生日</div>
+        <div class="sub-item"><span class="dot"></span>旅行清单</div>
+        <div class="sub-item"><span class="dot"></span>重要证件</div>
+        <div class="sub-item"><span class="dot"></span>待办事项</div>
+      </div>
+    </div>
+
+    <!-- 方块 4：学习思考 -->
+    <div class="wood-card wood-dark" onclick="this.classList.toggle('expanded')">
+      <span class="edit-hint">✏️</span>
+      <div class="icon">📖</div>
+      <div class="title">学习思考</div>
+      <div class="subtitle">知识与记录</div>
+      <div class="sub-items">
+        <div class="sub-item"><span class="dot"></span>书影音 (豆瓣)</div>
+        <div class="sub-item"><span class="dot"></span>收藏夹</div>
+        <div class="sub-item"><span class="dot"></span>学习笔记</div>
+        <div class="sub-item"><span class="dot"></span>灵感碎片</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:16px;padding:12px;background:#f9f5ef;border-radius:8px;text-align:center;">
+    <div style="font-size:11px;color:#999;">💡 提示：长按方块可编辑主题名称，点击展开/收起子选项</div>
+  </div>
+</div>

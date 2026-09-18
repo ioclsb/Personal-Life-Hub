@@ -1,0 +1,310 @@
+<h2>个人生活台 — 实木四宫格 v2</h2>
+<p class="subtitle">更真实的木质纹理与立体感</p>
+
+<style>
+  .hub-container {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #f5f0e8;
+  }
+  .hub-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: #4a3728;
+    margin-bottom: 4px;
+    padding: 20px 20px 0;
+  }
+  .hub-subtitle {
+    text-align: center;
+    font-size: 11px;
+    color: #a08b76;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+    padding: 0 20px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  /* 实木卡片基础 */
+  .wood-block {
+    position: relative;
+    border-radius: 0;
+    padding: 20px 18px;
+    min-height: 140px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border: 0.5px solid rgba(0,0,0,0.06);
+    /* 立体感：多层阴影 */
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.25),
+      inset 0 -1px 0 rgba(0,0,0,0.1);
+  }
+  .wood-block:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 4px 12px rgba(0,0,0,0.12),
+      inset 0 1px 0 rgba(255,255,255,0.3),
+      inset 0 -1px 0 rgba(0,0,0,0.12);
+  }
+  .wood-block:active {
+    transform: translateY(-1px) scale(1.005);
+  }
+
+  /* 木纹纹理层 — 用多层渐变模拟年轮 */
+  .wood-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* 高光层 — 模拟光照 */
+  .wood-block::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(
+      180deg,
+      rgba(255,255,255,0.18) 0%,
+      rgba(255,255,255,0.05) 60%,
+      transparent 100%
+    );
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* ——— 橡木 (浅色) ——— */
+  .wood-oak {
+    background:
+      /* 年轮纹理 */
+      repeating-linear-gradient(
+        2deg,
+        transparent,
+        transparent 3px,
+        rgba(160,120,70,0.08) 3px,
+        rgba(160,120,70,0.08) 4px
+      ),
+      repeating-linear-gradient(
+        178deg,
+        transparent,
+        transparent 7px,
+        rgba(120,80,40,0.06) 7px,
+        rgba(120,80,40,0.06) 8px
+      ),
+      /* 木纹波动 */
+      radial-gradient(ellipse 120% 60% at 30% 20%, rgba(210,170,120,0.3), transparent),
+      radial-gradient(ellipse 100% 50% at 70% 80%, rgba(180,140,90,0.2), transparent),
+      /* 底色 */
+      linear-gradient(160deg, #c9a87c 0%, #b8956a 40%, #a88558 70%, #c4a070 100%);
+    color: #3e2c1a;
+  }
+
+  /* ——— 胡桃木 (深色) ——— */
+  .wood-walnut {
+    background:
+      repeating-linear-gradient(
+        -1deg,
+        transparent,
+        transparent 4px,
+        rgba(80,45,20,0.1) 4px,
+        rgba(80,45,20,0.1) 5px
+      ),
+      repeating-linear-gradient(
+        179deg,
+        transparent,
+        transparent 9px,
+        rgba(60,30,10,0.07) 9px,
+        rgba(60,30,10,0.07) 10px
+      ),
+      radial-gradient(ellipse 130% 70% at 25% 30%, rgba(100,65,35,0.25), transparent),
+      radial-gradient(ellipse 90% 40% at 80% 70%, rgba(70,40,20,0.2), transparent),
+      linear-gradient(155deg, #6b4226 0%, #5a3620 35%, #4d2e1a 65%, #6b4226 100%);
+    color: #f0e0cc;
+  }
+
+  /* ——— 樱桃木 (暖红棕) ——— */
+  .wood-cherry {
+    background:
+      repeating-linear-gradient(
+        1deg,
+        transparent,
+        transparent 5px,
+        rgba(140,50,30,0.07) 5px,
+        rgba(140,50,30,0.07) 6px
+      ),
+      repeating-linear-gradient(
+        177deg,
+        transparent,
+        transparent 11px,
+        rgba(120,40,20,0.05) 11px,
+        rgba(120,40,20,0.05) 12px
+      ),
+      radial-gradient(ellipse 110% 55% at 40% 25%, rgba(180,90,50,0.2), transparent),
+      radial-gradient(ellipse 95% 45% at 65% 75%, rgba(150,70,40,0.15), transparent),
+      linear-gradient(158deg, #a0522d 0%, #8b4130 30%, #7a3828 60%, #964830 100%);
+    color: #fce8d8;
+  }
+
+  /* ——— 柚木 (金棕) ——— */
+  .wood-teak {
+    background:
+      repeating-linear-gradient(
+        -2deg,
+        transparent,
+        transparent 6px,
+        rgba(170,120,50,0.06) 6px,
+        rgba(170,120,50,0.06) 7px
+      ),
+      repeating-linear-gradient(
+        176deg,
+        transparent,
+        transparent 13px,
+        rgba(140,100,40,0.05) 13px,
+        rgba(140,100,40,0.05) 14px
+      ),
+      radial-gradient(ellipse 120% 65% at 35% 35%, rgba(200,155,80,0.25), transparent),
+      radial-gradient(ellipse 85% 50% at 75% 65%, rgba(180,130,60,0.15), transparent),
+      linear-gradient(162deg, #c49a4a 0%, #b08a3c 35%, #9a7832 65%, #c49a4a 100%);
+    color: #3e2c1a;
+  }
+
+  /* 卡片内容 */
+  .block-icon {
+    font-size: 30px;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 3;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+  }
+  .block-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 3px;
+    position: relative;
+    z-index: 3;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+  .block-desc {
+    font-size: 11px;
+    opacity: 0.65;
+    position: relative;
+    z-index: 3;
+  }
+  .block-sub {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    position: relative;
+    z-index: 3;
+  }
+  .block-sub-item {
+    font-size: 12.5px;
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .block-sub-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+  .edit-badge {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 4;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));
+  }
+  .wood-block:hover .edit-badge {
+    opacity: 0.6;
+  }
+  .footer-hint {
+    padding: 10px;
+    background: rgba(0,0,0,0.03);
+    text-align: center;
+    font-size: 10.5px;
+    color: #a08b76;
+  }
+</style>
+
+<div class="hub-container">
+  <div class="hub-title">我的生活台</div>
+  <div class="hub-subtitle">PERSONAL LIFE HUB</div>
+
+  <div class="grid">
+    <!-- 衣食住行 -->
+    <div class="wood-block wood-oak">
+      <span class="edit-badge">✏️</span>
+      <div class="block-icon">🏠</div>
+      <div class="block-title">衣食住行</div>
+      <div class="block-desc">日常生活管理</div>
+      <div class="block-sub">
+        <div class="block-sub-item"><span class="block-sub-dot"></span>衣橱管理</div>
+        <div class="block-sub-item"><span class="block-sub-dot"></span>生活消耗</div>
+        <div class="block-sub-item"><span class="block-sub-dot"></span>食材库存</div>
+        <div class="block-sub-item"><span class="block-sub-dot"></span>出行清单</div>
+      </div>
+    </div>
+
+    <!-- 个人成长 -->
+    <div class="wood-block wood-oak">
+      <span class="edit-badge">✏️</span>
+      <div class="block-icon">🌱</div>
+      <div class="block-title">个人成长</div>
+      <div class="block-desc">习惯与目标追踪</div>
+      <div class="block-sub">
+        <div class="block-sub-item"><span class="block-sub-dot"></span>每日打卡</div>
+        <div class="block-sub-item"><span class="block-sub-dot"></span>习惯追踪</div>
+        <div class="block-sub-item"><span class="block-sub-dot"></span>目标进度</div>
+        <div class="block-sub-item"><span class="block-sub-dot"></span>成长日志</div>
+      </div>
+    </div>
+
+    <!-- 未来计划 -->
+    <div class="wood-block wood-oak">
+      <span class="edit-badge">✏️</span>
+      <div class="block-icon">📅</div>
+      <div class="block-title">未来计划</div>
+      <div class="block-desc">规划与提醒</div>
+      <div class="block-sub">
+        <div class="block-sub-item"><span class="block-sub-dot"></span>节日生日</div>
+        <div class="block-sub-item"><span class="block-sub-dot"></span>旅行清单</div>
+        <div class="block-sub-item"><span class="block-sub-dot"></span>重要证件</div>
+        <div class="block-sub-item"><span class="block-sub-dot"></span>待办事项</div>
+      </div>
+    </div>
+
+    <!-- 学习思考 -->
+    <div class="wood-block wood-oak">
+      <span class="edit-badge">✏️</span>
+      <div class="block-icon">📖</div>
+      <div class="block-title">学习思考</div>
+      <div class="block-desc">知识与记录</div>
+      <div class="block-sub">
+        <div class="block-sub-item"><span class="block-sub-dot"></span>书影音 · 豆瓣</div>
+        <div class="block-sub-item"><span class="block-sub-dot"></span>收藏夹</div>
+        <div class="block-sub-item"><span class="block-sub-dot"></span>学习笔记</div>
+        <div class="block-sub-item"><span class="block-sub-dot"></span>灵感碎片</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-hint">长按编辑主题 · 点击展开子选项</div>
+</div>

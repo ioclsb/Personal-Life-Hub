@@ -1,0 +1,529 @@
+<h2>Things · Life · Action · Mind</h2>
+<p class="subtitle">长按母主题或子主题可编辑名称</p>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #c0af89; }
+
+  .phone-frame {
+    width: 375px;
+    height: 750px;
+    margin: 0 auto;
+    background: #2c2c2c;
+    border-radius: 24px;
+    padding: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+  }
+  .phone-screen {
+    background: #c0af89 !important;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .wood-surface {
+    background:
+      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(180,150,110,0.12) 2px, rgba(180,150,110,0.12) 3px),
+      repeating-linear-gradient(88deg, transparent, transparent 5px, rgba(160,130,90,0.08) 5px, rgba(160,130,90,0.08) 6px),
+      radial-gradient(ellipse 80% 100% at 20% 50%, rgba(210,185,145,0.25), transparent),
+      radial-gradient(ellipse 60% 100% at 75% 50%, rgba(195,165,120,0.2), transparent),
+      radial-gradient(ellipse 90% 80% at 50% 30%, rgba(220,195,155,0.15), transparent),
+      linear-gradient(180deg, #ddc9a5 0%, #d4bc98 30%, #ccb08a 60%, #d8c4a0 100%);
+  }
+
+  .wood-3d {
+    border: 1px solid rgba(0,0,0,0.08);
+    border-top-color: rgba(255,255,255,0.35);
+    border-left-color: rgba(255,255,255,0.25);
+    border-bottom-color: rgba(0,0,0,0.12);
+    border-right-color: rgba(0,0,0,0.06);
+    box-shadow:
+      0 2px 3px rgba(0,0,0,0.1),
+      0 4px 6px rgba(0,0,0,0.06),
+      inset 0 1px 0 rgba(255,255,255,0.45),
+      inset 0 -1px 2px rgba(0,0,0,0.08),
+      inset 1px 0 0 rgba(255,255,255,0.2),
+      inset -1px 0 0 rgba(0,0,0,0.04);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* 母主题 */
+  .main-block {
+    border-radius: 10px;
+    padding: 20px 14px 16px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    flex: 1;
+    transition: all 0.25s ease;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .main-block:active { transform: scale(0.97); }
+  .block-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15));
+  }
+  .block-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: #5a4632;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+  }
+  .block-hint {
+    font-size: 10px;
+    color: #9a8a70;
+    margin-top: 2px;
+  }
+
+  /* 展开时母主题缩小 */
+  .cell.expanded .main-block {
+    flex: 0 0 auto;
+    padding: 12px 14px 10px;
+    border-radius: 10px 10px 0 0;
+  }
+  .cell.expanded .block-icon { font-size: 18px; margin-bottom: 3px; }
+  .cell.expanded .block-label { font-size: 14px; }
+  .cell.expanded .block-hint { display: none; }
+
+  /* 子主题容器 */
+  .sub-list {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 6px 8px 8px;
+    border-radius: 0 0 10px 10px;
+  }
+  .sub-list::-webkit-scrollbar { display: none; }
+  .cell.expanded .sub-list { display: flex; }
+
+  .sub-bar {
+    border-radius: 8px;
+    padding: 10px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .sub-bar:active { transform: scale(0.96); }
+  .sub-bar.dragging { opacity: 0.55; transform: scale(1.02); }
+  .sub-bar.drop-target { outline: 2px dashed rgba(90,70,50,0.35); }
+  .bar-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #5a4632;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+  }
+  .bar-arrow { font-size: 11px; color: #a09080; }
+
+  /* 长按编辑输入框 */
+  .rename-input {
+    font-size: inherit;
+    font-weight: inherit;
+    color: #5a4632;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 4px;
+    padding: 2px 6px;
+    outline: none;
+    width: 100%;
+    font-family: inherit;
+  }
+  .rename-input:focus {
+    background: rgba(255,255,255,0.7);
+    border-color: rgba(0,0,0,0.25);
+  }
+
+  /* 长按提示 */
+  .editing-hint {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(60,40,20,0.85);
+    color: #f0e0cc;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 12px;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .editing-hint.show { opacity: 1; }
+</style>
+
+<div class="editing-hint" id="hint">长按可重命名</div>
+
+<div class="phone-frame">
+  <div class="phone-screen">
+
+    <div class="row">
+      <div class="cell" id="cell1">
+        <div class="main-block wood-surface wood-3d" onclick="handleMainClick(event,'cell1')" ondblclick="renameOnDoubleClick(event,'label1')">
+          <div class="block-icon">📦</div>
+          <div class="block-label" id="label1">Things</div>
+          <div class="block-hint">个人物品</div>
+        </div>
+        <div class="sub-list wood-surface wood-3d">
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub1a')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub1a')" ontouchend="cancelTimer()" onclick="openPersonalTemplate(event)"><span class="bar-label" id="sub1a">个人物品</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub1b')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub1b')" ontouchend="cancelTimer()" onclick="openKitchenTemplate(event)"><span class="bar-label" id="sub1b">食材厨具</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub1c')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub1c')" ontouchend="cancelTimer()" onclick="openBathTemplate(event)"><span class="bar-label" id="sub1c">洗浴清洁</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub1d')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub1d')" ontouchend="cancelTimer()" onclick="openWardrobeTemplate(event)"><span class="bar-label" id="sub1d">衣橱管理</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub1e')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub1e')" ontouchend="cancelTimer()"><span class="bar-label" id="sub1e">其他</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub1f')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub1f')" ontouchend="cancelTimer()"><span class="bar-label" id="sub1f"></span><span class="bar-arrow">›</span></div>
+        </div>
+      </div>
+      <div class="cell" id="cell2">
+        <div class="main-block wood-surface wood-3d" onclick="handleMainClick(event,'cell2')" ondblclick="renameOnDoubleClick(event,'label2')">
+          <div class="block-icon">🧭</div>
+          <div class="block-label" id="label2">Life</div>
+          <div class="block-hint">人生经历</div>
+        </div>
+        <div class="sub-list wood-surface wood-3d">
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub2a')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub2a')" ontouchend="cancelTimer()" onclick="openLifeTimeline(event)"><span class="bar-label" id="sub2a">人生进度</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub2b')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub2b')" ontouchend="cancelTimer()"><span class="bar-label" id="sub2b">成长清单</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub2c')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub2c')" ontouchend="cancelTimer()"><span class="bar-label" id="sub2c">节日生日</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub2d')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub2d')" ontouchend="cancelTimer()"><span class="bar-label" id="sub2d">未来规划</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub2e')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub2e')" ontouchend="cancelTimer()"><span class="bar-label" id="sub2e">旅行标记</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub2f')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub2f')" ontouchend="cancelTimer()"><span class="bar-label" id="sub2f">重要证件</span><span class="bar-arrow">›</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="cell" id="cell3">
+        <div class="main-block wood-surface wood-3d" onclick="handleMainClick(event,'cell3')" ondblclick="renameOnDoubleClick(event,'label3')">
+          <div class="block-icon">🚴‍♀️</div>
+          <div class="block-label" id="label3">Action</div>
+          <div class="block-hint">每日执行</div>
+        </div>
+        <div class="sub-list wood-surface wood-3d">
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub3a')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub3a')" ontouchend="cancelTimer()"><span class="bar-label" id="sub3a">每日执行</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub3b')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub3b')" ontouchend="cancelTimer()"><span class="bar-label" id="sub3b">习惯追踪</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub3c')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub3c')" ontouchend="cancelTimer()"><span class="bar-label" id="sub3c">代办事项</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub3d')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub3d')" ontouchend="cancelTimer()"><span class="bar-label" id="sub3d">其他</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub3e')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub3e')" ontouchend="cancelTimer()"><span class="bar-label" id="sub3e"></span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub3f')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub3f')" ontouchend="cancelTimer()"><span class="bar-label" id="sub3f"></span><span class="bar-arrow">›</span></div>
+        </div>
+      </div>
+      <div class="cell" id="cell4">
+        <div class="main-block wood-surface wood-3d" onclick="handleMainClick(event,'cell4')" ondblclick="renameOnDoubleClick(event,'label4')">
+          <div class="block-icon">📖</div>
+          <div class="block-label" id="label4">Mind</div>
+          <div class="block-hint">精神滋养</div>
+        </div>
+        <div class="sub-list wood-surface wood-3d">
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub4a')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub4a')" ontouchend="cancelTimer()"><span class="bar-label" id="sub4a">书影音</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub4b')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub4b')" ontouchend="cancelTimer()"><span class="bar-label" id="sub4b">书籍目录</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub4c')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub4c')" ontouchend="cancelTimer()"><span class="bar-label" id="sub4c">指引链接</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub4d')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub4d')" ontouchend="cancelTimer()"><span class="bar-label" id="sub4d">读书笔记</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub4e')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub4e')" ontouchend="cancelTimer()"><span class="bar-label" id="sub4e">灵感碎片</span><span class="bar-arrow">›</span></div>
+           <div class="sub-bar wood-surface wood-3d" onmousedown="startTimerSub(event,'sub4f')" onmouseup="cancelTimer()" onmouseleave="cancelTimer()" ontouchstart="startTimerSub(event,'sub4f')" ontouchend="cancelTimer()"><span class="bar-label" id="sub4f">其他</span><span class="bar-arrow">›</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var timer = null;
+var isEditing = false;
+var activeSub = null;
+var startPoint = null;
+var dragReady = false;
+var isDragging = false;
+var justDragged = false;
+var audioContext = null;
+var storageKey = 'personal-life-hub-state-v2';
+
+function toggleCell(id) {
+  if (isEditing) return;
+  document.getElementById(id).classList.toggle('expanded');
+}
+
+var clickTimer = null;
+
+function handleMainClick(e, id) {
+  if (isEditing) return;
+  if (clickTimer) clearTimeout(clickTimer);
+  clickTimer = setTimeout(function() {
+    playWoodClick();
+    toggleCell(id);
+    clickTimer = null;
+  }, 80);
+}
+
+function playWoodClick() {
+  var AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return;
+  if (!audioContext) audioContext = new AudioContext();
+  if (audioContext.state === 'suspended') audioContext.resume();
+
+  var now = audioContext.currentTime;
+  var gain = audioContext.createGain();
+  var tone = audioContext.createOscillator();
+  var body = audioContext.createOscillator();
+
+  tone.type = 'triangle';
+  tone.frequency.setValueAtTime(190, now);
+  tone.frequency.exponentialRampToValueAtTime(90, now + 0.09);
+  body.type = 'sine';
+  body.frequency.setValueAtTime(420, now);
+  body.frequency.exponentialRampToValueAtTime(150, now + 0.07);
+
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.14, now + 0.004);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+
+  tone.connect(gain);
+  body.connect(gain);
+  gain.connect(audioContext.destination);
+  tone.start(now);
+  body.start(now);
+  tone.stop(now + 0.13);
+  body.stop(now + 0.13);
+}
+
+function openKitchenTemplate(e) {
+  if (justDragged || isEditing) return;
+  if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; }
+  navigateWithWoodClick('wood-kitchen-template.html?return=sub1b');
+}
+
+function openBathTemplate(e) {
+  if (justDragged || isEditing) return;
+  if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; }
+  navigateWithWoodClick('wood-kitchen-template.html?type=bath&return=sub1c');
+}
+
+function openWardrobeTemplate(e) {
+  if (justDragged || isEditing) return;
+  if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; }
+  navigateWithWoodClick('wood-kitchen-template.html?type=wardrobe&return=sub1d');
+}
+
+function openPersonalTemplate(e) {
+  if (justDragged || isEditing) return;
+  if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; }
+  navigateWithWoodClick('wood-kitchen-template.html?type=personal&return=sub1a');
+}
+
+function openLifeTimeline(e) {
+  if (justDragged || isEditing) return;
+  if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; }
+  navigateWithWoodClick('wood-life-timeline.html?return=sub2a');
+}
+
+function navigateWithWoodClick(url) {
+  playWoodClick();
+  setTimeout(function() { window.location.href = url; }, 140);
+}
+
+function renameOnDoubleClick(e, labelId) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; }
+  cancelTimer();
+  startRename(labelId);
+}
+
+function startTimerSub(e, labelId) {
+  if (isEditing) return;
+  e.stopPropagation();
+  cancelTimer();
+  activeSub = e.currentTarget;
+  startPoint = getPoint(e);
+  dragReady = false;
+  isDragging = false;
+  timer = setTimeout(function() {
+    dragReady = true;
+  }, 500);
+}
+
+function cancelTimer() {
+  if (timer) { clearTimeout(timer); timer = null; }
+  if (!isDragging) {
+    activeSub = null;
+    startPoint = null;
+    dragReady = false;
+  }
+}
+
+function getPoint(e) {
+  var source = e.touches && e.touches.length ? e.touches[0] : e;
+  return { x: source.clientX, y: source.clientY };
+}
+
+function moveSub(e) {
+  if (!activeSub || isEditing || !startPoint) return;
+  var point = getPoint(e);
+  var distance = Math.hypot(point.x - startPoint.x, point.y - startPoint.y);
+  if (!isDragging) {
+    if (!dragReady || distance < 8) return;
+    isDragging = true;
+    if (timer) { clearTimeout(timer); timer = null; }
+    activeSub.classList.add('dragging');
+  }
+  e.preventDefault();
+  var target = document.elementFromPoint(point.x, point.y);
+  var targetBar = target && target.closest ? target.closest('.sub-bar') : null;
+  if (!targetBar || targetBar === activeSub || targetBar.parentNode !== activeSub.parentNode) return;
+  targetBar.classList.add('drop-target');
+  var rect = targetBar.getBoundingClientRect();
+  if (point.y < rect.top + rect.height / 2) {
+    targetBar.parentNode.insertBefore(activeSub, targetBar);
+  } else {
+    targetBar.parentNode.insertBefore(activeSub, targetBar.nextSibling);
+  }
+  document.querySelectorAll('.sub-bar.drop-target').forEach(function(bar) {
+    if (bar !== targetBar) bar.classList.remove('drop-target');
+  });
+}
+
+function finishSubDrag() {
+  if (!activeSub) return;
+  var changed = isDragging;
+  if (isDragging) {
+    justDragged = true;
+    setTimeout(function() { justDragged = false; }, 150);
+  }
+  activeSub.classList.remove('dragging');
+  document.querySelectorAll('.sub-bar.drop-target').forEach(function(bar) {
+    bar.classList.remove('drop-target');
+  });
+  isDragging = false;
+  activeSub = null;
+  startPoint = null;
+  dragReady = false;
+  if (changed) saveState();
+}
+
+document.addEventListener('mousemove', moveSub);
+document.addEventListener('touchmove', moveSub, { passive: false });
+document.addEventListener('mouseup', finishSubDrag);
+document.addEventListener('touchend', finishSubDrag);
+document.addEventListener('touchcancel', finishSubDrag);
+document.querySelectorAll('.sub-bar').forEach(function(bar) {
+  bar.addEventListener('click', function() {
+    if (!bar.hasAttribute('onclick') && !justDragged && !isEditing) playWoodClick();
+  });
+  bar.addEventListener('dblclick', function(e) {
+    var label = bar.querySelector('.bar-label');
+    renameOnDoubleClick(e, label.id);
+  });
+});
+
+function saveState() {
+  var state = { labels: {}, orders: {} };
+  document.querySelectorAll('.block-label, .bar-label').forEach(function(label) {
+    state.labels[label.id] = label.textContent;
+  });
+  document.querySelectorAll('.sub-list').forEach(function(list) {
+    state.orders[list.parentElement.id] = Array.from(list.querySelectorAll('.bar-label')).map(function(label) {
+      return label.id;
+    });
+  });
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(state));
+  } catch (error) {
+    // 当前浏览器不支持本地存储时，仍保留页面内的修改。
+  }
+}
+
+function loadState() {
+  var state;
+  try {
+    state = JSON.parse(localStorage.getItem(storageKey) || 'null');
+  } catch (error) {
+    state = null;
+  }
+  if (!state) return;
+
+  Object.keys(state.labels || {}).forEach(function(id) {
+    var label = document.getElementById(id);
+    if (label) label.textContent = state.labels[id];
+  });
+  Object.keys(state.orders || {}).forEach(function(cellId) {
+    var list = document.querySelector('#' + cellId + ' .sub-list');
+    if (!list) return;
+    state.orders[cellId].forEach(function(labelId) {
+      var bar = document.getElementById(labelId);
+      if (bar) list.appendChild(bar.parentElement);
+    });
+  });
+}
+
+loadState();
+openReturnSub();
+
+function openReturnSub() {
+  var subId = window.location.hash.slice(1);
+  if (!subId) return;
+  history.replaceState(null, '', window.location.pathname + window.location.search);
+  var sub = document.getElementById(subId);
+  if (!sub) return;
+  var cell = sub.closest('.cell');
+  if (cell) cell.classList.add('expanded');
+  window.scrollTo(0, 0);
+}
+
+function startRename(labelId) {
+  isEditing = true;
+  var el = document.getElementById(labelId);
+  var oldText = el.textContent;
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'rename-input';
+  input.value = oldText;
+  input.style.fontSize = getComputedStyle(el).fontSize;
+  input.style.fontWeight = getComputedStyle(el).fontWeight;
+  el.textContent = '';
+  el.appendChild(input);
+  input.focus();
+  input.select();
+
+  var hint = document.getElementById('hint');
+  hint.classList.add('show');
+
+  function finish() {
+    var val = input.value.trim();
+    el.textContent = val || oldText;
+    isEditing = false;
+    hint.classList.remove('show');
+    saveState();
+  }
+
+  input.addEventListener('blur', finish);
+  input.addEventListener('keydown', function(ev) {
+    if (ev.key === 'Enter') input.blur();
+  });
+}
+</script>

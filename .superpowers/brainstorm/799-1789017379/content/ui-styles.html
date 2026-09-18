@@ -1,0 +1,156 @@
+<h2>个人生活台 — 四种界面风格对比</h2>
+<p class="subtitle">选择你最顺眼的风格，点击选中</p>
+
+<div class="cards">
+
+  <!-- 风格 A：极简克制 -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#fafafa;padding:20px;font-family:-apple-system,sans-serif;">
+      <div style="max-width:280px;margin:0 auto;">
+        <div style="font-size:22px;font-weight:600;margin-bottom:16px;">我的生活台</div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+          <div style="flex:1;background:#fff;border:1px solid #eee;border-radius:8px;padding:12px;">
+            <div style="font-size:11px;color:#999;">打卡</div>
+            <div style="font-size:20px;font-weight:600;margin-top:4px;">连续 12 天</div>
+          </div>
+          <div style="flex:1;background:#fff;border:1px solid #eee;border-radius:8px;padding:12px;">
+            <div style="font-size:11px;color:#999;">本月支出</div>
+            <div style="font-size:20px;font-weight:600;margin-top:4px;">¥3,280</div>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid #eee;border-radius:8px;padding:12px;">
+          <div style="font-size:12px;color:#666;margin-bottom:8px;">最近记录</div>
+          <div style="font-size:13px;padding:6px 0;border-bottom:1px solid #f5f5f5;">读完《思考，快与慢》</div>
+          <div style="font-size:13px;padding:6px 0;border-bottom:1px solid #f5f5f5;">购入白色衬衫 ×1</div>
+          <div style="font-size:13px;padding:6px 0;">跑步 5km</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. 极简克制</h3>
+      <p>类似 Notion / Flomo。大量留白，黑白灰为主，信息密度低，专注内容本身。</p>
+    </div>
+  </div>
+
+  <!-- 风格 B：卡片宫格 -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f0f2f5;padding:20px;font-family:-apple-system,sans-serif;">
+      <div style="max-width:280px;margin:0 auto;">
+        <div style="font-size:18px;font-weight:600;margin-bottom:12px;">个人生活台</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div style="background:linear-gradient(135deg,#667eea,#764ba2);border-radius:12px;padding:14px;color:#fff;">
+            <div style="font-size:20px;">📋</div>
+            <div style="font-size:13px;font-weight:600;margin-top:6px;">每日打卡</div>
+            <div style="font-size:11px;opacity:0.8;">连续12天</div>
+          </div>
+          <div style="background:linear-gradient(135deg,#f093fb,#f5576c);border-radius:12px;padding:14px;color:#fff;">
+            <div style="font-size:20px;">💰</div>
+            <div style="font-size:13px;font-weight:600;margin-top:6px;">记账</div>
+            <div style="font-size:11px;opacity:0.8;">本月¥3,280</div>
+          </div>
+          <div style="background:linear-gradient(135deg,#4facfe,#00f2fe);border-radius:12px;padding:14px;color:#fff;">
+            <div style="font-size:20px;">📚</div>
+            <div style="font-size:13px;font-weight:600;margin-top:6px;">书影音</div>
+            <div style="font-size:11px;opacity:0.8;">在读 3 本</div>
+          </div>
+          <div style="background:linear-gradient(135deg,#43e97b,#38f9d7);border-radius:12px;padding:14px;color:#fff;">
+            <div style="font-size:20px;">👔</div>
+            <div style="font-size:13px;font-weight:600;margin-top:6px;">衣橱</div>
+            <div style="font-size:11px;opacity:0.8;">42 件衣物</div>
+          </div>
+          <div style="background:linear-gradient(135deg,#fa709a,#fee140);border-radius:12px;padding:14px;color:#fff;">
+            <div style="font-size:20px;">🎂</div>
+            <div style="font-size:13px;font-weight:600;margin-top:6px;">节日生日</div>
+            <div style="font-size:11px;opacity:0.8;">下周 2 个</div>
+          </div>
+          <div style="background:linear-gradient(135deg,#a18cd1,#fbc2eb);border-radius:12px;padding:14px;color:#fff;">
+            <div style="font-size:20px;">📦</div>
+            <div style="font-size:13px;font-weight:600;margin-top:6px;">物品消耗</div>
+            <div style="font-size:11px;opacity:0.8;">2 件待补</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. 卡片宫格</h3>
+      <p>类似 iOS 主屏幕 / 支付宝。每个维度一个彩色卡片，一目了然，点击进入详情。</p>
+    </div>
+  </div>
+
+  <!-- 风格 C：清单列表 -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#fff;padding:20px;font-family:-apple-system,sans-serif;">
+      <div style="max-width:280px;margin:0 auto;">
+        <div style="font-size:18px;font-weight:600;margin-bottom:12px;">生活台</div>
+        <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">今日概览</div>
+        <div style="display:flex;align-items:center;padding:10px 0;border-bottom:1px solid #f0f0f0;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#4caf50;margin-right:10px;"></div>
+          <div style="flex:1;"><div style="font-size:13px;font-weight:500;">每日打卡</div><div style="font-size:11px;color:#999;">已完成 · 连续12天</div></div>
+          <div style="font-size:12px;color:#999;">→</div>
+        </div>
+        <div style="display:flex;align-items:center;padding:10px 0;border-bottom:1px solid #f0f0f0;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#2196f3;margin-right:10px;"></div>
+          <div style="flex:1;"><div style="font-size:13px;font-weight:500;">记账</div><div style="font-size:11px;color:#999;">本月支出 ¥3,280</div></div>
+          <div style="font-size:12px;color:#999;">→</div>
+        </div>
+        <div style="display:flex;align-items:center;padding:10px 0;border-bottom:1px solid #f0f0f0;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#ff9800;margin-right:10px;"></div>
+          <div style="flex:1;"><div style="font-size:13px;font-weight:500;">书影音</div><div style="font-size:11px;color:#999;">在读3本 · 在看2部</div></div>
+          <div style="font-size:12px;color:#999;">→</div>
+        </div>
+        <div style="display:flex;align-items:center;padding:10px 0;border-bottom:1px solid #f0f0f0;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#9c27b0;margin-right:10px;"></div>
+          <div style="flex:1;"><div style="font-size:13px;font-weight:500;">衣橱</div><div style="font-size:11px;color:#999;">42件衣物</div></div>
+          <div style="font-size:12px;color:#999;">→</div>
+        </div>
+        <div style="display:flex;align-items:center;padding:10px 0;border-bottom:1px solid #f0f0f0;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#e91e63;margin-right:10px;"></div>
+          <div style="flex:1;"><div style="font-size:13px;font-weight:500;">节日生日</div><div style="font-size:11px;color:#999;">下周2个提醒</div></div>
+          <div style="font-size:12px;color:#999;">→</div>
+        </div>
+        <div style="display:flex;align-items:center;padding:10px 0;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#607d8b;margin-right:10px;"></div>
+          <div style="flex:1;"><div style="font-size:13px;font-weight:500;">物品消耗</div><div style="font-size:11px;color:#999;">2件待补货</div></div>
+          <div style="font-size:12px;color:#999;">→</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. 清单列表</h3>
+      <p>类似待办事项 / 备忘录。文字为主，纵向滚动，紧凑高效，信息密度最高。</p>
+    </div>
+  </div>
+
+  <!-- 风格 D：杂志风 -->
+  <div class="card" data-choice="d" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#1a1a2e;padding:20px;font-family:-apple-system,sans-serif;color:#fff;">
+      <div style="max-width:280px;margin:0 auto;">
+        <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#e94560;margin-bottom:8px;">Personal Life Hub</div>
+        <div style="font-size:26px;font-weight:700;line-height:1.2;margin-bottom:16px;">我的<br>生活台</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:12px;">
+            <div style="font-size:10px;color:#e94560;">打卡</div>
+            <div style="font-size:18px;font-weight:700;margin-top:4px;">12</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);">连续天数</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:12px;">
+            <div style="font-size:10px;color:#e94560;">支出</div>
+            <div style="font-size:18px;font-weight:700;margin-top:4px;">¥3.2k</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);">本月</div>
+          </div>
+        </div>
+        <div style="margin-top:8px;background:rgba(255,255,255,0.05);border-radius:8px;padding:12px;">
+          <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:8px;">最近动态</div>
+          <div style="font-size:12px;padding:4px 0;">📖 读完《思考，快与慢》</div>
+          <div style="font-size:12px;padding:4px 0;">👔 新增白色衬衫</div>
+          <div style="font-size:12px;padding:4px 0;">🏃 跑步 5km</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>D. 杂志风</h3>
+      <p>类似 Flipboard。有排版设计感，深色/亮色主题，强调视觉层次和呼吸感。</p>
+    </div>
+  </div>
+
+</div>
