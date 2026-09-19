@@ -48,6 +48,8 @@ assert.match(source, /sessionStorage\.setItem\(storageKey/, '保存记录时应�
 assert.match(renameSource, /sessionStorage\.setItem\(storageKey/, '保存序列时应同步写入会话存储');
 assert.match(renameSource, /type=custom&return=/, '新增子主题应进入独立自定义界面');
 assert.match(source, /pageType === 'custom'[\s\S]{0,500}personal-life-hub-custom-/, '自定义子主题应使用独立存储空间');
+assert.match(source, /function getSavedParentTitle[\s\S]{0,420}personal-life-hub-state-v2[\s\S]{0,180}labels/, '项目标题应读取母页面最新名称');
+assert.match(source, /var savedReturnTitle = getSavedParentTitle\(returnSub\)[\s\S]{0,260}var pageTitle = pageConfig\.title/, '固定模板项目标题也应同步子主题名称');
 assert.doesNotMatch(renameSource, /if \(!value\) return;/, '新增子主题名称为空时也应允许确认保存');
 assert.match(renameSource, /subEditingLabel\.closest\('\.sub-bar'\)\.hidden = false/, '空白子主题保存后应保留项目入口');
 assert.match(renameSource, /state\.visible/, '子主题入口可见状态应持久化');

@@ -247,6 +247,19 @@ var queryParams = new URLSearchParams(window.location.search);
 var pageType = queryParams.get('type') || 'kitchen';
 var customSubId = queryParams.get('return') || 'custom';
 var customTitle = queryParams.get('title') || '自定义主题';
+function getSavedParentTitle(subId) {
+  try {
+    var parentState = JSON.parse(sessionStorage.getItem('personal-life-hub-state-v2') || localStorage.getItem('personal-life-hub-state-v2') || 'null');
+    var savedTitle = parentState && parentState.labels && parentState.labels[subId];
+    return savedTitle && savedTitle.trim() ? savedTitle.trim() : '';
+  } catch (error) {
+    return '';
+  }
+}
+if (pageType === 'custom') {
+  var savedCustomTitle = getSavedParentTitle(customSubId);
+  if (savedCustomTitle) customTitle = savedCustomTitle;
+}
 var pageConfigs = {
   kitchen: {
     title: '食材厨具', categories: ['厨具', '食材'], storageKey: 'personal-life-hub-kitchen-template-v1', returnSub: 'sub1b', records: [
@@ -306,10 +319,12 @@ if (!pageConfig && pageType === 'custom') {
   };
 }
 if (!pageConfig) pageConfig = pageConfigs.kitchen;
-var pageTitle = pageConfig.title;
 var categoryNames = pageConfig.categories.slice();
 var storageKey = pageConfig.storageKey;
 var returnSub = queryParams.get('return') || pageConfig.returnSub;
+var savedReturnTitle = getSavedParentTitle(returnSub);
+if (savedReturnTitle) pageConfig.title = savedReturnTitle;
+var pageTitle = pageConfig.title;
 var records = pageConfig.records;
 var currentCategory = categoryNames[0];
 var editingId = null;
