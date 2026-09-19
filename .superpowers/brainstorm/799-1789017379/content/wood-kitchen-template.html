@@ -36,7 +36,7 @@
   }
   .header { display: flex; align-items: center; gap: 8px; padding: 4px 2px 10px; }
   .back { font-size: 22px; cursor: pointer; }
-  .title { font-size: 18px; font-weight: 800; }
+  .title { font-size: 18px; font-weight: 800; letter-spacing: 0.08em; }
   .layout { min-height: 0; flex: 1; display: grid; grid-template-columns: 70px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); column-gap: 8px; row-gap: 10px; }
   .control-panel { display: contents; }
   .control-main { min-width: 0; grid-column: 2; grid-row: 1; }
@@ -52,6 +52,7 @@
     font-size: 13px;
     cursor: pointer;
     user-select: none;
+    letter-spacing: 0.06em;
   }
   .category.active { color: #3e2d1e; box-shadow: inset 0 0 0 2px rgba(90,70,50,0.28), 0 2px 4px rgba(0,0,0,0.1); }
   .category.need-category { background-color: #ead8bc; background-blend-mode: multiply; color: #f3e4ca; text-shadow: 0 1px 1px rgba(40,25,12,0.2); }
@@ -93,11 +94,36 @@
   .section-head { position: sticky; top: 0; z-index: 3; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; gap: 6px; margin: 0 2px 7px; padding: 7px 0 5px; background: #c0af89; }
   .section-title { display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 31px; padding: 5px 4px; border-radius: 6px; font-size: 13px; font-weight: 800; letter-spacing: 0.16em; }
   .section-add { display: inline-flex; align-items: center; justify-content: center; width: 28px; min-height: 28px; padding: 0; border: 0; border-radius: 6px; color: #5a4632; cursor: pointer; font-size: 20px; font-weight: 800; line-height: 1; }
+  .purchase-button { min-height: 31px; padding: 5px 4px; border: 0; border-radius: 6px; color: #5a4632; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 500; letter-spacing: 0.06em; }
+  .purchase-modal .editor { width: 360px; max-width: calc(100vw - 28px); max-height: 88vh; display: flex; flex-direction: column; }
+  .purchase-modal .editor h3 { letter-spacing: 0.12em; text-align: center; }
+  .purchase-table-wrap { max-height: calc(88vh - 120px); margin-bottom: 12px; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+  .purchase-table-wrap::-webkit-scrollbar { display: none; }
+  .purchase-table { width: calc(100% + 8px); border-collapse: separate; border-spacing: 0 5px; color: #5a4632; font-size: 13px; table-layout: fixed; }
+  .purchase-table th { padding: 4px 7px; color: #806b52; font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-align: left; }
+  .purchase-table th:first-child, .purchase-table td:first-child { width: 54px; text-align: center; white-space: nowrap; }
+  .purchase-table th:nth-child(3), .purchase-table td:nth-child(3) { width: 110px; transform: translateX(10px); text-align: center; }
+  .purchase-table th:nth-child(2) { text-align: center; }
+  .purchase-table th:nth-child(2), .purchase-table td:nth-child(2) { min-width: 125px; transform: translateX(-5px); overflow: visible; }
+  .purchase-table th:last-child, .purchase-table td:last-child { width: 92px; transform: translateX(12px); text-align: center; }
+  .purchase-table tr { background: rgba(255,240,215,0.28); }
+  .purchase-table td { min-height: 32px; padding: 7px; background: transparent; white-space: nowrap; }
+  .purchase-table td:first-child { border-radius: 6px 0 0 6px; }
+  .purchase-table td:last-child { border-radius: 0 6px 6px 0; }
+  .purchase-table td:nth-child(2) { overflow: visible; text-align: center; text-overflow: clip; }
+  .purchase-table button { padding: 1px 5px; border: 0; border-radius: 4px; background: transparent; color: #5a4632; cursor: pointer; font-size: 13px; line-height: 1; }
+  .purchase-note-input { width: 100%; min-width: 0; padding: 2px 3px; border: 1px solid rgba(90,70,50,0.35); border-radius: 3px; background: rgba(255,240,215,0.28); color: #5a4632; font: inherit; text-align: center; outline: none; }
+  .purchase-table input { width: 16px; height: 16px; margin: 0; accent-color: #8d785c; vertical-align: middle; transform: translateY(6px); }
+  .purchase-empty { padding: 12px 4px; color: #806b52; font-size: 12px; text-align: center; }
+  .purchase-actions { display: flex; gap: 7px; }
+  .purchase-actions button { flex: 1; padding: 8px 4px; border: 0; border-radius: 6px; color: #5a4632; cursor: pointer; font-size: 14px; }
+  .purchase-empty { padding: 12px 4px; color: #806b52; font-size: 12px; text-align: center; }
   .add { padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; }
   .items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
   .item { min-height: 43px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 6px 4px; border-radius: 7px; cursor: grab; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-align: center; transition: transform 0.12s, opacity 0.12s; }
   .item-name { max-width: 100%; overflow: hidden; letter-spacing: 0.12em; text-overflow: ellipsis; white-space: nowrap; }
   .item-time { max-width: 100%; overflow: hidden; color: #806b52; font-size: 9px; font-weight: 500; letter-spacing: 0.04em; text-overflow: ellipsis; white-space: nowrap; }
+
   .item.dragging, .item.touch-dragging { opacity: 0.5; }
   .item.insert-before { box-shadow: inset 3px 0 0 #8d785c, 0 2px 4px rgba(0,0,0,0.12); }
   .item.insert-after { box-shadow: inset -3px 0 0 #8d785c, 0 2px 4px rgba(0,0,0,0.12); }
@@ -149,7 +175,7 @@
       <div class="lower-panel">
         <div class="lower-sidebar-spacer" aria-hidden="true"></div>
         <main class="content">
-          <div class="section-head"><span class="section-title wood-surface wood-3d" id="sectionTitle">厨具</span><button class="section-add wood-surface wood-3d" id="sectionAddButton" type="button" aria-label="新增项目">＋</button></div>
+          <div class="section-head"><span class="section-title wood-surface wood-3d" id="sectionTitle">厨具</span><button class="purchase-button wood-surface wood-3d" id="purchaseButton" type="button">采购清单</button><button class="section-add wood-surface wood-3d" id="sectionAddButton" type="button" aria-label="新增项目">＋</button></div>
           <div class="items" id="items"></div>
         </main>
       </div>
@@ -162,6 +188,19 @@
     <h3 id="categoryEditorTitle">新增序列</h3>
     <input id="categoryNameInput" maxlength="20" placeholder="输入序列名称">
     <div class="editor-actions"><button id="categoryDeleteButton" hidden>删除</button><button id="categoryCancelButton">取消</button><button id="categorySaveButton">保存</button></div>
+  </div>
+</div>
+
+<div class="modal purchase-modal" id="purchaseModal">
+  <div class="editor wood-surface wood-3d">
+    <h3>采购清单</h3>
+    <div class="purchase-table-wrap" id="purchaseTable">
+      <table class="purchase-table">
+        <thead><tr><th>勾选框</th><th>名称</th><th>备注</th><th>类别</th></tr></thead>
+        <tbody id="purchaseList"></tbody>
+      </table>
+    </div>
+    <div class="purchase-actions"><button id="purchaseClearButton">一键清空</button><button id="purchaseSelectAllButton">全选</button><button id="purchaseConfirmButton">确定</button></div>
   </div>
 </div>
 
@@ -280,6 +319,8 @@ var editingCategory = null;
 var annualSelectedYear = new Date().getFullYear();
 var newAssignmentsByMonth = {};
 var monthlyStats = {};
+var purchaseChecked = {};
+var purchaseCleared = {};
 var audioContext = null;
 var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 var monthChineseNames = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
@@ -463,6 +504,117 @@ function openAnnualDetail() {
   document.getElementById('annualModal').classList.add('show');
 }
 function closeAnnualDetail() { document.getElementById('annualModal').classList.remove('show'); }
+function startNoteEdit(record, noteCell) {
+  noteCell.textContent = '';
+  var input = document.createElement('input');
+  input.className = 'purchase-note-input';
+  input.type = 'text';
+  input.value = record.note || '';
+  input.placeholder = '输入备注';
+  var finished = false;
+  function finish(save) {
+    if (finished) return;
+    finished = true;
+    if (save) {
+      record.note = input.value.trim();
+      saveState();
+    }
+    renderPurchaseList();
+    render();
+  }
+  input.addEventListener('click', function(event) { event.stopPropagation(); });
+  input.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') finish(true);
+    if (event.key === 'Escape') finish(false);
+  });
+  input.addEventListener('blur', function() { finish(true); });
+  noteCell.appendChild(input);
+  input.focus();
+}
+function renderPurchaseList() {
+  var list = document.getElementById('purchaseList');
+  list.textContent = '';
+  var needIds = statIds('need');
+  var needRecords = records.filter(function(record) { return !purchaseCleared[record.id] && (needIds.indexOf(record.id) !== -1 || purchaseChecked[record.id]); });
+  if (!needRecords.length) {
+    list.innerHTML = '<tr><td class="purchase-empty" colspan="4">暂无需添置物品</td></tr>';
+    return;
+  }
+  needRecords.forEach(function(record) {
+    var row = document.createElement('tr');
+    var checkboxCell = document.createElement('td');
+    var checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.dataset.id = record.id;
+    checkbox.checked = Boolean(purchaseChecked[record.id]);
+    checkbox.addEventListener('change', function() {
+      var id = Number(this.dataset.id);
+      if (this.checked) {
+        purchaseChecked[id] = true;
+        setStatAssignment('need', id, false);
+      } else {
+        delete purchaseChecked[id];
+        setStatAssignment('need', id, true);
+      }
+      renderPurchaseList();
+      render();
+    });
+    checkboxCell.appendChild(checkbox);
+    var nameCell = document.createElement('td');
+    nameCell.textContent = record.name;
+    var noteCell = document.createElement('td');
+    var noteButton = document.createElement('button');
+    noteButton.type = 'button';
+    noteButton.textContent = record.note || '✎';
+    noteButton.title = record.note || '添加备注';
+    noteButton.addEventListener('click', function() {
+      startNoteEdit(record, noteCell);
+    });
+    noteCell.appendChild(noteButton);
+    var categoryCell = document.createElement('td');
+    categoryCell.textContent = record.category;
+    row.appendChild(checkboxCell);
+    row.appendChild(nameCell);
+    row.appendChild(noteCell);
+    row.appendChild(categoryCell);
+    list.appendChild(row);
+  });
+}
+function purchaseRows() { return records.filter(function(record) { return !purchaseCleared[record.id] && (statIds('need').indexOf(record.id) !== -1 || purchaseChecked[record.id]); }); }
+function setPurchaseChecked(checked) {
+  purchaseRows().forEach(function(record) {
+    if (checked) {
+      purchaseChecked[record.id] = true;
+      setStatAssignment('need', record.id, false);
+    } else {
+      delete purchaseChecked[record.id];
+      setStatAssignment('need', record.id, true);
+    }
+  });
+  saveState();
+  renderPurchaseList();
+  render();
+}
+function clearPurchaseList() {
+  purchaseRows().forEach(function(record) {
+    purchaseCleared[record.id] = true;
+    delete purchaseChecked[record.id];
+  });
+  saveState();
+  renderPurchaseList();
+  render();
+}
+function selectAllPurchaseList() {
+  var rows = purchaseRows();
+  var allChecked = rows.length > 0 && rows.every(function(record) { return Boolean(purchaseChecked[record.id]); });
+  setPurchaseChecked(!allChecked);
+}
+function confirmPurchaseList() { saveState(); closePurchaseList(); }
+function openPurchaseList() {
+  renderPurchaseList();
+  document.getElementById('purchaseModal').classList.add('show');
+}
+function closePurchaseList() { document.getElementById('purchaseModal').classList.remove('show'); }
 function removeFromNewStats(id) {
   Object.keys(newAssignmentsByMonth).forEach(function(key) {
     newAssignmentsByMonth[key] = newAssignmentsByMonth[key].filter(function(recordId) { return recordId !== id; });
@@ -470,23 +622,31 @@ function removeFromNewStats(id) {
   });
 }
 function saveState() {
-  refreshCurrentMonthSnapshot();
-  try { localStorage.setItem(storageKey, JSON.stringify({ records: records, categories: categoryNames, statAssignments: statAssignments, newAssignmentsByMonth: newAssignmentsByMonth, monthlyStats: monthlyStats })); } catch (error) {}
+  try { refreshCurrentMonthSnapshot(); } catch (error) {}
+  var serialized = JSON.stringify({ records: records, categories: categoryNames, currentCategory: currentCategory, statAssignments: statAssignments, newAssignmentsByMonth: newAssignmentsByMonth, monthlyStats: monthlyStats, purchaseChecked: purchaseChecked, purchaseCleared: purchaseCleared });
+  try { localStorage.setItem(storageKey, serialized); } catch (error) {}
+  try { sessionStorage.setItem(storageKey, serialized); } catch (error) {}
 }
 function loadState() {
   try {
-    var saved = JSON.parse(localStorage.getItem(storageKey));
+    var saved = JSON.parse(sessionStorage.getItem(storageKey) || localStorage.getItem(storageKey));
+    if (!saved) return false;
     if (saved && Array.isArray(saved.records)) records = saved.records;
-    if (saved && pageType === 'kitchen' && Array.isArray(saved.categories) && saved.categories.length) categoryNames = saved.categories;
+    if (saved && Array.isArray(saved.categories) && saved.categories.length) categoryNames = saved.categories;
+    if (saved && typeof saved.currentCategory === 'string' && categoryNames.indexOf(saved.currentCategory) !== -1) currentCategory = saved.currentCategory;
     if (saved && saved.statAssignments) statAssignments = { new: saved.statAssignments.new || [], discarded: saved.statAssignments.discarded || [], need: saved.statAssignments.need || [] };
     if (saved && saved.newAssignmentsByMonth && typeof saved.newAssignmentsByMonth === 'object') newAssignmentsByMonth = saved.newAssignmentsByMonth;
     if (saved && saved.monthlyStats && typeof saved.monthlyStats === 'object') monthlyStats = saved.monthlyStats;
+    if (saved && saved.purchaseChecked && typeof saved.purchaseChecked === 'object') purchaseChecked = saved.purchaseChecked;
     else if (saved && saved.statAssignments && Array.isArray(saved.statAssignments.new) && saved.statAssignments.new.length) newAssignmentsByMonth[currentMonthKey()] = saved.statAssignments.new.slice();
+    if (saved && saved.purchaseCleared && typeof saved.purchaseCleared === 'object') purchaseCleared = saved.purchaseCleared;
     if (pageType === 'other') {
       categoryNames = ['其他'];
       records.forEach(function(record) { record.category = '其他'; });
     }
+    return Array.isArray(saved.records);
   } catch (error) {}
+  return false;
 }
 function openCategoryEditor(category) {
   editingCategory = category || null;
@@ -555,6 +715,7 @@ function setStatAssignment(key, id, checked) {
     if (!checked) newAssignmentsByMonth[monthKey] = newAssignmentsByMonth[monthKey].filter(function(recordId) { return recordId !== id; });
     if (!newAssignmentsByMonth[monthKey].length) delete newAssignmentsByMonth[monthKey];
   } else if (['discarded', 'need'].indexOf(key) !== -1) {
+    if (key === 'need' && checked) delete purchaseCleared[id];
     if (checked && statAssignments[key].indexOf(id) === -1) statAssignments[key].push(id);
     if (!checked) statAssignments[key] = statAssignments[key].filter(function(recordId) { return recordId !== id; });
   }
@@ -585,12 +746,12 @@ function render(skipCategories) {
     itemName.className = 'item-name';
     itemName.textContent = record.name;
     item.appendChild(itemName);
-     if (record.time) {
-      var itemTime = document.createElement('span');
-      itemTime.className = 'item-time';
-      itemTime.textContent = record.time;
-       item.appendChild(itemTime);
-     }
+      if (record.time) {
+       var itemTime = document.createElement('span');
+       itemTime.className = 'item-time';
+       itemTime.textContent = record.time;
+        item.appendChild(itemTime);
+      }
      item.draggable = true;
     item.dataset.id = record.id;
      item.addEventListener('click', function(event) {
@@ -696,6 +857,11 @@ document.addEventListener('click', function(event) {
 });
 document.getElementById('sectionTitle').addEventListener('click', openAnnualDetail);
 document.getElementById('sectionAddButton').addEventListener('click', function() { openEditor(null); });
+document.getElementById('purchaseButton').addEventListener('click', openPurchaseList);
+document.getElementById('purchaseClearButton').addEventListener('click', clearPurchaseList);
+document.getElementById('purchaseSelectAllButton').addEventListener('click', selectAllPurchaseList);
+document.getElementById('purchaseConfirmButton').addEventListener('click', confirmPurchaseList);
+document.getElementById('purchaseModal').addEventListener('click', function(event) { if (event.target === this) closePurchaseList(); });
 document.getElementById('annualYearButton').addEventListener('click', function(event) {
   event.stopPropagation();
   var picker = document.getElementById('annualYearPicker');
@@ -779,7 +945,6 @@ document.getElementById('deleteButton').addEventListener('click', function() {
 });
 loadState();
 if (categoryNames.indexOf(currentCategory) === -1) currentCategory = categoryNames[0];
-saveState();
 renderCategories();
 render();
 </script>

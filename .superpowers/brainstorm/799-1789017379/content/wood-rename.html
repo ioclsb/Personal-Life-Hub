@@ -580,17 +580,15 @@ function saveState() {
       return label.id;
     });
   });
-  try {
-    localStorage.setItem(storageKey, JSON.stringify(state));
-  } catch (error) {
-    // 当前浏览器不支持本地存储时，仍保留页面内的修改。
-  }
+  var serialized = JSON.stringify(state);
+  try { localStorage.setItem(storageKey, serialized); } catch (error) {}
+  try { sessionStorage.setItem(storageKey, serialized); } catch (error) {}
 }
 
 function loadState() {
   var state;
   try {
-    state = JSON.parse(localStorage.getItem(storageKey) || 'null');
+    state = JSON.parse(sessionStorage.getItem(storageKey) || localStorage.getItem(storageKey) || 'null');
   } catch (error) {
     state = null;
   }
