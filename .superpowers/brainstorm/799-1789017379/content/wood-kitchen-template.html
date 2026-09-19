@@ -68,7 +68,8 @@
   .stat-label { display: contents; }
   .stat-name { order: 2; max-width: 100%; overflow: hidden; color: #806b52; font-size: 9px; letter-spacing: 0.06em; text-overflow: ellipsis; transform: translateY(3px); white-space: nowrap; }
   .stat-count { order: 1; font-size: 22px; font-weight: 800; line-height: 1; }
-  .annual-modal .editor { width: 340px; max-height: 85vh; overflow-y: auto; }
+  .annual-modal .editor { width: 340px; max-height: 85vh; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+  .annual-modal .editor::-webkit-scrollbar { display: none; }
   .annual-modal .editor-actions { transform: translateY(5px); }
   .annual-head { display: flex; align-items: center; justify-content: flex-start; gap: 8px; margin-bottom: 10px; }
   .annual-head h3 { margin: 12px 0 0; letter-spacing: 0.12em; }
@@ -107,12 +108,19 @@
   .modal { position: fixed; inset: 0; display: none; place-items: center; background: rgba(40,25,12,0.32); z-index: 5; }
   .modal.show { display: grid; }
   .editor { width: 300px; padding: 16px; border-radius: 12px; }
+  .record-editor.expanded { width: 390px; height: 760px; max-width: 100%; max-height: 100%; display: flex; flex-direction: column; }
+  .record-editor.expanded .regular-record-fields:not([hidden]), .record-editor.expanded .daily-meal-fields:not([hidden]) { flex: 1; display: flex; flex-direction: column; }
+  .record-editor.expanded .editor-input-area { flex: 1; display: flex; flex-direction: column; }
+  .record-editor.expanded .expandable-input { flex: 1; min-height: 0; resize: none; }
   .editor h3 { margin-bottom: 12px; font-size: 16px; }
   .editor input, .editor textarea { width: 100%; margin-bottom: 10px; padding: 9px; border: 1px solid rgba(90,70,50,0.2); border-radius: 6px; background: rgba(255,255,255,0.5); color: #5a4632; outline: none; font: inherit; }
   .editor-primary-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
   .editor-primary-row .details-label { margin-bottom: 3px; font-size: 10px; }
   .editor-primary-row input { margin-bottom: 8px; padding: 6px 7px; font-size: 12px; }
-  .editor textarea { min-height: 108px; margin-bottom: 10px; padding: 7px 8px; font-size: 12px; resize: vertical; }
+  .editor textarea { min-height: 108px; margin-bottom: 10px; padding: 7px 8px; font-size: 12px; resize: vertical; scrollbar-width: none; -ms-overflow-style: none; }
+  .editor textarea::-webkit-scrollbar { display: none; }
+  .editor-expand { width: 100%; margin: 0 0 9px; padding: 7px; border: 0; border-radius: 6px; background: rgba(255,255,255,0.35); color: #5a4632; cursor: pointer; font-size: 12px; }
+  .daily-meal-fields[hidden], .regular-record-fields[hidden] { display: none; }
   .details-panel[hidden] { display: none; }
   .details-label { display: block; margin-bottom: 5px; color: #806b52; font-size: 11px; }
   .editor-stat-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 10px; }
@@ -166,19 +174,31 @@
 </div>
 
 <div class="modal" id="modal">
-  <div class="editor wood-surface wood-3d">
+  <div class="editor record-editor wood-surface wood-3d">
     <h3 id="editorTitle">编辑记录</h3>
-    <div class="editor-primary-row">
+    <div class="regular-record-fields" id="regularRecordFields">
+      <div class="editor-primary-row">
       <div><label class="details-label" for="timeInput">日期</label><input id="timeInput" type="date"></div>
       <div><label class="details-label" for="nameInput">名称</label><input id="nameInput" maxlength="30" placeholder="输入名称"></div>
+      </div>
+      <div class="editor-stat-options">
+        <label class="editor-stat-option wood-surface wood-3d"><input id="editNewInput" type="checkbox"><span>新增</span></label>
+        <label class="editor-stat-option wood-surface wood-3d"><input id="editDiscardedInput" type="checkbox"><span>废弃</span></label>
+        <label class="editor-stat-option wood-surface wood-3d"><input id="editNeedInput" type="checkbox"><span>添置</span></label>
+      </div>
+      <div class="editor-input-area">
+        <label class="details-label" for="noteInput">使用记录</label>
+        <textarea class="expandable-input" id="noteInput" maxlength="500" placeholder="填写使用记录"></textarea>
+        <button class="editor-expand" id="expandButton" type="button" aria-expanded="false">展开编辑</button>
+      </div>
     </div>
-    <div class="editor-stat-options">
-      <label class="editor-stat-option wood-surface wood-3d"><input id="editNewInput" type="checkbox"><span>新增</span></label>
-      <label class="editor-stat-option wood-surface wood-3d"><input id="editDiscardedInput" type="checkbox"><span>废弃</span></label>
-      <label class="editor-stat-option wood-surface wood-3d"><input id="editNeedInput" type="checkbox"><span>添置</span></label>
+    <div class="daily-meal-fields" id="dailyMealFields" hidden>
+      <div class="editor-input-area">
+        <label class="details-label" for="dailyMealInput">记录</label>
+        <textarea class="expandable-input" id="dailyMealInput" maxlength="500" placeholder="记录今天的餐食"></textarea>
+        <button class="editor-expand" id="dailyMealExpandButton" type="button" aria-expanded="false">展开编辑</button>
+      </div>
     </div>
-    <label class="details-label" for="noteInput">使用记录</label>
-    <textarea id="noteInput" maxlength="500" placeholder="填写使用记录"></textarea>
     <div class="editor-actions"><button id="deleteButton" hidden>删除</button><button id="cancelButton">取消</button><button id="saveButton">保存</button></div>
   </div>
 </div>
@@ -307,10 +327,11 @@ function renderCategories() {
      button.className = 'category wood-surface wood-3d' + (name === currentCategory ? ' active' : '') + (categoryHasNeed(name) ? ' need-category' : '');
     button.dataset.category = name;
     button.textContent = name;
-    button.addEventListener('click', function() {
+     button.addEventListener('click', function() {
        if (categoryLongPressed) { categoryLongPressed = false; return; }
        currentCategory = name;
-       render();
+       document.querySelectorAll('.category').forEach(function(item) { item.classList.toggle('active', item.dataset.category === name); });
+       render(true);
     });
     button.addEventListener('dblclick', function(event) {
       event.preventDefault();
@@ -468,7 +489,6 @@ function loadState() {
   } catch (error) {}
 }
 function openCategoryEditor(category) {
-  if (pageType !== 'kitchen') return;
   editingCategory = category || null;
   document.getElementById('categoryEditorTitle').textContent = category ? '编辑序列' : '新增序列';
   document.getElementById('categoryNameInput').value = category || '';
@@ -542,8 +562,8 @@ function setStatAssignment(key, id, checked) {
   var card = document.querySelector('.stat[data-key="' + key + '"]');
   if (card) card.querySelector('.stat-count').textContent = countFor(key);
 }
-function render() {
-  renderCategories();
+function render(skipCategories) {
+  if (!skipCategories) renderCategories();
   document.getElementById('sectionTitle').textContent = currentCategory;
   var stats = document.getElementById('stats');
   stats.textContent = '';
@@ -639,17 +659,34 @@ function openEditor(id, assignmentKey) {
   editingId = id;
   editingAssignment = null;
   var record = records.find(function(item) { return item.id === id; });
+  var isDailyMeal = currentCategory === '每日餐食';
+  var editor = document.querySelector('.record-editor');
+  editor.classList.remove('expanded');
+  ['expandButton', 'dailyMealExpandButton'].forEach(function(buttonId) {
+    document.getElementById(buttonId).setAttribute('aria-expanded', 'false');
+    document.getElementById(buttonId).textContent = '展开编辑';
+  });
+  document.getElementById('regularRecordFields').hidden = isDailyMeal;
+  document.getElementById('dailyMealFields').hidden = !isDailyMeal;
   document.getElementById('nameInput').value = record ? record.name : '';
   document.getElementById('timeInput').value = record && record.time ? record.time : '';
   document.getElementById('noteInput').value = record && record.note ? record.note : '';
+  document.getElementById('dailyMealInput').value = record ? record.name : '';
   document.getElementById('editNewInput').checked = record ? statIds('new').indexOf(record.id) !== -1 : false;
   document.getElementById('editDiscardedInput').checked = record ? statIds('discarded').indexOf(record.id) !== -1 : false;
   document.getElementById('editNeedInput').checked = record ? statIds('need').indexOf(record.id) !== -1 : false;
-  document.getElementById('editorTitle').textContent = record ? '编辑记录' : '新增记录';
+  document.getElementById('editorTitle').textContent = isDailyMeal ? (record ? '编辑餐食记录' : '新增餐食记录') : (record ? '编辑记录' : '新增记录');
   document.getElementById('deleteButton').hidden = !record;
   document.getElementById('deleteButton').textContent = '删除';
   document.getElementById('modal').classList.add('show');
-  document.getElementById('nameInput').focus();
+  document.getElementById(isDailyMeal ? 'dailyMealInput' : 'nameInput').focus();
+}
+function setEditorExpanded(expanded) {
+  var editor = document.querySelector('.record-editor');
+  var button = document.getElementById(currentCategory === '每日餐食' ? 'dailyMealExpandButton' : 'expandButton');
+  editor.classList.toggle('expanded', expanded);
+  button.setAttribute('aria-expanded', String(expanded));
+  button.textContent = expanded ? '缩小编辑' : '展开编辑';
 }
 function closeEditor() { editingId = null; editingAssignment = null; document.getElementById('modal').classList.remove('show'); }
 document.querySelector('.back').addEventListener('click', function() { window.location.href = 'wood-rename.html#' + encodeURIComponent(returnSub); });
@@ -667,7 +704,7 @@ document.getElementById('annualYearButton').addEventListener('click', function(e
 });
 document.getElementById('annualCloseButton').addEventListener('click', closeAnnualDetail);
 document.getElementById('annualModal').addEventListener('click', function(event) { if (event.target === this) closeAnnualDetail(); });
-document.getElementById('addCategoryButton').hidden = pageType !== 'kitchen';
+document.getElementById('addCategoryButton').hidden = false;
 document.getElementById('addCategoryButton').addEventListener('click', function() { openCategoryEditor(null); });
 document.getElementById('categoryCancelButton').addEventListener('click', closeCategoryEditor);
 document.getElementById('categorySaveButton').addEventListener('click', function() {
@@ -685,11 +722,14 @@ document.getElementById('categorySaveButton').addEventListener('click', function
 document.getElementById('categoryDeleteButton').addEventListener('click', function() {
   if (deleteCategory(editingCategory)) closeCategoryEditor();
 });
+document.getElementById('expandButton').addEventListener('click', function(event) { event.stopPropagation(); setEditorExpanded(!document.querySelector('.record-editor').classList.contains('expanded')); });
+document.getElementById('dailyMealExpandButton').addEventListener('click', function(event) { event.stopPropagation(); setEditorExpanded(!document.querySelector('.record-editor').classList.contains('expanded')); });
 document.getElementById('cancelButton').addEventListener('click', closeEditor);
 document.getElementById('saveButton').addEventListener('click', function() {
-  var name = document.getElementById('nameInput').value.trim();
-  var time = document.getElementById('timeInput').value;
-  var note = document.getElementById('noteInput').value.trim();
+  var isDailyMeal = currentCategory === '每日餐食';
+  var name = document.getElementById(isDailyMeal ? 'dailyMealInput' : 'nameInput').value.trim();
+  var time = isDailyMeal ? '' : document.getElementById('timeInput').value;
+  var note = isDailyMeal ? '' : document.getElementById('noteInput').value.trim();
   if (!name) return;
   var savedId = editingId;
   if (editingId) {
@@ -701,9 +741,9 @@ document.getElementById('saveButton').addEventListener('click', function() {
     savedId = Date.now();
     records.push({ id: savedId, category: currentCategory, name: name, time: time, note: note, created: time || '', status: 'normal' });
   }
-  setStatAssignment('new', savedId, document.getElementById('editNewInput').checked);
-  setStatAssignment('discarded', savedId, document.getElementById('editDiscardedInput').checked);
-  setStatAssignment('need', savedId, document.getElementById('editNeedInput').checked);
+  setStatAssignment('new', savedId, !isDailyMeal && document.getElementById('editNewInput').checked);
+  setStatAssignment('discarded', savedId, !isDailyMeal && document.getElementById('editDiscardedInput').checked);
+  setStatAssignment('need', savedId, !isDailyMeal && document.getElementById('editNeedInput').checked);
   closeEditor();
   saveState();
   render();

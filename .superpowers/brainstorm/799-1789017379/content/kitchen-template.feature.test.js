@@ -2,6 +2,8 @@ const fs = require('fs');
 const assert = require('assert');
 
 const source = fs.readFileSync(__dirname + '/wood-kitchen-template.html', 'utf8');
+const lifeSource = fs.readFileSync(__dirname + '/wood-life-timeline.html', 'utf8');
+const renameSource = fs.readFileSync(__dirname + '/wood-rename.html', 'utf8');
 
 assert.match(source, /statAssignments\s*=\s*\{\s*new:\s*\[\]/, '统计状态应包含本月新增集合');
 assert.doesNotMatch(source, /if \(\['new', 'discarded', 'need'\][\s\S]{0,120}push\(dragId\)/, '本月新增不能通过拖动计数');
@@ -14,7 +16,29 @@ assert.match(source, /id="categoryNameInput"/, '序列编辑窗口应包含重�
 assert.match(source, /id="categoryDeleteButton"[\s\S]{0,100}id="categoryCancelButton"[\s\S]{0,100}id="categorySaveButton"/, '序列编辑窗口底部应依次提供删除、取消、保存');
 assert.match(source, /categoryDeleteButton'\)\.addEventListener\('click'[\s\S]{0,180}deleteCategory\(editingCategory\)/, '删除按钮应删除当前序列');
 assert.doesNotMatch(source, /button\.addEventListener\('click'[\s\S]{0,180}renderCategories\(\)[\s\S]{0,80}render\(\)/, '序列单击不应在双击完成前替换按钮节点');
+assert.match(source, /currentCategory = name;[\s\S]{0,300}render\(true\)/, '序列单击应保留按钮节点以支持双击重命名');
 assert.match(source, /function openCategoryEditor[\s\S]{0,700}categoryNameInput/, '序列重命名应在编辑窗口显示输入框');
+assert.doesNotMatch(source, /if \(pageType !== 'kitchen' && pageType !== 'bath'\) return;/, '所有记录子主题都应允许编辑序列');
+assert.match(source, /id="dailyMealInput"/, '每日餐食应使用单一记录输入框');
+assert.match(source, /currentCategory === '每日餐食'/, '每日餐食应使用专用编辑界面');
+assert.match(source, /function setEditorExpanded/, '编辑框应支持展开和缩小');
+assert.match(source, /id="expandButton"/, '编辑框应提供展开按钮');
+assert.match(source, /\.record-editor\.expanded[\s\S]{0,240}\.regular-record-fields:not\(\[hidden\]\), \.record-editor\.expanded \.daily-meal-fields:not\(\[hidden\]\)[\s\S]{0,160}display: flex/, '展开编辑框时输入区父容器应填满高度');
+assert.match(source, /\.record-editor\.expanded \.regular-record-fields:not\(\[hidden\]\), \.record-editor\.expanded \.daily-meal-fields:not\(\[hidden\]\)/, '每日餐食展开时仍应只显示一个记录框');
+assert.match(source, /dailyMealInput[\s\S]{0,500}records\.push|dailyMealInput[\s\S]{0,500}editingRecord\.name/, '每日餐食记录应保存输入内容');
+assert.match(lifeSource, /\.timeline \{[\s\S]{0,180}overflow-y: auto[\s\S]{0,180}scrollbar-width: none[\s\S]{0,180}-ms-overflow-style: none/, '人生进度应保留滚动并隐藏滚动条');
+assert.match(lifeSource, /\.editor textarea \{[\s\S]{0,220}scrollbar-width: none[\s\S]{0,220}-ms-overflow-style: none/, '成长记录编辑框应隐藏滚动条并保留滚动');
+assert.match(renameSource, /id="subEditorModal"/, '子主题应使用独立编辑窗口');
+assert.match(renameSource, /id="subEditorDeleteButton"[\s\S]{0,220}id="subEditorCancelButton"[\s\S]{0,220}id="subEditorSaveButton"/, '子主题编辑窗口应提供删除、取消、保存按钮');
+assert.match(renameSource, /function openSubEditor/, '子主题应支持打开编辑窗口');
+assert.match(renameSource, /function deleteSubTheme/, '子主题应支持直接删除');
+assert.match(renameSource, /add-sub-button|新增主题/, '母主题下方应提供新增主题入口');
+assert.match(renameSource, /bar\.addEventListener\('dblclick'[\s\S]{0,160}openSubEditor/, '子主题双击应打开编辑窗口');
+assert.match(renameSource, /function openGenericSubTemplate/, '未配置专用页面的子主题也应支持单击进入项目界面');
+assert.match(renameSource, /function navigateWithWoodClick\(url\)[\s\S]{0,180}clickTimer = setTimeout/, '单击进入的跳转应可被双击编辑取消');
+assert.doesNotMatch(renameSource, /class="sub-bar[^>]*onclick=/, '子主题不能使用会抢先跳转的内联单击事件');
+assert.match(renameSource, /list\.appendChild\(addButton\)/, '新增主题按钮应与子主题保持在同一底色容器内');
+assert.match(renameSource, /loadState\(\);[\s\S]{0,300}list\.appendChild\(addButton\)/, '状态恢复后新增主题按钮仍应位于子主题列表底部');
 assert.match(source, /categoryTouchDragging = true/, '序列长按应进入排序状态');
 assert.match(source, /function reorderCategory/, '序列应提供排序函数');
 assert.match(source, /\.stat-head[\s\S]{0,180}gap: 6px/, '统计数字和简介之间应保留间距');

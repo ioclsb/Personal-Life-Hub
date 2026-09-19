@@ -127,7 +127,10 @@
     pointer-events: none;
     transition: opacity 0.25s ease, transform 0.25s ease;
     overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
+  .sub-list::-webkit-scrollbar { display: none; }
   .sub-list.show {
     opacity: 1;
     transform: scale(1);
