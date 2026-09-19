@@ -520,7 +520,7 @@ function openSubEditor(labelId, cellId) {
   subAddingCell = cellId ? document.getElementById(cellId) : null;
   document.getElementById('subEditorTitle').textContent = label && label.textContent.trim() ? '编辑子主题' : '新增主题';
   document.getElementById('subEditorInput').value = label ? label.textContent : '';
-  document.getElementById('subEditorDeleteButton').hidden = !label || !label.textContent.trim();
+  document.getElementById('subEditorDeleteButton').hidden = !label;
   document.getElementById('subEditorModal').classList.add('show');
   document.getElementById('subEditorInput').focus();
 }

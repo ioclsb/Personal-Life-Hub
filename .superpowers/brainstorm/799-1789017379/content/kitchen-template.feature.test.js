@@ -52,6 +52,7 @@ assert.doesNotMatch(renameSource, /if \(!value\) return;/, '新增子主题名�
 assert.match(renameSource, /subEditingLabel\.closest\('\.sub-bar'\)\.hidden = false/, '空白子主题保存后应保留项目入口');
 assert.match(renameSource, /state\.visible/, '子主题入口可见状态应持久化');
 assert.match(renameSource, /state\.visible\[label\.id\]/, '刷新后应恢复已保存的空白入口');
+assert.doesNotMatch(renameSource, /subEditorDeleteButton'\)\.hidden = !label \|\| !label\.textContent\.trim\(\)/, '空白子主题也应显示删除按钮');
 assert.match(renameSource, /function createSubBar/, '新增子主题没有预留空位时应动态创建入口');
 assert.match(renameSource, /if \(!emptyBar\) emptyBar = createSubBar\(cell\)/, '新增主题应支持连续创建多个入口');
 assert.match(source, /categoryTouchDragging = true/, '序列长按应进入排序状态');
