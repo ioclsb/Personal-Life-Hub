@@ -270,6 +270,8 @@ var isDragging = false;
 var justDragged = false;
 var subEditingLabel = null;
 var subAddingCell = null;
+var savedSubVisibility = {};
+var subIdSeed = 0;
 var audioContext = null;
 var storageKey = 'personal-life-hub-state-v2';
 
@@ -347,7 +349,13 @@ function openOtherTemplate(e) {
 
 function openGenericSubTemplate(e, labelId) {
   if (justDragged || isEditing) return;
-  navigateWithWoodClick('wood-kitchen-template.html?type=other&return=' + encodeURIComponent(labelId));
+  navigateWithWoodClick(customSubTemplate(labelId));
+}
+
+function customSubTemplate(labelId) {
+  var label = document.getElementById(labelId);
+  var title = label ? label.textContent.trim() : '';
+  return 'wood-kitchen-template.html?type=custom&return=' + encodeURIComponent(labelId) + '&title=' + encodeURIComponent(title);
 }
 
 function openPersonalTemplate(e) {
@@ -483,7 +491,7 @@ document.addEventListener('touchmove', moveSub, { passive: false });
 document.addEventListener('mouseup', finishSubDrag);
 document.addEventListener('touchend', finishSubDrag);
 document.addEventListener('touchcancel', finishSubDrag);
-document.querySelectorAll('.sub-bar').forEach(function(bar) {
+function bindSubBar(bar) {
   bar.addEventListener('click', function(event) {
     if (justDragged || isEditing) return;
     event.preventDefault();
@@ -497,13 +505,14 @@ document.querySelectorAll('.sub-bar').forEach(function(bar) {
       sub1e: 'wood-kitchen-template.html?type=other&return=sub1e',
       sub2a: 'wood-life-timeline.html?return=sub2a'
     };
-    navigateWithWoodClick(routes[labelId] || 'wood-kitchen-template.html?type=other&return=' + encodeURIComponent(labelId));
+    navigateWithWoodClick(routes[labelId] || customSubTemplate(labelId));
   });
   bar.addEventListener('dblclick', function(e) {
     var label = bar.querySelector('.bar-label');
     renameOnDoubleClick(e, label.id);
   });
-});
+}
+document.querySelectorAll('.sub-bar').forEach(bindSubBar);
 
 function openSubEditor(labelId, cellId) {
   var label = labelId ? document.getElementById(labelId) : null;
@@ -530,11 +539,29 @@ function deleteSubTheme() {
   saveState();
 }
 
+function createSubBar(cell, id) {
+  var bar = document.createElement('div');
+  var labelId = id || cell.id + '-sub-' + Date.now() + '-' + (++subIdSeed);
+  bar.className = 'sub-bar wood-surface wood-3d';
+  bar.id = labelId + '-bar';
+  bar.setAttribute('onmousedown', "startTimerSub(event,'" + labelId + "')");
+  bar.setAttribute('onmouseup', 'cancelTimer()');
+  bar.setAttribute('onmouseleave', 'cancelTimer()');
+  bar.setAttribute('ontouchstart', "startTimerSub(event,'" + labelId + "')");
+  bar.setAttribute('ontouchend', 'cancelTimer()');
+  bar.innerHTML = '<span class="bar-label" id="' + labelId + '"></span><span class="bar-arrow">›</span>';
+  var list = cell.querySelector('.sub-list');
+  var addButton = list.querySelector('.add-sub-button');
+  list.insertBefore(bar, addButton || null);
+  bindSubBar(bar);
+  return bar;
+}
+
 function addSubTheme(cell) {
   var emptyBar = Array.from(cell.querySelectorAll('.sub-bar')).find(function(bar) {
-    return !bar.querySelector('.bar-label').textContent.trim();
+    return bar.hidden && !bar.querySelector('.bar-label').textContent.trim();
   });
-  if (!emptyBar) return;
+  if (!emptyBar) emptyBar = createSubBar(cell);
   emptyBar.hidden = false;
   openSubEditor(emptyBar.querySelector('.bar-label').id, cell.id);
 }
@@ -558,7 +585,6 @@ document.getElementById('subEditorDeleteButton').addEventListener('click', delet
 document.getElementById('subEditorCancelButton').addEventListener('click', closeSubEditor);
 document.getElementById('subEditorSaveButton').addEventListener('click', function() {
   var value = document.getElementById('subEditorInput').value.trim();
-  if (!value) return;
   if (subEditingLabel) {
     subEditingLabel.textContent = value;
     subEditingLabel.closest('.sub-bar').hidden = false;
@@ -571,13 +597,17 @@ document.getElementById('subEditorSaveButton').addEventListener('click', functio
 });
 
 function saveState() {
-  var state = { labels: {}, orders: {} };
+  var state = { labels: {}, orders: {}, visible: {} };
   document.querySelectorAll('.block-label, .bar-label').forEach(function(label) {
     state.labels[label.id] = label.textContent;
   });
   document.querySelectorAll('.sub-list').forEach(function(list) {
     state.orders[list.parentElement.id] = Array.from(list.querySelectorAll('.bar-label')).map(function(label) {
       return label.id;
+    });
+    list.querySelectorAll('.sub-bar').forEach(function(bar) {
+      var label = bar.querySelector('.bar-label');
+      state.visible[label.id] = !bar.hidden;
     });
   });
   var serialized = JSON.stringify(state);
@@ -593,6 +623,7 @@ function loadState() {
     state = null;
   }
   if (!state) return;
+  savedSubVisibility = state.visible || {};
 
   Object.keys(state.labels || {}).forEach(function(id) {
     var label = document.getElementById(id);
@@ -603,14 +634,21 @@ function loadState() {
     if (!list) return;
     state.orders[cellId].forEach(function(labelId) {
       var bar = document.getElementById(labelId);
-      if (bar) list.appendChild(bar.parentElement);
+      if (!bar) {
+        var cell = document.getElementById(cellId);
+        if (cell) bar = createSubBar(cell, labelId).parentElement;
+      }
+      var label = document.getElementById(labelId);
+      if (label && Object.prototype.hasOwnProperty.call(state.labels || {}, labelId)) label.textContent = state.labels[labelId];
+      if (bar) list.appendChild(bar.classList.contains('sub-bar') ? bar : bar.parentElement);
     });
   });
 }
 
 loadState();
 document.querySelectorAll('.sub-bar').forEach(function(bar) {
-  bar.hidden = !bar.querySelector('.bar-label').textContent.trim();
+  var label = bar.querySelector('.bar-label');
+  bar.hidden = Object.prototype.hasOwnProperty.call(savedSubVisibility, label.id) ? !savedSubVisibility[label.id] : !label.textContent.trim();
 });
 document.querySelectorAll('.sub-list').forEach(function(list) {
   var addButton = list.querySelector('.add-sub-button');

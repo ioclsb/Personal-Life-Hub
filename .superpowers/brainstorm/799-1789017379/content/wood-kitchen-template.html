@@ -243,7 +243,10 @@
 </div>
 
 <script>
-var pageType = new URLSearchParams(window.location.search).get('type') || 'kitchen';
+var queryParams = new URLSearchParams(window.location.search);
+var pageType = queryParams.get('type') || 'kitchen';
+var customSubId = queryParams.get('return') || 'custom';
+var customTitle = queryParams.get('title') || '自定义主题';
 var pageConfigs = {
   kitchen: {
     title: '食材厨具', categories: ['厨具', '食材'], storageKey: 'personal-life-hub-kitchen-template-v1', returnSub: 'sub1b', records: [
@@ -292,11 +295,21 @@ var pageConfigs = {
     ]
   }
 };
-var pageConfig = pageConfigs[pageType] || pageConfigs.kitchen;
+var pageConfig = pageConfigs[pageType];
+if (!pageConfig && pageType === 'custom') {
+  pageConfig = {
+    title: customTitle,
+    categories: ['其他'],
+    storageKey: 'personal-life-hub-custom-' + customSubId.replace(/[^a-zA-Z0-9_-]/g, '_') + '-v1',
+    returnSub: customSubId,
+    records: []
+  };
+}
+if (!pageConfig) pageConfig = pageConfigs.kitchen;
 var pageTitle = pageConfig.title;
 var categoryNames = pageConfig.categories.slice();
 var storageKey = pageConfig.storageKey;
-var returnSub = new URLSearchParams(window.location.search).get('return') || pageConfig.returnSub;
+var returnSub = queryParams.get('return') || pageConfig.returnSub;
 var records = pageConfig.records;
 var currentCategory = categoryNames[0];
 var editingId = null;
