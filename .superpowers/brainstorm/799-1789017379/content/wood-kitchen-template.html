@@ -256,6 +256,15 @@ function getSavedParentTitle(subId) {
     return '';
   }
 }
+function migrateStorage(sourceKey, targetKey) {
+  try {
+    if (sessionStorage.getItem(targetKey) || localStorage.getItem(targetKey)) return;
+    var legacyState = sessionStorage.getItem(sourceKey) || localStorage.getItem(sourceKey);
+    if (!legacyState) return;
+    sessionStorage.setItem(targetKey, legacyState);
+    localStorage.setItem(targetKey, legacyState);
+  } catch (error) {}
+}
 if (pageType === 'custom') {
   var savedCustomTitle = getSavedParentTitle(customSubId);
   if (savedCustomTitle) customTitle = savedCustomTitle;
@@ -322,6 +331,10 @@ if (!pageConfig) pageConfig = pageConfigs.kitchen;
 var categoryNames = pageConfig.categories.slice();
 var storageKey = pageConfig.storageKey;
 var returnSub = queryParams.get('return') || pageConfig.returnSub;
+if (pageType === 'other' && returnSub === 'sub1e') {
+  storageKey = 'personal-life-hub-sub1e-v1';
+  migrateStorage('personal-life-hub-other-template-v1', storageKey);
+}
 var savedReturnTitle = getSavedParentTitle(returnSub);
 if (savedReturnTitle) pageConfig.title = savedReturnTitle;
 var pageTitle = pageConfig.title;
@@ -668,7 +681,7 @@ function loadState() {
     if (saved && saved.purchaseChecked && typeof saved.purchaseChecked === 'object') purchaseChecked = saved.purchaseChecked;
     else if (saved && saved.statAssignments && Array.isArray(saved.statAssignments.new) && saved.statAssignments.new.length) newAssignmentsByMonth[currentMonthKey()] = saved.statAssignments.new.slice();
     if (saved && saved.purchaseCleared && typeof saved.purchaseCleared === 'object') purchaseCleared = saved.purchaseCleared;
-    if (pageType === 'other') {
+    if (pageType === 'other' && returnSub !== 'sub1e') {
       categoryNames = ['其他'];
       records.forEach(function(record) { record.category = '其他'; });
     }

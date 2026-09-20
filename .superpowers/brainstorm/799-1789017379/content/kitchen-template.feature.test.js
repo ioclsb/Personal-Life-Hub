@@ -50,6 +50,9 @@ assert.match(renameSource, /type=custom&return=/, '新增子主题应进入独�
 assert.match(source, /pageType === 'custom'[\s\S]{0,500}personal-life-hub-custom-/, '自定义子主题应使用独立存储空间');
 assert.match(source, /function getSavedParentTitle[\s\S]{0,420}personal-life-hub-state-v2[\s\S]{0,180}labels/, '项目标题应读取母页面最新名称');
 assert.match(source, /var savedReturnTitle = getSavedParentTitle\(returnSub\)[\s\S]{0,260}var pageTitle = pageConfig\.title/, '固定模板项目标题也应同步子主题名称');
+assert.match(source, /function migrateStorage[\s\S]{0,500}setItem\(targetKey/, '存储迁移应复制旧数据到新空间');
+assert.match(source, /pageType === 'other' && returnSub === 'sub1e'[\s\S]{0,180}personal-life-hub-sub1e-v1[\s\S]{0,120}migrateStorage\('personal-life-hub-other-template-v1'/, '重命名的其他入口应迁移到独立数据空间');
+assert.match(source, /pageType === 'other' && returnSub !== 'sub1e'[\s\S]{0,100}categoryNames = \['其他'\]/, '独立的其他入口刷新后应保留新增序列');
 assert.doesNotMatch(renameSource, /if \(!value\) return;/, '新增子主题名称为空时也应允许确认保存');
 assert.match(renameSource, /subEditingLabel\.closest\('\.sub-bar'\)\.hidden = false/, '空白子主题保存后应保留项目入口');
 assert.match(renameSource, /state\.visible/, '子主题入口可见状态应持久化');
@@ -72,7 +75,7 @@ assert.match(source, /id="annualYearButton"/, '年度明细应通过年份按钮
 assert.match(source, /id="annualYearPicker"/, '年度明细应提供可滚动年份列表');
 assert.match(source, /var firstYear = 2025/, '年份选择应从2025年开始');
 assert.match(source, /other:\s*\{[\s\S]{0,220}title: '其他物品', categories: \['其他'\]/, 'Things其他子主题应复刻单序列界面');
-assert.match(source, /if \(pageType === 'other'\) \{[\s\S]{0,120}categoryNames = \['其他'\]/, '其他子主题应兼容旧分类数据');
+assert.match(source, /if \(pageType === 'other' && returnSub !== 'sub1e'\)[\s\S]{0,120}categoryNames = \['其他'\]/, '其他子主题应兼容旧分类数据');
 assert.match(source, /\.item \{[^}]*letter-spacing: 0\.06em/, '项目卡片文字应保持统一字间距');
 assert.doesNotMatch(source, /id="annualYearUp"|id="annualYearDown"/, '年份按钮两侧不应再有上下调整按钮');
 assert.match(source, /\.annual-table[\s\S]{0,180}repeat\(4, minmax/, '年度明细应包含四项统计列');
