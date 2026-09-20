@@ -19,7 +19,10 @@
   .growth-list { min-width: 0; overflow-x: auto; display: flex; gap: 6px; padding-bottom: 2px; scrollbar-width: none; -ms-overflow-style: none; }
   .growth-list::-webkit-scrollbar { display: none; }
   .growth-block { flex: 0 0 112px; min-height: 52px; padding: 7px; border-radius: 6px; background: rgba(255,255,255,0.28); font-size: 10px; }
-  .add-growth, .edit-growth { border: 0; color: #5a4632; cursor: pointer; }
+  .add-growth, .edit-growth, .new-item, .add-item { border: 0; color: #5a4632; cursor: pointer; }
+  .item-date, .item-title { display: block; text-align: left; }
+  .item-date { color: #806b52; font-size: 9px; }
+  .item-title { margin-top: 3px; font-weight: 700; }
   .add-growth { flex: 0 0 38px; background: rgba(255,255,255,0.2); font-size: 20px; }
   .empty { color: #a18e72; font-size: 10px; }
   .modal { position: fixed; inset: 0; display: none; place-items: center; background: rgba(40,25,12,0.32); }
@@ -30,6 +33,7 @@
   .editor textarea { min-height: 100px; resize: vertical; }
   .editor-actions { display: flex; gap: 7px; }
   .editor-actions button { flex: 1; padding: 8px; border: 0; border-radius: 5px; background: rgba(255,255,255,0.5); color: #5a4632; cursor: pointer; }
+  #deleteButton { background: rgba(184,81,73,0.25); }
   @media (max-width: 430px) { .phone-frame { width: 100%; height: 100vh; border-radius: 0; } }
 </style>
 
@@ -41,9 +45,10 @@
 
 <div class="modal" id="itemModal"><div class="editor wood-surface wood-3d">
   <h3 id="editorTitle">新增成长项目</h3>
-  <input id="itemNameInput" maxlength="80" placeholder="项目名称">
-  <textarea id="itemNoteInput" maxlength="500" placeholder="记录项目内容"></textarea>
-  <div class="editor-actions"><button id="cancelButton" type="button">取消</button><button id="saveButton" type="button">保存</button></div>
+  <input id="itemDateInput" type="date">
+  <input id="itemTitleInput" maxlength="80" placeholder="项目名称">
+  <textarea id="itemNoteInput" maxlength="2000" placeholder="记录项目内容"></textarea>
+  <div class="editor-actions"><button id="deleteButton" type="button">删除</button><button id="cancelButton" type="button">取消</button><button id="saveButton" type="button">保存</button></div>
 </div></div>
 
 <script>
@@ -51,7 +56,7 @@ var storageKey = 'personal-life-hub-growth-checklist-v1';
 var returnSub = new URLSearchParams(window.location.search).get('return') || 'sub2b';
 var state = loadState();
 var editingYear = null;
-var editingIndex = null;
+var editingItemId = null;
 
 function ageAtYear(year) { return year - 1996; }
 function calculateAge(year) { return ageAtYear(year); }
@@ -80,44 +85,62 @@ function renderYears() {
     label.innerHTML = '<div class="year-label">' + year + '</div><span class="age-label">' + ageAtYear(year) + ' 岁</span>';
     var list = document.createElement('div');
     list.className = 'growth-list';
-    (Array.isArray(state.items[year]) ? state.items[year] : []).forEach(function(item, index) {
+    (Array.isArray(state.items[year]) ? state.items[year] : []).forEach(function(item) {
       var block = document.createElement('button');
       block.className = 'growth-block edit-growth';
       block.type = 'button';
-      block.textContent = item.name || '未命名项目';
-      block.addEventListener('click', function() { openEditor(year, index); });
+      var date = document.createElement('span');
+      date.className = 'item-date';
+      date.textContent = item.date || '';
+      var title = document.createElement('span');
+      title.className = 'item-title';
+      title.textContent = item.title || '未命名项目';
+      block.appendChild(date);
+      block.appendChild(title);
+      block.addEventListener('click', function() { openItemEditor(year, item.id); });
       list.appendChild(block);
     });
     var addButton = document.createElement('button');
-    addButton.className = 'growth-block add-growth';
+    addButton.className = 'growth-block add-growth new-item add-item';
     addButton.type = 'button';
     addButton.textContent = '+';
     addButton.setAttribute('aria-label', year + ' 年新增成长项目');
-    addButton.addEventListener('click', function() { openEditor(year, null); });
+    addButton.addEventListener('click', function() { openItemEditor(year, null); });
     list.appendChild(addButton);
     if (!state.items[year] || !state.items[year].length) { var empty = document.createElement('span'); empty.className = 'empty'; empty.textContent = '尚无项目'; list.insertBefore(empty, addButton); }
     row.appendChild(label); row.appendChild(list); container.appendChild(row);
   });
 }
 function render() { renderYears(); }
-function openEditor(year, index) {
-  editingYear = year; editingIndex = index;
-  var item = index === null ? null : state.items[year][index];
+function openItemEditor(year, itemId) {
+  editingYear = year; editingItemId = itemId;
+  var items = Array.isArray(state.items[year]) ? state.items[year] : [];
+  var item = itemId === null ? null : items.find(function(candidate) { return candidate.id === itemId; });
   document.getElementById('editorTitle').textContent = item ? '编辑成长项目' : '新增成长项目';
-  document.getElementById('itemNameInput').value = item ? item.name : '';
+  document.getElementById('itemDateInput').value = item ? item.date : '';
+  document.getElementById('itemTitleInput').value = item ? item.title : '';
   document.getElementById('itemNoteInput').value = item ? item.note : '';
+  document.getElementById('deleteButton').hidden = !item;
   document.getElementById('itemModal').classList.add('show');
-  document.getElementById('itemNameInput').focus();
+  document.getElementById('itemTitleInput').focus();
 }
-function closeEditor() { document.getElementById('itemModal').classList.remove('show'); editingYear = null; editingIndex = null; }
+function closeEditor() { document.getElementById('itemModal').classList.remove('show'); editingYear = null; editingItemId = null; }
 document.getElementById('backButton').addEventListener('click', function() { window.location.href = 'wood-rename.html#' + encodeURIComponent(returnSub); });
 document.getElementById('cancelButton').addEventListener('click', closeEditor);
+document.getElementById('deleteButton').addEventListener('click', function() {
+  if (editingYear === null || editingItemId === null) return;
+  state.items[editingYear] = (state.items[editingYear] || []).filter(function(item) { return item.id !== editingItemId; });
+  saveState(); closeEditor(); render();
+});
 document.getElementById('saveButton').addEventListener('click', function() {
-  var name = document.getElementById('itemNameInput').value.trim();
-  if (!name) return;
+  var title = document.getElementById('itemTitleInput').value.trim();
+  if (!title || editingYear === null) return;
   if (!Array.isArray(state.items[editingYear])) state.items[editingYear] = [];
-  var item = { name: name, note: document.getElementById('itemNoteInput').value.trim() };
-  if (editingIndex === null) state.items[editingYear].push(item); else state.items[editingYear][editingIndex] = item;
+  var date = document.getElementById('itemDateInput').value;
+  var note = document.getElementById('itemNoteInput').value.trim();
+  var item = { id: editingItemId || Date.now(), date: date, title: title, note: note };
+  var index = state.items[editingYear].findIndex(function(candidate) { return candidate.id === editingItemId; });
+  if (index === -1) state.items[editingYear].push(item); else state.items[editingYear][index] = item;
   saveState(); closeEditor(); render();
 });
 render();

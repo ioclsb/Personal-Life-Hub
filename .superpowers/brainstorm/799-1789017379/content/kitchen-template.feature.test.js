@@ -24,6 +24,14 @@ assert.match(growthSource, /return \{ years: defaultYears\.slice\(\), items: ite
 assert.match(growthSource, /class="growth-block"|growth-block/, '成长清单应包含成长方块字段');
 assert.match(growthSource, /addGrowth|addChecklist|新增/, '成长清单应提供新增入口');
 assert.match(growthSource, /editGrowth|editChecklist|编辑/, '成长清单应提供编辑入口');
+assert.match(growthSource, /date:\s*date[\s\S]{0,120}title:\s*title[\s\S]{0,120}note:/, '项目应保存日期、名称和备注');
+assert.match(growthSource, /function openItemEditor\(year, itemId\)/, '项目应支持新增和编辑');
+assert.match(growthSource, /deleteItem|deleteButton/, '项目应支持删除');
+assert.match(growthSource, /new-item|add-item/, '每个年份应提供新增项目入口');
+assert.match(growthSource, /id="itemDateInput" type="date"/, '编辑器应包含日期字段');
+assert.match(growthSource, /id="itemTitleInput" maxlength="80"/, '编辑器应包含名称字段');
+assert.match(growthSource, /id="itemNoteInput" maxlength="2000"/, '编辑器应包含备注字段');
+assert.doesNotMatch(growthSource, /personal-life-hub-life-timeline-v1/, '成长清单不得读取人生进度存储');
 
 assert.match(source, /statAssignments\s*=\s*\{\s*new:\s*\[\]/, '统计状态应包含本月新增集合');
 assert.doesNotMatch(source, /if \(\['new', 'discarded', 'need'\][\s\S]{0,120}push\(dragId\)/, '本月新增不能通过拖动计数');
