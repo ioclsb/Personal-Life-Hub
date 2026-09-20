@@ -7,7 +7,10 @@ const renameSource = fs.readFileSync(__dirname + '/wood-rename.html', 'utf8');
 const growthSource = fs.readFileSync(__dirname + '/wood-growth-checklist.html', 'utf8');
 
 assert.match(renameSource, /wood-growth-checklist\.html\?return=sub2b/, '成长清单入口应指向独立页面');
+assert.match(renameSource, /sub2a[\s\S]{0,500}wood-life-timeline\.html\?return=sub2a/, '人生进度入口不得改变');
+assert.match(lifeSource, /personal-life-hub-life-timeline-v1/, '人生进度应继续使用原存储');
 assert.match(growthSource, /personal-life-hub-growth-checklist-v1/, '成长清单应使用独立存储');
+assert.doesNotMatch(growthSource, /personal-life-hub-life-timeline-v1/, '成长清单不得读取人生进度存储');
 assert.match(growthSource, /function generateYears|generateYears\(/, '成长清单应生成年份选项');
 assert.match(growthSource, /function calculateAge|calculateAge\(/, '成长清单应计算年龄');
 assert.match(growthSource, /for \(var year = 1997; year <= 2026; year \+= 1\)/, '成长清单应生成完整年份范围');
@@ -31,8 +34,6 @@ assert.match(growthSource, /new-item|add-item/, '每个年份应提供新增项�
 assert.match(growthSource, /id="itemDateInput" type="date"/, '编辑器应包含日期字段');
 assert.match(growthSource, /id="itemTitleInput" maxlength="80"/, '编辑器应包含名称字段');
 assert.match(growthSource, /id="itemNoteInput" maxlength="2000"/, '编辑器应包含备注字段');
-assert.doesNotMatch(growthSource, /personal-life-hub-life-timeline-v1/, '成长清单不得读取人生进度存储');
-
 assert.match(source, /statAssignments\s*=\s*\{\s*new:\s*\[\]/, '统计状态应包含本月新增集合');
 assert.doesNotMatch(source, /if \(\['new', 'discarded', 'need'\][\s\S]{0,120}push\(dragId\)/, '本月新增不能通过拖动计数');
 assert.doesNotMatch(source, /key === 'new'[\s\S]{0,220}statAssignments\.new\.indexOf/, '本月新增不能依赖拖动集合');
