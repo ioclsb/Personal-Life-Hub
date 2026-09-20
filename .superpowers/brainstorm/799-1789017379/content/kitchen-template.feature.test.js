@@ -20,6 +20,7 @@ assert.match(growthSource, /function saveState\(\)[\s\S]{0,300}localStorage\.set
 assert.match(growthSource, /function render\(\)/, '成长清单应提供渲染接口');
 assert.match(growthSource, /function renderYears\(\)/, '成长清单应提供年份渲染接口');
 assert.match(growthSource, /function ageAtYear\(year\)/, '成长清单应提供年龄计算接口');
+assert.match(growthSource, /return \{ years: defaultYears\.slice\(\), items: items \};/, '成长清单应忽略异常年份并保留完整基础年份及项目数据');
 assert.match(growthSource, /class="growth-block"|growth-block/, '成长清单应包含成长方块字段');
 assert.match(growthSource, /addGrowth|addChecklist|新增/, '成长清单应提供新增入口');
 assert.match(growthSource, /editGrowth|editChecklist|编辑/, '成长清单应提供编辑入口');
