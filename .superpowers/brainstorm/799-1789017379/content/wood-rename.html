@@ -370,6 +370,12 @@ function openLifeTimeline(e) {
   navigateWithWoodClick('wood-life-timeline.html?return=sub2a');
 }
 
+function openGrowthChecklist(e) {
+  if (justDragged || isEditing) return;
+  if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; }
+  navigateWithWoodClick('wood-growth-checklist.html?return=sub2b');
+}
+
 function navigateWithWoodClick(url) {
   if (clickTimer) clearTimeout(clickTimer);
   playWoodClick();
@@ -497,6 +503,10 @@ function bindSubBar(bar) {
     event.preventDefault();
     event.stopPropagation();
     var labelId = bar.querySelector('.bar-label').id;
+    if (labelId === 'sub2b') {
+      openGrowthChecklist(event);
+      return;
+    }
     var routes = {
       sub1a: 'wood-kitchen-template.html?type=personal&return=sub1a',
       sub1b: 'wood-kitchen-template.html?return=sub1b',

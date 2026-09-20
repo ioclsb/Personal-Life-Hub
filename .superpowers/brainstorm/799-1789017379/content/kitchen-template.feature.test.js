@@ -4,6 +4,15 @@ const assert = require('assert');
 const source = fs.readFileSync(__dirname + '/wood-kitchen-template.html', 'utf8');
 const lifeSource = fs.readFileSync(__dirname + '/wood-life-timeline.html', 'utf8');
 const renameSource = fs.readFileSync(__dirname + '/wood-rename.html', 'utf8');
+const growthSource = fs.readFileSync(__dirname + '/wood-growth-checklist.html', 'utf8');
+
+assert.match(renameSource, /sub2b[\s\S]{0,500}wood-growth-checklist\.html\?return=sub2b/, '成长清单入口应指向独立页面');
+assert.match(growthSource, /personal-life-hub-growth-checklist-v1/, '成长清单应使用独立存储');
+assert.match(growthSource, /function generateYears|generateYears\(/, '成长清单应生成年份选项');
+assert.match(growthSource, /function calculateAge|calculateAge\(/, '成长清单应计算年龄');
+assert.match(growthSource, /class="growth-block"|growth-block/, '成长清单应包含成长方块字段');
+assert.match(growthSource, /addGrowth|addChecklist|新增/, '成长清单应提供新增入口');
+assert.match(growthSource, /editGrowth|editChecklist|编辑/, '成长清单应提供编辑入口');
 
 assert.match(source, /statAssignments\s*=\s*\{\s*new:\s*\[\]/, '统计状态应包含本月新增集合');
 assert.doesNotMatch(source, /if \(\['new', 'discarded', 'need'\][\s\S]{0,120}push\(dragId\)/, '本月新增不能通过拖动计数');
