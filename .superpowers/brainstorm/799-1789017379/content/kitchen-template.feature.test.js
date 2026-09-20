@@ -6,10 +6,20 @@ const lifeSource = fs.readFileSync(__dirname + '/wood-life-timeline.html', 'utf8
 const renameSource = fs.readFileSync(__dirname + '/wood-rename.html', 'utf8');
 const growthSource = fs.readFileSync(__dirname + '/wood-growth-checklist.html', 'utf8');
 
-assert.match(renameSource, /sub2b[\s\S]{0,500}wood-growth-checklist\.html\?return=sub2b/, '成长清单入口应指向独立页面');
+assert.match(renameSource, /wood-growth-checklist\.html\?return=sub2b/, '成长清单入口应指向独立页面');
 assert.match(growthSource, /personal-life-hub-growth-checklist-v1/, '成长清单应使用独立存储');
 assert.match(growthSource, /function generateYears|generateYears\(/, '成长清单应生成年份选项');
 assert.match(growthSource, /function calculateAge|calculateAge\(/, '成长清单应计算年龄');
+assert.match(growthSource, /for \(var year = 1997; year <= 2026; year \+= 1\)/, '成长清单应生成完整年份范围');
+assert.match(growthSource, /return year - 1996/, '成长清单年龄应从一岁开始');
+assert.match(growthSource, /sort\(function\(a, b\) \{ return b - a; \}\)/, '年份应从2026向1997排列');
+assert.match(growthSource, /returnSub\s*=\s*new URLSearchParams\(window\.location\.search\)\.get\('return'\)\s*\|\|\s*'sub2b'/, '成长清单应接收 sub2b 返回参数');
+assert.match(growthSource, /window\.location\.href\s*=\s*['"]wood-rename\.html#['"]\s*\+\s*encodeURIComponent\(returnSub\)/, '成长清单应返回入口页面');
+assert.match(growthSource, /function loadState\(\)/, '成长清单应提供状态读取接口');
+assert.match(growthSource, /function saveState\(\)[\s\S]{0,300}localStorage\.setItem\(storageKey/, '成长清单应使用独立存储保存');
+assert.match(growthSource, /function render\(\)/, '成长清单应提供渲染接口');
+assert.match(growthSource, /function renderYears\(\)/, '成长清单应提供年份渲染接口');
+assert.match(growthSource, /function ageAtYear\(year\)/, '成长清单应提供年龄计算接口');
 assert.match(growthSource, /class="growth-block"|growth-block/, '成长清单应包含成长方块字段');
 assert.match(growthSource, /addGrowth|addChecklist|新增/, '成长清单应提供新增入口');
 assert.match(growthSource, /editGrowth|editChecklist|编辑/, '成长清单应提供编辑入口');
