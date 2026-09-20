@@ -147,3 +147,15 @@ assert.strictEqual(context.state.items[1997].length, 0, '删除应移除1997的�
 assert.deepStrictEqual(JSON.parse(JSON.stringify(context.state.items[1998][0])), otherYearItemSnapshot, '删除1997不应影响1998');
 
 console.log('成长清单行为测试通过：新增、编辑、取消、删除、年份隔离和备注隐藏');
+
+localStorage.data['personal-life-hub-growth-checklist-v1'] = JSON.stringify({
+  items: {
+    1997: [null, { id: 2, title: '字段缺失' }, { id: 3, date: '2026-01-01', title: '合法项目', note: '备注', extra: true }]
+  }
+});
+context.state = context.loadState();
+context.render();
+assert.deepStrictEqual(JSON.parse(JSON.stringify(context.state.items[1997])), [
+  { id: 3, date: '2026-01-01', title: '合法项目', note: '备注' }
+], '损坏存储中的非法项目应丢弃并保留合法字段');
+console.log('成长清单损坏存储回归测试通过');

@@ -69,7 +69,20 @@ function loadState() {
   var defaultYears = generateYears();
   try {
     var saved = JSON.parse(localStorage.getItem(storageKey)) || {};
-    var items = saved.items && typeof saved.items === 'object' ? saved.items : {};
+    var savedItems = saved.items && typeof saved.items === 'object' && !Array.isArray(saved.items) ? saved.items : {};
+    var items = {};
+    defaultYears.forEach(function(year) {
+      var yearItems = Array.isArray(savedItems[year]) ? savedItems[year] : [];
+      items[year] = yearItems.filter(function(item) {
+        return item && typeof item === 'object' && !Array.isArray(item) &&
+          Object.prototype.hasOwnProperty.call(item, 'id') &&
+          Object.prototype.hasOwnProperty.call(item, 'date') &&
+          Object.prototype.hasOwnProperty.call(item, 'title') &&
+          Object.prototype.hasOwnProperty.call(item, 'note');
+      }).map(function(item) {
+        return { id: item.id, date: item.date, title: item.title, note: item.note };
+      });
+    });
     return { years: defaultYears.slice(), items: items };
   } catch (error) { return { years: defaultYears, items: {} }; }
 }
