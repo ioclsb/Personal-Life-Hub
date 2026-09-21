@@ -37,6 +37,7 @@
   .header { display: flex; align-items: center; gap: 8px; padding: 4px 2px 10px; }
   .back { font-size: 22px; cursor: pointer; }
   .title { font-size: 18px; font-weight: 800; letter-spacing: 0.08em; }
+  .calendar-date { margin-left: 6px; color: #5a4632; font-size: 14px; font-weight: 800; letter-spacing: 0.01em; white-space: nowrap; }
   .layout { min-height: 0; flex: 1; display: grid; grid-template-columns: 70px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); column-gap: 8px; row-gap: 10px; }
   .control-panel { display: contents; }
   .control-main { min-width: 0; grid-column: 2; grid-row: 1; }
@@ -69,6 +70,10 @@
   .stat-label { display: contents; }
   .stat-name { order: 2; max-width: 100%; overflow: hidden; color: #806b52; font-size: 9px; letter-spacing: 0.06em; text-overflow: ellipsis; transform: translateY(3px); white-space: nowrap; }
   .stat-count { order: 1; font-size: 22px; font-weight: 800; line-height: 1; }
+  .calendar-stat { height: 69px; min-height: 69px; overflow: hidden; }
+  .calendar-stat .stat-head { height: 58px; min-height: 58px; gap: 3px; overflow: hidden; }
+  .calendar-stat .stat-name { font-size: 9px; font-weight: 400; }
+  .calendar-stat .stat-count { display: -webkit-box; max-width: 100%; max-height: 34px; overflow: hidden; font-size: 12px; line-height: 1.35; text-align: center; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
   .annual-modal .editor { width: 340px; max-height: 85vh; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
   .annual-modal .editor::-webkit-scrollbar { display: none; }
   .annual-modal .editor-actions { transform: translateY(5px); }
@@ -120,6 +125,12 @@
   .purchase-empty { padding: 12px 4px; color: #806b52; font-size: 12px; text-align: center; }
   .add { padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; }
   .items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .calendar-solar-items { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .calendar-solar-items .item { min-height: 38px; }
+  .calendar-holiday-items { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .calendar-holiday-items .item { min-height: 38px; }
+  .calendar-date-items { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .calendar-date-items .item { min-height: 38px; }
   .item { min-height: 43px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 6px 4px; border-radius: 7px; cursor: grab; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-align: center; transition: transform 0.12s, opacity 0.12s; }
   .item-name { max-width: 100%; overflow: hidden; letter-spacing: 0.12em; text-overflow: ellipsis; white-space: nowrap; }
   .item-time { max-width: 100%; overflow: hidden; color: #806b52; font-size: 9px; font-weight: 500; letter-spacing: 0.04em; text-overflow: ellipsis; white-space: nowrap; }
@@ -156,12 +167,20 @@
   .editor-actions { display: flex; gap: 7px; }
   .editor-actions button { flex: 1; padding: 8px; border: 0; border-radius: 6px; color: #5a4632; cursor: pointer; }
   .category-editor { width: 270px; padding: 12px; }
+  .calendar-add-modal .editor { width: 250px; padding: 12px; }
+  .calendar-add-modal .editor h3 { margin-bottom: 10px; text-align: center; }
+  .calendar-add-modal .editor input { margin-bottom: 8px; padding: 7px; }
+  .calendar-add-modal .editor-actions { margin-top: 2px; }
+  .item-action-modal .editor { width: 250px; padding: 12px; }
+  .item-action-modal .editor h3 { margin-bottom: 10px; text-align: center; }
+  .item-action-modal .editor input { margin-bottom: 8px; padding: 7px; }
+  .item-action-modal .editor-actions { margin-top: 2px; }
   @media (max-width: 430px) { .phone-frame { width: 100%; height: 100vh; border-radius: 0; } }
 </style>
 
 <div class="phone-frame">
   <div class="screen">
-    <div class="header"><span class="back">‹</span><span class="title"></span></div>
+    <div class="header"><span class="back">‹</span><span class="title"></span><span class="calendar-date" hidden></span></div>
     <div class="layout">
       <div class="control-panel">
         <aside class="sidebar">
@@ -200,7 +219,7 @@
         <tbody id="purchaseList"></tbody>
       </table>
     </div>
-    <div class="purchase-actions"><button id="purchaseClearButton">一键清空</button><button id="purchaseSelectAllButton">全选</button><button id="purchaseConfirmButton">确定</button></div>
+    <div class="purchase-actions"><button id="purchaseClearButton">清空</button><button id="purchaseSelectAllButton">全选</button><button id="purchaseConfirmButton">确定</button></div>
   </div>
 </div>
 
@@ -209,6 +228,26 @@
     <div class="annual-head"><h3>年度明细</h3><div class="annual-year-control"><button class="annual-year-button" id="annualYearButton" type="button"><span id="annualYearLabel"></span></button><div class="annual-year-picker wood-surface wood-3d" id="annualYearPicker" hidden></div></div></div>
     <div class="annual-table" id="annualTable"></div>
     <div class="editor-actions"><button id="annualCloseButton">关闭</button></div>
+  </div>
+</div>
+
+<div class="modal calendar-add-modal" id="calendarAddModal">
+  <div class="editor wood-surface wood-3d">
+    <h3>新增日期</h3>
+    <label class="details-label" for="calendarAddDateInput">日期</label>
+    <input id="calendarAddDateInput" type="date">
+    <label class="details-label" for="calendarAddNameInput">名称</label>
+    <input id="calendarAddNameInput" maxlength="30" placeholder="输入名称">
+    <div class="editor-actions"><button id="calendarAddCancelButton" type="button">取消</button><button id="calendarAddSaveButton" type="button">保存</button></div>
+  </div>
+</div>
+
+<div class="modal item-action-modal" id="itemActionModal">
+  <div class="editor wood-surface wood-3d">
+    <h3>编辑项目</h3>
+    <label class="details-label" for="itemActionNameInput">名称</label>
+    <input id="itemActionNameInput" maxlength="30" placeholder="输入名称">
+    <div class="editor-actions"><button id="itemActionDeleteButton" type="button">删除</button><button id="itemActionCancelButton" type="button">取消</button><button id="itemActionSaveButton" type="button">保存</button></div>
   </div>
 </div>
 
@@ -269,6 +308,73 @@ if (pageType === 'custom') {
   var savedCustomTitle = getSavedParentTitle(customSubId);
   if (savedCustomTitle) customTitle = savedCustomTitle;
 }
+var calendarSolarTerms = [
+  { id: 5001, category: '十二节气', name: '1月5日 小寒', created: '2000-01-05', status: 'normal' },
+  { id: 5002, category: '十二节气', name: '1月20日 大寒', created: '2000-01-20', status: 'normal' },
+  { id: 5003, category: '十二节气', name: '2月4日 立春', created: '2000-02-04', status: 'normal' },
+  { id: 5004, category: '十二节气', name: '2月19日 雨水', created: '2000-02-19', status: 'normal' },
+  { id: 5005, category: '十二节气', name: '3月5日 惊蛰', created: '2000-03-05', status: 'normal' },
+  { id: 5006, category: '十二节气', name: '3月20日 春分', created: '2000-03-20', status: 'normal' },
+  { id: 5007, category: '十二节气', name: '4月4日 清明', created: '2000-04-04', status: 'normal' },
+  { id: 5008, category: '十二节气', name: '4月20日 谷雨', created: '2000-04-20', status: 'normal' },
+  { id: 5009, category: '十二节气', name: '5月5日 立夏', created: '2000-05-05', status: 'normal' },
+  { id: 5010, category: '十二节气', name: '5月21日 小满', created: '2000-05-21', status: 'normal' },
+  { id: 5011, category: '十二节气', name: '6月5日 芒种', created: '2000-06-05', status: 'normal' },
+  { id: 5012, category: '十二节气', name: '6月21日 夏至', created: '2000-06-21', status: 'normal' },
+  { id: 5013, category: '十二节气', name: '7月7日 小暑', created: '2000-07-07', status: 'normal' },
+  { id: 5014, category: '十二节气', name: '7月22日 大暑', created: '2000-07-22', status: 'normal' },
+  { id: 5015, category: '十二节气', name: '8月7日 立秋', created: '2000-08-07', status: 'normal' },
+  { id: 5016, category: '十二节气', name: '8月23日 处暑', created: '2000-08-23', status: 'normal' },
+  { id: 5017, category: '十二节气', name: '9月7日 白露', created: '2000-09-07', status: 'normal' },
+  { id: 5018, category: '十二节气', name: '9月22日 秋分', created: '2000-09-22', status: 'normal' },
+  { id: 5019, category: '十二节气', name: '10月8日 寒露', created: '2000-10-08', status: 'normal' },
+  { id: 5020, category: '十二节气', name: '10月23日 霜降', created: '2000-10-23', status: 'normal' },
+  { id: 5021, category: '十二节气', name: '11月7日 立冬', created: '2000-11-07', status: 'normal' },
+  { id: 5022, category: '十二节气', name: '11月22日 小雪', created: '2000-11-22', status: 'normal' },
+  { id: 5023, category: '十二节气', name: '12月7日 大雪', created: '2000-12-07', status: 'normal' },
+  { id: 5024, category: '十二节气', name: '12月21日 冬至', created: '2000-12-21', status: 'normal' }
+];
+var calendarHolidays = [
+  { id: 5101, category: '重要节日', name: '1.1 元旦', created: '2000-01-01', status: 'normal' },
+  { id: 5102, category: '重要节日', name: '1.17 腊八节', created: '2000-01-17', status: 'normal' },
+  { id: 5103, category: '重要节日', name: '2.4 除夕', created: '2000-02-04', status: 'normal' },
+  { id: 5104, category: '重要节日', name: '2.5 春节', created: '2000-02-05', status: 'normal' },
+  { id: 5105, category: '重要节日', name: '2.14 情人节', created: '2000-02-14', status: 'normal' },
+  { id: 5106, category: '重要节日', name: '2.19 元宵节', created: '2000-02-19', status: 'normal' },
+  { id: 5107, category: '重要节日', name: '3.8 妇女节', created: '2000-03-08', status: 'normal' },
+  { id: 5108, category: '重要节日', name: '4.1 愚人节', created: '2000-04-01', status: 'normal' },
+  { id: 5109, category: '重要节日', name: '4.4 清明节', created: '2000-04-04', status: 'normal' },
+  { id: 5110, category: '重要节日', name: '5.1 劳动节', created: '2000-05-01', status: 'normal' },
+  { id: 5111, category: '重要节日', name: '5.4 青年节', created: '2000-05-04', status: 'normal' },
+  { id: 5112, category: '重要节日', name: '5.12 护士节', created: '2000-05-12', status: 'normal' },
+  { id: 5113, category: '重要节日', name: '6.1 儿童节', created: '2000-06-01', status: 'normal' },
+  { id: 5114, category: '重要节日', name: '6.6 端午节', created: '2000-06-06', status: 'normal' },
+  { id: 5115, category: '重要节日', name: '7.1 建党节', created: '2000-07-01', status: 'normal' },
+  { id: 5116, category: '重要节日', name: '7.7 七夕节', created: '2000-07-07', status: 'normal' },
+  { id: 5117, category: '重要节日', name: '8.1 建军节', created: '2000-08-01', status: 'normal' },
+  { id: 5118, category: '重要节日', name: '8.7 中元节', created: '2000-08-07', status: 'normal' },
+  { id: 5119, category: '重要节日', name: '9.10 教师节', created: '2000-09-10', status: 'normal' },
+  { id: 5120, category: '重要节日', name: '9.12 中秋节', created: '2000-09-12', status: 'normal' },
+  { id: 5121, category: '重要节日', name: '10.1 国庆节', created: '2000-10-01', status: 'normal' },
+  { id: 5122, category: '重要节日', name: '10.7 重阳节', created: '2000-10-07', status: 'normal' },
+  { id: 5123, category: '重要节日', name: '10.31 万圣节', created: '2000-10-31', status: 'normal' },
+  { id: 5124, category: '重要节日', name: '11.11 双十一', created: '2000-11-11', status: 'normal' },
+  { id: 5125, category: '重要节日', name: '12.24 平安夜', created: '2000-12-24', status: 'normal' },
+  { id: 5126, category: '重要节日', name: '12.25 圣诞节', created: '2000-12-25', status: 'normal' }
+];
+var calendarHolidayAnnualDates = {
+  2026: {
+    5102: '2026-01-26',
+    5103: '2026-02-16',
+    5104: '2026-02-17',
+    5106: '2026-03-03',
+    5114: '2026-06-19',
+    5116: '2026-08-19',
+    5118: '2026-08-27',
+    5120: '2026-09-25',
+    5122: '2026-10-18'
+  }
+};
 var pageConfigs = {
   kitchen: {
     title: '食材厨具', categories: ['厨具', '食材'], storageKey: 'personal-life-hub-kitchen-template-v1', returnSub: 'sub1b', records: [
@@ -315,6 +421,9 @@ var pageConfigs = {
       { id: 402, category: '其他', name: '纪念物', created: '2026-09-04', status: 'normal' },
       { id: 403, category: '其他', name: '螺丝刀', created: '2026-09-08', status: 'normal' }
     ]
+  },
+  calendar: {
+    title: '节日节气', categories: ['十二节气', '重要节日', '纪念日', '生日', '特殊日记录'], storageKey: 'personal-life-hub-calendar-v1', returnSub: 'sub2c', records: calendarSolarTerms.concat(calendarHolidays)
   }
 };
 var pageConfig = pageConfigs[pageType];
@@ -331,6 +440,9 @@ if (!pageConfig) pageConfig = pageConfigs.kitchen;
 var categoryNames = pageConfig.categories.slice();
 var storageKey = pageConfig.storageKey;
 var returnSub = queryParams.get('return') || pageConfig.returnSub;
+var calendarCategoryRoles = pageType === 'calendar' ? {
+  '十二节气': 'solar', '重要节日': 'holiday', '纪念日': 'memorial', '生日': 'birthday', '特殊日记录': 'special'
+} : {};
 if (pageType === 'other' && returnSub === 'sub1e') {
   storageKey = 'personal-life-hub-sub1e-v1';
   migrateStorage('personal-life-hub-other-template-v1', storageKey);
@@ -341,6 +453,7 @@ var pageTitle = pageConfig.title;
 var records = pageConfig.records;
 var currentCategory = categoryNames[0];
 var editingId = null;
+var itemActionId = null;
 var editingAssignment = null;
 var dragId = null;
 var dragMode = null;
@@ -349,7 +462,6 @@ var dragInsertBefore = true;
 var statAssignments = { new: [], discarded: [], need: [] };
 var touchDragTimer = null;
 var touchDragging = false;
-var suppressClick = false;
 var categoryPressTimer = null;
 var categoryLongPressed = false;
 var categoryTouchDragging = false;
@@ -362,6 +474,7 @@ var newAssignmentsByMonth = {};
 var monthlyStats = {};
 var purchaseChecked = {};
 var purchaseCleared = {};
+var purchaseDraft = null;
 var audioContext = null;
 var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 var monthChineseNames = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
@@ -401,6 +514,23 @@ function playWoodClick() {
 
 document.querySelector('h2').textContent = pageTitle + ' — 记录模板';
 document.querySelector('.title').textContent = pageTitle;
+function calendarHeaderDateText(date) {
+  return date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日';
+}
+function calendarWeekdayText(date) {
+  var weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+  return weekdays[date.getDay()];
+}
+function calendarLunarDateText(date) {
+  return new Intl.DateTimeFormat('zh-CN-u-ca-chinese', { month: 'long', day: 'numeric' }).format(date);
+}
+if (pageType === 'calendar') {
+  var calendarDate = document.querySelector('.calendar-date');
+  calendarDate.textContent = calendarHeaderDateText(new Date());
+  calendarDate.hidden = false;
+  document.getElementById('purchaseButton').hidden = true;
+  document.querySelector('.editor-stat-options').hidden = true;
+}
 var categoryContainer = document.getElementById('categories');
 function renderCategories() {
   categoryContainer.textContent = '';
@@ -470,6 +600,116 @@ function dateKey(year, month) { return year + '-' + String(month).padStart(2, '0
 function currentMonthKey() { var now = new Date(); return dateKey(now.getFullYear(), now.getMonth() + 1); }
 function currentMonthName() { return monthNames[new Date().getMonth()]; }
 function currentMonthChineseName() { return monthChineseNames[new Date().getMonth()]; }
+function calendarRoleForCategory(category) { return calendarCategoryRoles[category] || ''; }
+function calendarDateValue(record, year) {
+  var annualDates = calendarHolidayAnnualDates[year] || {};
+  var storedDate = annualDates[record.id] || record.time || record.created || '';
+  if (storedDate) return storedDate;
+  if (calendarRoleForCategory(record.category) === 'holiday') {
+    var nameDate = String(record.name || '').match(/^(\d{1,2})\.(\d{1,2})\s*/);
+    if (nameDate) return year + '-' + String(nameDate[1]).padStart(2, '0') + '-' + String(nameDate[2]).padStart(2, '0');
+  }
+  return '';
+}
+function sameMonthDay(value, date) {
+  var match = String(value).match(/^\d{4}-(\d{2})-(\d{2})/);
+  return Boolean(match) && Number(match[1]) === date.getMonth() + 1 && Number(match[2]) === date.getDate();
+}
+function calendarRecords(roles, matcher) {
+  var now = new Date();
+  return records.filter(function(record) {
+    return roles.indexOf(calendarRoleForCategory(record.category)) !== -1 && matcher(calendarDateValue(record, now.getFullYear()), now);
+  });
+}
+function calendarRecordName(record) {
+  var dateValue = calendarDateValue(record, new Date().getFullYear()).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!dateValue || (calendarRoleForCategory(record.category) !== 'holiday' && !record.time)) return record.name;
+  var name = record.name.replace(/^(?:\d{1,2}\.\d{1,2}|\d{1,2}月\d{1,2}日)\s*/, '');
+  return Number(dateValue[2]) + '.' + Number(dateValue[3]) + ' ' + name;
+}
+function calendarMonthDayKey(record) {
+  var match = calendarDateValue(record, new Date().getFullYear()).match(/^\d{4}-(\d{2})-(\d{2})/);
+  return match ? match[1] + '-' + match[2] : '99-99';
+}
+function calendarHolidayBaseName(record) {
+  return String(record.name || '').replace(/^\d{1,2}\.\d{1,2}\s*/, '').replace(/^\d{1,2}月\d{1,2}日\s*/, '');
+}
+function loadCalendarHolidayAnnualCache() {
+  if (pageType !== 'calendar') return;
+  try {
+    var cached = JSON.parse(localStorage.getItem('personal-life-hub-calendar-annual-v1') || '{}');
+    Object.keys(cached).forEach(function(year) {
+      calendarHolidayAnnualDates[year] = Object.assign({}, cached[year], calendarHolidayAnnualDates[year] || {});
+    });
+  } catch (error) {}
+}
+function refreshCalendarHolidayYear(year) {
+  if (pageType !== 'calendar' || typeof fetch !== 'function') return Promise.resolve(false);
+  return fetch('https://timor.tech/api/holiday/year/' + year + '/')
+    .then(function(response) { if (!response.ok) throw new Error('holiday api'); return response.json(); })
+    .then(function(payload) {
+      var annualDates = Object.assign({}, calendarHolidayAnnualDates[year] || {});
+      var holidayData = payload && payload.holiday ? payload.holiday : {};
+      Object.keys(holidayData).forEach(function(key) {
+        var holiday = holidayData[key];
+        if (!holiday || !holiday.date || !holiday.name) return;
+        var record = records.find(function(item) {
+          if (calendarRoleForCategory(item.category) !== 'holiday') return false;
+          var baseName = calendarHolidayBaseName(item);
+          return baseName.indexOf(holiday.name) !== -1 || holiday.name.indexOf(baseName) !== -1;
+        });
+        if (record && !annualDates[record.id]) annualDates[record.id] = holiday.date;
+      });
+      calendarHolidayAnnualDates[year] = annualDates;
+      localStorage.setItem('personal-life-hub-calendar-annual-v1', JSON.stringify(calendarHolidayAnnualDates));
+      renderCalendarStats();
+      render();
+      return true;
+    })
+    .catch(function() { return false; });
+}
+function calendarStatRecordName(record) {
+  return String(record.name || '').replace(/^(?:\d{1,2}\.\d{1,2}|\d{1,2}月\d{1,2}日)\s*/, '');
+}
+function calendarStatNames(list) {
+  return list.map(calendarStatRecordName).filter(Boolean).join('、');
+}
+function calendarStatData(now) {
+  var solarRecords = calendarRecords(['solar'], function(value) { return sameMonthDay(value, now); });
+  var holidayRecords = calendarRecords(['holiday'], function(value) { return sameMonthDay(value, now); });
+  var memorialRecords = calendarRecords(['memorial'], function(value) { return sameMonthDay(value, now); });
+  var birthdayRecords = calendarRecords(['birthday'], function(value) { return sameMonthDay(value, now); });
+  var specialRecords = calendarRecords(['special'], function(value) { return sameMonthDay(value, now); });
+  return [
+    { title: calendarWeekdayText(now), note: calendarLunarDateText(now) },
+    { title: calendarStatNames(holidayRecords.length ? holidayRecords : solarRecords), note: holidayRecords.length && solarRecords.length ? calendarStatNames(solarRecords) : '节气节日' },
+    { title: calendarStatNames(memorialRecords.length ? memorialRecords : birthdayRecords), note: memorialRecords.length && birthdayRecords.length ? calendarStatNames(birthdayRecords) : '纪念日 生日' },
+    { title: calendarStatNames(specialRecords), note: calendarStatNames(specialRecords) ? '' : '特殊日' }
+  ];
+}
+function renderCalendarStats() {
+  var now = new Date();
+  var cards = calendarStatData(now);
+  var stats = document.getElementById('stats');
+  stats.textContent = '';
+  cards.forEach(function(data) {
+    var card = document.createElement('div');
+    card.className = 'stat calendar-stat wood-surface wood-3d';
+    var head = document.createElement('div');
+    head.className = 'stat-head';
+    var label = document.createElement('span');
+    label.className = 'stat-name';
+    label.textContent = data.note;
+    label.hidden = !data.note;
+    var count = document.createElement('span');
+    count.className = 'stat-count';
+    count.textContent = data.title;
+    head.appendChild(label);
+    head.appendChild(count);
+    card.appendChild(head);
+    stats.appendChild(card);
+  });
+}
 function activeRecords() {
   var discardedIds = statIds('discarded');
   var needIds = statIds('need');
@@ -558,7 +798,6 @@ function startNoteEdit(record, noteCell) {
     finished = true;
     if (save) {
       record.note = input.value.trim();
-      saveState();
     }
     renderPurchaseList();
     render();
@@ -588,18 +827,15 @@ function renderPurchaseList() {
     checkbox.type = 'checkbox';
     checkbox.dataset.id = record.id;
     checkbox.checked = Boolean(purchaseChecked[record.id]);
-    checkbox.addEventListener('change', function() {
-      var id = Number(this.dataset.id);
-      if (this.checked) {
-        purchaseChecked[id] = true;
-        setStatAssignment('need', id, false);
-      } else {
-        delete purchaseChecked[id];
-        setStatAssignment('need', id, true);
-      }
-      renderPurchaseList();
-      render();
-    });
+      checkbox.addEventListener('change', function() {
+        var id = Number(this.dataset.id);
+        if (this.checked) {
+          purchaseChecked[id] = true;
+        } else {
+          delete purchaseChecked[id];
+        }
+        renderPurchaseList();
+      });
     checkboxCell.appendChild(checkbox);
     var nameCell = document.createElement('td');
     nameCell.textContent = record.name;
@@ -626,22 +862,20 @@ function setPurchaseChecked(checked) {
   purchaseRows().forEach(function(record) {
     if (checked) {
       purchaseChecked[record.id] = true;
-      setStatAssignment('need', record.id, false);
     } else {
       delete purchaseChecked[record.id];
-      setStatAssignment('need', record.id, true);
     }
   });
-  saveState();
   renderPurchaseList();
-  render();
 }
 function clearPurchaseList() {
   purchaseRows().forEach(function(record) {
-    purchaseCleared[record.id] = true;
-    delete purchaseChecked[record.id];
+    if (purchaseChecked[record.id]) {
+      purchaseCleared[record.id] = true;
+      delete purchaseChecked[record.id];
+      setStatAssignment('need', record.id, false);
+    }
   });
-  saveState();
   renderPurchaseList();
   render();
 }
@@ -650,12 +884,34 @@ function selectAllPurchaseList() {
   var allChecked = rows.length > 0 && rows.every(function(record) { return Boolean(purchaseChecked[record.id]); });
   setPurchaseChecked(!allChecked);
 }
-function confirmPurchaseList() { saveState(); closePurchaseList(); }
+function clonePurchaseRecords() { return records.map(function(record) { return Object.assign({}, record); }); }
+function openPurchaseDraft() {
+  purchaseDraft = {
+    records: clonePurchaseRecords(),
+    statAssignments: JSON.parse(JSON.stringify(statAssignments)),
+    purchaseChecked: Object.assign({}, purchaseChecked),
+    purchaseCleared: Object.assign({}, purchaseCleared)
+  };
+}
+function restorePurchaseDraft() {
+  if (!purchaseDraft) return;
+  records = purchaseDraft.records;
+  statAssignments = purchaseDraft.statAssignments;
+  purchaseChecked = purchaseDraft.purchaseChecked;
+  purchaseCleared = purchaseDraft.purchaseCleared;
+  purchaseDraft = null;
+}
+function confirmPurchaseList() { saveState(); purchaseDraft = null; closePurchaseList(); }
 function openPurchaseList() {
+  openPurchaseDraft();
   renderPurchaseList();
   document.getElementById('purchaseModal').classList.add('show');
 }
-function closePurchaseList() { document.getElementById('purchaseModal').classList.remove('show'); }
+function closePurchaseList() {
+  restorePurchaseDraft();
+  document.getElementById('purchaseModal').classList.remove('show');
+  render();
+}
 function removeFromNewStats(id) {
   Object.keys(newAssignmentsByMonth).forEach(function(key) {
     newAssignmentsByMonth[key] = newAssignmentsByMonth[key].filter(function(recordId) { return recordId !== id; });
@@ -664,7 +920,7 @@ function removeFromNewStats(id) {
 }
 function saveState() {
   try { refreshCurrentMonthSnapshot(); } catch (error) {}
-  var serialized = JSON.stringify({ records: records, categories: categoryNames, currentCategory: currentCategory, statAssignments: statAssignments, newAssignmentsByMonth: newAssignmentsByMonth, monthlyStats: monthlyStats, purchaseChecked: purchaseChecked, purchaseCleared: purchaseCleared });
+  var serialized = JSON.stringify({ records: records, categories: categoryNames, currentCategory: currentCategory, calendarCategoryRoles: calendarCategoryRoles, statAssignments: statAssignments, newAssignmentsByMonth: newAssignmentsByMonth, monthlyStats: monthlyStats, purchaseChecked: purchaseChecked, purchaseCleared: purchaseCleared });
   try { localStorage.setItem(storageKey, serialized); } catch (error) {}
   try { sessionStorage.setItem(storageKey, serialized); } catch (error) {}
 }
@@ -673,7 +929,16 @@ function loadState() {
     var saved = JSON.parse(sessionStorage.getItem(storageKey) || localStorage.getItem(storageKey));
     if (!saved) return false;
     if (saved && Array.isArray(saved.records)) records = saved.records;
+    if (pageType === 'calendar') records = records.filter(function(record) { return [5191, 5192].indexOf(record.id) === -1; });
+    if (pageType === 'calendar') records = records.filter(function(record) { return !(pageType === 'calendar' && !record.name && record.time); });
     if (saved && Array.isArray(saved.categories) && saved.categories.length) categoryNames = saved.categories;
+    if (pageType === 'calendar' && saved && saved.calendarCategoryRoles) calendarCategoryRoles = saved.calendarCategoryRoles;
+    if (pageType === 'calendar') {
+      var defaultCalendarRoles = ['solar', 'holiday', 'memorial', 'birthday', 'special'];
+      categoryNames.forEach(function(name, index) {
+        if (!calendarCategoryRoles[name]) calendarCategoryRoles[name] = defaultCalendarRoles[index] || '';
+      });
+    }
     if (saved && typeof saved.currentCategory === 'string' && categoryNames.indexOf(saved.currentCategory) !== -1) currentCategory = saved.currentCategory;
     if (saved && saved.statAssignments) statAssignments = { new: saved.statAssignments.new || [], discarded: saved.statAssignments.discarded || [], need: saved.statAssignments.need || [] };
     if (saved && saved.newAssignmentsByMonth && typeof saved.newAssignmentsByMonth === 'object') newAssignmentsByMonth = saved.newAssignmentsByMonth;
@@ -688,6 +953,34 @@ function loadState() {
     return Array.isArray(saved.records);
   } catch (error) {}
   return false;
+}
+function normalizeCalendarHolidayName(name) {
+  var match = String(name || '').match(/^(\d{1,2})月(\d{1,2})日\s*(.*)$/);
+  return match ? match[1] + '.' + match[2] + ' ' + match[3] : name;
+}
+function ensureCalendarSolarTerms() {
+  if (pageType !== 'calendar') return false;
+  var solarCategory = Object.keys(calendarCategoryRoles).find(function(name) { return calendarCategoryRoles[name] === 'solar'; }) || '十二节气';
+  var deleted = {};
+  try { deleted = JSON.parse(localStorage.getItem('personal-life-calendar-deleted-v1') || '{}'); } catch (error) {}
+  var changed = false;
+  calendarSolarTerms.concat(calendarHolidays).forEach(function(term) {
+    if (deleted[term.id]) return;
+    var existing = records.find(function(record) { return record.id === term.id; });
+    if (existing && term.category === '重要节日') {
+      var normalizedName = normalizeCalendarHolidayName(existing.name);
+      if (normalizedName !== existing.name) {
+        existing.name = normalizedName;
+        changed = true;
+      }
+    }
+    if (!existing) {
+      var role = term.category === '十二节气' ? solarCategory : (Object.keys(calendarCategoryRoles).find(function(name) { return calendarCategoryRoles[name] === 'holiday'; }) || '重要节日');
+      records.push(Object.assign({}, term, { category: role }));
+      changed = true;
+    }
+  });
+  return changed;
 }
 function openCategoryEditor(category) {
   editingCategory = category || null;
@@ -705,6 +998,10 @@ function renameCategory(oldName, newName) {
   var index = categoryNames.indexOf(oldName);
   if (index < 0 || !newName || (newName !== oldName && categoryNames.indexOf(newName) !== -1)) return false;
   categoryNames[index] = newName;
+  if (pageType === 'calendar' && calendarCategoryRoles[oldName]) {
+    calendarCategoryRoles[newName] = calendarCategoryRoles[oldName];
+    delete calendarCategoryRoles[oldName];
+  }
   records.forEach(function(record) { if (record.category === oldName) record.category = newName; });
   if (currentCategory === oldName) currentCategory = newName;
   return true;
@@ -768,24 +1065,38 @@ function render(skipCategories) {
   if (!skipCategories) renderCategories();
   document.getElementById('sectionTitle').textContent = currentCategory;
   var stats = document.getElementById('stats');
-  stats.textContent = '';
+  if (pageType === 'calendar') renderCalendarStats();
+  if (pageType !== 'calendar') stats.textContent = '';
+  if (pageType === 'calendar') {
+    // 节日节气页面使用独立的四个日期统计方块。
+  } else {
    orderedStats().forEach(function(stat) {
      var card = document.createElement('div');
      card.className = 'stat wood-surface wood-3d';
      card.dataset.key = stat.key;
       card.innerHTML = '<div class="stat-head"><div class="stat-label"><span class="stat-name">' + statTitle(stat) + '</span><span class="stat-count">' + countFor(stat.key) + '</span></div></div>';
       stats.appendChild(card);
-  });
+   });
+  }
   var items = document.getElementById('items');
+   var currentCalendarRole = pageType === 'calendar' ? calendarRoleForCategory(currentCategory) : '';
+   items.classList.toggle('calendar-solar-items', currentCalendarRole === 'solar');
+   items.classList.toggle('calendar-holiday-items', currentCalendarRole === 'holiday');
+   items.classList.toggle('calendar-date-items', ['memorial', 'birthday', 'special'].indexOf(currentCalendarRole) !== -1);
   items.textContent = '';
-   visibleRecords().forEach(function(record) {
+  var recordsToRender = visibleRecords();
+    if (currentCalendarRole === 'solar' || currentCalendarRole === 'holiday' || currentCalendarRole === 'memorial' || currentCalendarRole === 'birthday' || currentCalendarRole === 'special') {
+     recordsToRender = recordsToRender.slice().sort(function(left, right) { return calendarMonthDayKey(left).localeCompare(calendarMonthDayKey(right)); });
+   }
+   recordsToRender.forEach(function(record) {
     var item = document.createElement('div');
     item.className = 'item wood-surface wood-3d';
+     if (!record.name) item.classList.add('empty');
     if (statIds('need').indexOf(record.id) !== -1) item.classList.add('need-item');
     if (statIds('discarded').indexOf(record.id) !== -1) item.classList.add('discarded-item');
     var itemName = document.createElement('span');
     itemName.className = 'item-name';
-    itemName.textContent = record.name;
+     itemName.textContent = pageType === 'calendar' ? calendarRecordName(record) : record.name;
     item.appendChild(itemName);
       if (record.time) {
        var itemTime = document.createElement('span');
@@ -795,11 +1106,11 @@ function render(skipCategories) {
       }
      item.draggable = true;
     item.dataset.id = record.id;
-     item.addEventListener('click', function(event) {
-       event.stopPropagation();
-       if (suppressClick) { suppressClick = false; return; }
-       openEditor(record.id);
-     });
+       item.addEventListener('dblclick', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+         openItemActionEditor(record.id);
+      });
     item.addEventListener('dragstart', function() { dragMode = 'item'; dragId = record.id; item.classList.add('dragging'); });
     item.addEventListener('dragend', function() { item.classList.remove('dragging'); clearDropIndicators(); dragMode = null; dragId = null; });
     item.addEventListener('pointerdown', function() {
@@ -840,7 +1151,6 @@ function finishTouchDrag(event, item) {
   clearDropIndicators();
   item.classList.remove('touch-dragging');
   touchDragging = false;
-  suppressClick = true;
   dragMode = null;
   dragTargetId = null;
   dragId = null;
@@ -883,6 +1193,23 @@ function openEditor(id, assignmentKey) {
   document.getElementById('modal').classList.add('show');
   document.getElementById(isDailyMeal ? 'dailyMealInput' : 'nameInput').focus();
 }
+function openCalendarAddEditor() {
+  document.getElementById('calendarAddDateInput').value = '';
+  document.getElementById('calendarAddNameInput').value = '';
+  document.getElementById('calendarAddModal').classList.add('show');
+  document.getElementById('calendarAddDateInput').focus();
+}
+function closeCalendarAddEditor() { document.getElementById('calendarAddModal').classList.remove('show'); }
+function openItemActionEditor(id) {
+  itemActionId = id;
+  var record = records.find(function(item) { return item.id === id; });
+  if (!record) return;
+  closeEditor();
+  document.getElementById('itemActionNameInput').value = record.name;
+  document.getElementById('itemActionModal').classList.add('show');
+  document.getElementById('itemActionNameInput').focus();
+}
+function closeItemActionEditor() { itemActionId = null; document.getElementById('itemActionModal').classList.remove('show'); }
 function setEditorExpanded(expanded) {
   var editor = document.querySelector('.record-editor');
   var button = document.getElementById(currentCategory === '每日餐食' ? 'dailyMealExpandButton' : 'expandButton');
@@ -897,7 +1224,44 @@ document.addEventListener('click', function(event) {
   if (target) playWoodClick();
 });
 document.getElementById('sectionTitle').addEventListener('click', openAnnualDetail);
-document.getElementById('sectionAddButton').addEventListener('click', function() { openEditor(null); });
+document.getElementById('sectionAddButton').addEventListener('click', function() { pageType === 'calendar' ? openCalendarAddEditor() : openEditor(null); });
+document.getElementById('calendarAddCancelButton').addEventListener('click', closeCalendarAddEditor);
+document.getElementById('calendarAddSaveButton').addEventListener('click', function() {
+  var time = document.getElementById('calendarAddDateInput').value;
+  var name = document.getElementById('calendarAddNameInput').value.trim();
+  time = name ? time : '';
+  records.push({ id: Date.now(), category: currentCategory, name: name, time: time, note: '', created: time, status: 'normal' });
+  closeCalendarAddEditor();
+  saveState();
+  render();
+});
+document.getElementById('calendarAddModal').addEventListener('click', function(event) { if (event.target === this) closeCalendarAddEditor(); });
+document.getElementById('itemActionCancelButton').addEventListener('click', closeItemActionEditor);
+document.getElementById('itemActionSaveButton').addEventListener('click', function() {
+  var name = document.getElementById('itemActionNameInput').value.trim();
+  var record = records.find(function(item) { return item.id === itemActionId; });
+  if (!record || !name) return;
+  record.name = name;
+  closeItemActionEditor();
+  saveState();
+  render();
+});
+document.getElementById('itemActionDeleteButton').addEventListener('click', function() {
+  if (itemActionId === null) return;
+  if (pageType === 'calendar' && calendarSolarTerms.concat(calendarHolidays).some(function(term) { return term.id === itemActionId; })) {
+    var deletedCalendarRecords = {};
+    try { deletedCalendarRecords = JSON.parse(localStorage.getItem('personal-life-calendar-deleted-v1') || '{}'); } catch (error) {}
+    deletedCalendarRecords[itemActionId] = true;
+    try { localStorage.setItem('personal-life-calendar-deleted-v1', JSON.stringify(deletedCalendarRecords)); } catch (error) {}
+  }
+  records = records.filter(function(record) { return record.id !== itemActionId; });
+  Object.keys(statAssignments).forEach(function(key) { statAssignments[key] = statAssignments[key].filter(function(id) { return id !== itemActionId; }); });
+  removeFromNewStats(itemActionId);
+  saveState();
+  closeItemActionEditor();
+  render();
+});
+document.getElementById('itemActionModal').addEventListener('click', function(event) { if (event.target === this) closeItemActionEditor(); });
 document.getElementById('purchaseButton').addEventListener('click', openPurchaseList);
 document.getElementById('purchaseClearButton').addEventListener('click', clearPurchaseList);
 document.getElementById('purchaseSelectAllButton').addEventListener('click', selectAllPurchaseList);
@@ -916,11 +1280,11 @@ document.getElementById('addCategoryButton').addEventListener('click', function(
 document.getElementById('categoryCancelButton').addEventListener('click', closeCategoryEditor);
 document.getElementById('categorySaveButton').addEventListener('click', function() {
   var name = document.getElementById('categoryNameInput').value.trim();
-  if (!name) return;
+   if (!name) return;
   if (editingCategory) {
     if (!renameCategory(editingCategory, name)) return;
   } else if (categoryNames.indexOf(name) !== -1) return;
-  else { categoryNames.push(name); currentCategory = name; }
+   else { categoryNames.push(name); currentCategory = name; calendarCategoryRoles[name] = pageType === 'calendar' ? 'custom' : ''; }
   closeCategoryEditor();
   saveState();
   renderCategories();
@@ -985,7 +1349,11 @@ document.getElementById('deleteButton').addEventListener('click', function() {
   closeEditor();
 });
 loadState();
+loadCalendarHolidayAnnualCache();
+var calendarDataChanged = ensureCalendarSolarTerms();
+if (calendarDataChanged) saveState();
 if (categoryNames.indexOf(currentCategory) === -1) currentCategory = categoryNames[0];
 renderCategories();
 render();
+refreshCalendarHolidayYear(new Date().getFullYear());
 </script>

@@ -100,8 +100,8 @@ assert.match(source, /statTypes = \[[\s\S]{0,180}key: 'total'[\s\S]{0,180}key: '
 assert.doesNotMatch(source, /card\.draggable = true/, '统计方块不应再支持拖动排序');
 assert.doesNotMatch(source, /stat-toggle|statLongPressed|statPressTimer|renderStatDetail/, '统计方块不应再有交互逻辑');
 assert.doesNotMatch(source, /className = 'item-option'|options-open/, '项目方块不应再内嵌选项栏');
-assert.match(source, /item\.addEventListener\('click'[\s\S]{0,220}openEditor\(record\.id\)/, '单击项目方块应直接打开编辑框');
-assert.doesNotMatch(source, /item\.addEventListener\('dblclick'/, '项目方块不应再依赖双击编辑');
+assert.doesNotMatch(source, /item\.addEventListener\('click'[\s\S]{0,220}openEditor\(record\.id\)/, '单击项目方块不应打开编辑框');
+assert.match(source, /item\.addEventListener\('dblclick'[\s\S]{0,180}openItemActionEditor\(record\.id\)/, '项目方块双击应打开紧凑操作框');
 assert.match(source, /id="timeInput" type="date"/, '编辑框应直接显示日期字段');
 assert.match(source, /timeInput'\)\.value = record && record\.time \? record\.time : ''/, '项目日期默认应为空');
 assert.match(source, /created: time \|\| ''/, '未选择日期时不应自动添加日期');
@@ -173,7 +173,14 @@ assert.match(source, /function selectAllPurchaseList\(\) \{[\s\S]{0,500}allCheck
 assert.match(source, /id="purchaseButton"/, '食材厨具应提供采购清单按钮');
 assert.match(source, /id="purchaseModal"/, '采购清单应使用独立弹窗');
 assert.match(source, /function renderPurchaseList[\s\S]{0,500}statIds\('need'\)/, '采购清单应汇总所有分类的需添置项目');
-assert.match(source, /checkbox\.addEventListener\('change'[\s\S]{0,180}setStatAssignment\('need'/, '采购清单勾选应同步移除需添置状态');
+assert.match(source, /checkbox\.addEventListener\('change'[\s\S]{0,220}purchaseChecked/, '采购清单勾选应只保存清单选择状态');
+assert.doesNotMatch(source, /checkbox\.addEventListener\('change'[\s\S]{0,260}setStatAssignment\('need'/, '采购清单勾选不应改变项目需添置状态');
+assert.doesNotMatch(source, /function setPurchaseChecked\(checked\)[\s\S]{0,300}setStatAssignment\('need'/, '采购清单全选不应改变项目需添置状态');
+assert.doesNotMatch(source, /function setPurchaseChecked\(checked\)[\s\S]{0,420}saveState\(\)/, '全选不应在点击确定前保存');
+assert.match(source, /function openPurchaseList\(\)[\s\S]{0,260}openPurchaseDraft/, '打开采购清单应建立临时编辑状态');
+assert.match(source, /function closePurchaseList\(\)[\s\S]{0,260}restorePurchaseDraft/, '未点击确定关闭时应撤销采购清单修改');
+assert.match(source, /function confirmPurchaseList\(\)[\s\S]{0,180}saveState\(\)[\s\S]{0,100}closePurchaseList/, '确定按钮应保存采购清单修改后关闭');
+assert.match(source, /function clearPurchaseList\(\)[\s\S]{0,320}purchaseChecked\[record\.id\][\s\S]{0,180}setStatAssignment\('need', record\.id, false\)/, '采购清单清空已勾选项目时应移除需添置状态');
 assert.match(source, /\.section-title[\s\S]{0,180}min-height: 31px/, '厨具标题按钮应略微增加高度');
 assert.match(source, /\.section-add[\s\S]{0,180}width: 28px[\s\S]{0,100}min-height: 28px/, '加号按钮应为等高等宽小方块');
 assert.match(source, /\.section-title[\s\S]{0,220}letter-spacing:/, '厨具标题文字应增加字间距');

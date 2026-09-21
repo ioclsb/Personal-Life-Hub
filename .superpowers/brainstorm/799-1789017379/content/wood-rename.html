@@ -1,5 +1,11 @@
 <h2>Things · Life · Action · Mind</h2>
 <p class="subtitle">长按母主题或子主题可编辑名称</p>
+<div class="data-tools">
+  <button id="exportDataButton" type="button">导出全部数据</button>
+  <button id="importDataButton" type="button">导入数据</button>
+  <span id="integrityStatus">完整性检查中</span>
+  <input id="importDataInput" type="file" accept="application/json,.json" hidden>
+</div>
 
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -172,6 +178,10 @@
     transition: opacity 0.3s;
   }
   .editing-hint.show { opacity: 1; }
+  .data-tools { display: flex; justify-content: center; gap: 8px; margin: 8px auto; }
+  .data-tools button { padding: 6px 10px; border: 1px solid rgba(90,70,50,0.18); border-radius: 6px; background: rgba(255,255,255,0.35); color: #5a4632; cursor: pointer; font: 12px system-ui, sans-serif; }
+  #integrityStatus { color: #806b52; font: 11px system-ui, sans-serif; }
+  #integrityStatus.error { color: #8f3f39; font-weight: 700; }
 </style>
 
 <div class="editing-hint" id="hint">双击子主题可编辑</div>
@@ -370,6 +380,12 @@ function openLifeTimeline(e) {
   navigateWithWoodClick('wood-life-timeline.html?return=sub2a');
 }
 
+function openGrowthChecklist(e) {
+  if (justDragged || isEditing) return;
+  if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; }
+  navigateWithWoodClick('wood-growth-checklist.html?return=sub2b');
+}
+
 function navigateWithWoodClick(url) {
   if (clickTimer) clearTimeout(clickTimer);
   playWoodClick();
@@ -497,13 +513,18 @@ function bindSubBar(bar) {
     event.preventDefault();
     event.stopPropagation();
     var labelId = bar.querySelector('.bar-label').id;
+    if (labelId === 'sub2b') {
+      openGrowthChecklist(event);
+      return;
+    }
     var routes = {
       sub1a: 'wood-kitchen-template.html?type=personal&return=sub1a',
       sub1b: 'wood-kitchen-template.html?return=sub1b',
       sub1c: 'wood-kitchen-template.html?type=bath&return=sub1c',
       sub1d: 'wood-kitchen-template.html?type=wardrobe&return=sub1d',
-      sub1e: 'wood-kitchen-template.html?type=other&return=sub1e',
-      sub2a: 'wood-life-timeline.html?return=sub2a'
+       sub1e: 'wood-kitchen-template.html?type=other&return=sub1e',
+       sub2a: 'wood-life-timeline.html?return=sub2a',
+       sub2c: 'wood-kitchen-template.html?type=calendar&return=sub2c'
     };
     navigateWithWoodClick(routes[labelId] || customSubTemplate(labelId));
   });
@@ -666,5 +687,86 @@ function openReturnSub() {
   if (cell) cell.classList.add('expanded');
   window.scrollTo(0, 0);
 }
+
+var backupPrefix = 'personal-life-hub-';
+var backupSnapshotKey = 'personal-life-hub-last-backup-v1';
+
+function backupPayload() {
+  var data = {};
+  for (var index = 0; index < localStorage.length; index += 1) {
+    var key = localStorage.key(index);
+    if (key && key.indexOf(backupPrefix) === 0 && key !== backupSnapshotKey) data[key] = localStorage.getItem(key);
+  }
+  return { format: 'personal-life-hub-backup', version: 1, exportedAt: new Date().toISOString(), data: data };
+}
+
+function exportAllData() {
+  var payload = backupPayload();
+  localStorage.setItem(backupSnapshotKey, JSON.stringify(payload));
+  var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  var link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'personal-life-hub-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+function importAllData(event) {
+  var file = event.target.files && event.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function() {
+    try {
+      var payload = JSON.parse(reader.result);
+      if (!payload || payload.format !== 'personal-life-hub-backup' || !payload.data || typeof payload.data !== 'object') throw new Error('invalid backup');
+      if (!window.confirm('导入会覆盖当前生活台数据，是否继续？')) return;
+      localStorage.setItem(backupSnapshotKey, JSON.stringify(backupPayload()));
+      for (var index = localStorage.length - 1; index >= 0; index -= 1) {
+        var key = localStorage.key(index);
+        if (key && key.indexOf(backupPrefix) === 0 && key !== backupSnapshotKey) localStorage.removeItem(key);
+      }
+      Object.keys(payload.data).forEach(function(key) {
+        if (key.indexOf(backupPrefix) === 0 && key !== backupSnapshotKey && typeof payload.data[key] === 'string') localStorage.setItem(key, payload.data[key]);
+      });
+      window.alert('数据导入完成，请重新打开生活台。');
+    } catch (error) {
+      window.alert('备份文件无效，未修改当前数据。');
+    } finally {
+      event.target.value = '';
+    }
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('exportDataButton').addEventListener('click', exportAllData);
+document.getElementById('importDataButton').addEventListener('click', function() { document.getElementById('importDataInput').click(); });
+document.getElementById('importDataInput').addEventListener('change', importAllData);
+
+function checkLifeHubIntegrity() {
+  var status = document.getElementById('integrityStatus');
+  if (window.location.protocol === 'file:') {
+    status.textContent = '请使用固定生活台地址打开';
+    status.classList.add('error');
+    return;
+  }
+  fetch('life-hub-manifest.json', { cache: 'no-store' }).then(function(response) {
+    if (!response.ok) throw new Error('manifest');
+    return response.json();
+  }).then(function(manifest) {
+    return Promise.all(manifest.requiredPages.map(function(page) {
+      return fetch(page, { method: 'HEAD', cache: 'no-store' }).then(function(response) {
+        if (!response.ok) throw new Error(page);
+      });
+    }));
+  }).then(function() {
+    status.textContent = '生活台完整';
+    status.classList.remove('error');
+  }).catch(function(error) {
+    status.textContent = '页面缺失：' + error.message;
+    status.classList.add('error');
+  });
+}
+
+checkLifeHubIntegrity();
 
 </script>

@@ -1,0 +1,11 @@
+{
+  "format": "personal-life-hub-manifest",
+  "version": 1,
+  "entry": "wood-rename.html",
+  "requiredPages": [
+    "wood-rename.html",
+    "wood-growth-checklist.html",
+    "wood-life-timeline.html",
+    "wood-kitchen-template.html"
+  ]
+}
