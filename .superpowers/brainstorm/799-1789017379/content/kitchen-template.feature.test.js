@@ -26,7 +26,7 @@ assert.match(source, /function setEditorExpanded/, '编辑框应支持展开和�
 assert.match(source, /id="expandButton"/, '编辑框应提供展开按钮');
 assert.match(source, /\.record-editor\.expanded[\s\S]{0,240}\.regular-record-fields:not\(\[hidden\]\), \.record-editor\.expanded \.daily-meal-fields:not\(\[hidden\]\)[\s\S]{0,160}display: flex/, '展开编辑框时输入区父容器应填满高度');
 assert.match(source, /\.record-editor\.expanded \.regular-record-fields:not\(\[hidden\]\), \.record-editor\.expanded \.daily-meal-fields:not\(\[hidden\]\)/, '每日餐食展开时仍应只显示一个记录框');
-assert.match(source, /dailyMealInput[\s\S]{0,500}records\.push|dailyMealInput[\s\S]{0,500}editingRecord\.name/, '每日餐食记录应保存输入内容');
+assert.match(source, /dailyMealInput[\s\S]{0,800}records\.push|dailyMealInput[\s\S]{0,800}editingRecord\.name/, '每日餐食记录应保存输入内容');
 assert.match(lifeSource, /\.timeline \{[\s\S]{0,180}overflow-y: auto[\s\S]{0,180}scrollbar-width: none[\s\S]{0,180}-ms-overflow-style: none/, '人生进度应保留滚动并隐藏滚动条');
 assert.match(lifeSource, /\.editor textarea \{[\s\S]{0,220}scrollbar-width: none[\s\S]{0,220}-ms-overflow-style: none/, '成长记录编辑框应隐藏滚动条并保留滚动');
 assert.match(renameSource, /id="subEditorModal"/, '子主题应使用独立编辑窗口');
@@ -128,6 +128,8 @@ assert.match(source, /querySelector\('\.stat-count'\)[\s\S]{0,80}countFor\(key\)
 assert.match(source, /class="section-title wood-surface wood-3d"/, '厨具名称应使用木制按钮视觉');
 assert.match(source, /id="sectionAddButton"/, '厨具标题右侧应有木制加号按钮');
 assert.match(source, /id="purchaseButton"/, '食材厨具应提供采购清单按钮');
+assert.match(source, /getElementById\('purchaseButton'\)\.textContent\s*=\s*pageType === 'travel' \? '计划出行' : '采购清单'/, '仅旅行标记应将采购清单按钮改名为计划出行');
+assert.match(source, /pageType === 'travel' \? '计划出行' : '采购清单'/, '非旅行主题应继续显示采购清单');
 assert.doesNotMatch(source, /getElementById\('purchaseButton'\)\.hidden = pageType !== 'kitchen'/, '所有Things子主题都应显示采购清单按钮');
 assert.match(source, /id="purchaseModal"/, '采购清单应使用独立弹窗');
 assert.match(source, /function renderPurchaseList/, '采购清单应汇总所有序列的需添置项目');

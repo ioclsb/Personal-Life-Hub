@@ -71,6 +71,8 @@ assert.match(source, /function loadState[\s\S]{0,700}return !\(pageType === 'cal
 assert.match(source, /var name = document\.getElementById\('calendarAddNameInput'\)\.value\.trim\(\);[\s\S]{0,220}time = name \? time : ''/, '新增空白方块不应保留单独日期');
 assert.doesNotMatch(source, /item\.addEventListener\('click'[\s\S]{0,180}openEditor\(record\.id\)/, '单击项目方块不应打开编辑框');
 assert.doesNotMatch(source, /calendarAddSaveButton'[\s\S]{0,500}if \(!time \|\| !name\) return/, '新增日历方块不应强制填写日期和名称');
+assert.match(source, /if \(pageType !== 'calendar'\) document\.getElementById\('sectionTitle'\)\.addEventListener\('click', openAnnualDetail\)/, '节日节气各序列标题不应打开统计表格');
+assert.match(source, /pageType === 'calendar' \? openItemActionEditor\(record\.id\) : openEditor\(record\.id\)/, '仅日历项目使用简化编辑框，其他子主题恢复完整编辑框');
 assert.match(source, /function refreshCalendarHolidayYear[\s\S]{0,1400}if \(record && !annualDates\[record\.id\]\) annualDates\[record\.id\] = holiday\.date/, '接口节假日放假起始日不应覆盖已有准确节日日期');
 assert.match(source, /calendarHolidayAnnualDates\[year\] = Object\.assign\(\{\}, cached\[year\][\s\S]{0,120}calendarHolidayAnnualDates\[year\]/, '本地缓存不应覆盖内置的准确年度日期');
 assert.match(source, /function ensureCalendarSolarTerms[\s\S]{0,700}personal-life-calendar-deleted-v1/, '内置日历记录删除状态应持久化');

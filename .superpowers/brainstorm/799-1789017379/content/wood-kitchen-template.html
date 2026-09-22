@@ -41,11 +41,11 @@
   .layout { min-height: 0; flex: 1; display: grid; grid-template-columns: 70px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); column-gap: 8px; row-gap: 10px; }
   .control-panel { display: contents; }
   .control-main { min-width: 0; grid-column: 2; grid-row: 1; }
-  .sidebar { width: 70px; display: flex; flex-direction: column; gap: 7px; grid-column: 1; grid-row: 1 / span 2; }
+  .sidebar { width: 70px; min-height: 0; display: flex; flex-direction: column; gap: 7px; overflow: hidden; grid-column: 1; grid-row: 1 / span 2; }
   .lower-panel { min-height: 0; display: flex; gap: 8px; margin-top: 10px; grid-column: 2; grid-row: 2; }
   .lower-sidebar-spacer { display: none; }
-  #categories { display: flex; flex-direction: column; gap: 7px; }
-  .category-add { width: 100%; min-height: 28px; align-self: center; padding: 0; border: 0; border-radius: 9px; color: #5a4632; font-size: 20px; font-weight: 800; line-height: 1; }
+  #categories { min-height: 0; flex: 1; display: flex; flex-direction: column; gap: 7px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(90,70,50,0.35) transparent; }
+  .category-add { width: 100%; min-height: 28px; flex-shrink: 0; align-self: center; padding: 0; border: 0; border-radius: 9px; color: #5a4632; font-size: 20px; font-weight: 800; line-height: 1; }
   .category {
     padding: 15px 4px;
     border-radius: 9px;
@@ -57,6 +57,7 @@
   }
   .category.active { color: #3e2d1e; box-shadow: inset 0 0 0 2px rgba(90,70,50,0.28), 0 2px 4px rgba(0,0,0,0.1); }
   .category.need-category { background-color: #ead8bc; background-blend-mode: multiply; color: #f3e4ca; text-shadow: 0 1px 1px rgba(40,25,12,0.2); }
+  .category.travel-first-category { background-color: #f2dfc1; background-blend-mode: multiply; }
   .category.touch-dragging { opacity: 0.5; }
   .category.insert-before { box-shadow: inset 0 3px 0 #8d785c, 0 2px 4px rgba(0,0,0,0.12); }
   .category.insert-after { box-shadow: inset 0 -3px 0 #8d785c, 0 2px 4px rgba(0,0,0,0.12); }
@@ -91,15 +92,30 @@
   .year-step { width: 14px; height: 10px; padding: 0; border: 0; border-radius: 3px; background: transparent; color: rgba(90,70,50,0.58); font-size: 8px; line-height: 8px; transition: color 0.12s, background 0.12s, transform 0.12s; }
   .year-step:hover, .year-step:active { background: rgba(184,81,73,0.12); color: #b85149; transform: scale(1.12); }
   .annual-table { display: grid; grid-template-columns: 44px repeat(4, minmax(0, 1fr)); gap: 3px; font-size: 10px; }
+  .travel-annual-table { grid-template-columns: 44px 44px 44px minmax(160px, 1fr); }
   .annual-cell { min-height: 28px; display: flex; align-items: center; justify-content: center; padding: 4px 2px; border-radius: 4px; background: rgba(255,240,215,0.28); text-align: center; }
   .annual-cell.head { min-height: 34px; color: #5a4632; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; }
   .mini-item { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 4px 7px; border-radius: 5px; background: rgba(255,240,215,0.14); color: #f3e4ca; font-size: 10px; text-shadow: 0 1px 1px rgba(40,25,12,0.28); }
   .mini-time { color: #ead5b4; font-size: 8px; font-weight: 500; }
   .mini-remove { padding: 0 2px; border: 0; background: transparent; color: #8d785c; cursor: pointer; font-size: 12px; line-height: 1; }
   .section-head { position: sticky; top: 0; z-index: 3; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; gap: 6px; margin: 0 2px 7px; padding: 7px 0 5px; background: #c0af89; }
+  .travel-section-head { grid-template-columns: repeat(3, minmax(max-content, 1fr)) 28px; }
+  .travel-section-head .section-title { font-weight: 500; letter-spacing: 0.06em; }
+  .travel-section-head .section-title, .travel-section-head button { white-space: nowrap; }
   .section-title { display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 31px; padding: 5px 4px; border-radius: 6px; font-size: 13px; font-weight: 800; letter-spacing: 0.16em; }
   .section-add { display: inline-flex; align-items: center; justify-content: center; width: 28px; min-height: 28px; padding: 0; border: 0; border-radius: 6px; color: #5a4632; cursor: pointer; font-size: 20px; font-weight: 800; line-height: 1; }
   .purchase-button { min-height: 31px; padding: 5px 4px; border: 0; border-radius: 6px; color: #5a4632; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 500; letter-spacing: 0.06em; }
+  .travel-overview-button { min-height: 31px; padding: 5px 4px; border: 0; border-radius: 6px; color: #5a4632; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 500; letter-spacing: 0.06em; }
+  .travel-overview-modal .editor { width: 360px; max-width: calc(100vw - 28px); max-height: 88vh; display: flex; flex-direction: column; }
+  .travel-overview-summary { display: grid; gap: 5px; margin-bottom: 10px; color: #5a4632; font-size: 13px; font-weight: 800; line-height: 1.5; }
+  .travel-overview-table-wrap { max-height: calc(88vh - 150px); overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+  .travel-overview-table-wrap::-webkit-scrollbar { display: none; }
+  .travel-overview-table { width: 100%; border-collapse: separate; border-spacing: 0 5px; color: #5a4632; font-size: 12px; table-layout: fixed; }
+  .travel-overview-table th, .travel-overview-table td { padding: 5px 6px; text-align: center; vertical-align: middle; }
+  .travel-overview-table th { color: #806b52; font-size: 12px; letter-spacing: 0.06em; }
+  .travel-overview-table th:first-child, .travel-overview-table td:first-child { width: 92px; }
+  .travel-overview-table th:last-child, .travel-overview-table td:last-child { width: 100px; }
+  .travel-overview-table tbody tr { background: rgba(255,240,215,0.28); }
   .purchase-modal .editor { width: 360px; max-width: calc(100vw - 28px); max-height: 88vh; display: flex; flex-direction: column; }
   .purchase-modal .editor h3 { letter-spacing: 0.12em; text-align: center; }
   .purchase-table-wrap { max-height: calc(88vh - 120px); margin-bottom: 12px; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
@@ -125,6 +141,8 @@
   .purchase-empty { padding: 12px 4px; color: #806b52; font-size: 12px; text-align: center; }
   .add { padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; }
   .items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .travel-items { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
+  .travel-items .item-name { max-width: 100%; overflow: visible; white-space: normal; text-overflow: clip; overflow-wrap: anywhere; }
   .calendar-solar-items { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .calendar-solar-items .item { min-height: 38px; }
   .calendar-holiday-items { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -140,6 +158,7 @@
   .item.insert-after { box-shadow: inset -3px 0 0 #8d785c, 0 2px 4px rgba(0,0,0,0.12); }
   .item.need-item { background-color: #ead8bc; background-blend-mode: multiply; color: #f3e4ca; text-shadow: 0 1px 1px rgba(40,25,12,0.2); }
   .item.need-item .item-time { color: rgba(243,228,202,0.82); }
+  .item.travel-first-item { background-color: #f2dfc1; background-blend-mode: multiply; }
   .item.discarded-item { outline: 1px dashed #b85149; outline-offset: 1px; }
   .item.empty { color: #a18e72; font-weight: 500; border-style: dashed; }
   .modal { position: fixed; inset: 0; display: none; place-items: center; background: rgba(40,25,12,0.32); z-index: 5; }
@@ -164,6 +183,11 @@
   .editor-stat-option { display: flex; align-items: center; justify-content: center; gap: 4px; min-height: 36px; padding: 5px 3px; border-radius: 7px; color: #5a4632; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; cursor: pointer; }
   .editor-stat-option:has(input:checked) { box-shadow: inset 0 0 0 2px rgba(90,70,50,0.32), 0 2px 4px rgba(0,0,0,0.12); }
   .editor-stat-option input { width: 15px; height: 15px; margin: 0; padding: 0; accent-color: #8d785c; }
+  .travel-editor .editor-stat-option { justify-content: flex-start; overflow: hidden; }
+  .travel-editor .editor-stat-option input { flex: 0 0 auto; }
+  .travel-editor .editor-stat-option span { white-space: nowrap; }
+  .travel-editor .editor-stat-option.compact { gap: 3px; padding-left: 2px; padding-right: 2px; font-size: 10px; letter-spacing: 0.08em; }
+  .travel-editor .editor-stat-option.compact input { width: 13px; height: 13px; }
   .editor-actions { display: flex; gap: 7px; }
   .editor-actions button { flex: 1; padding: 8px; border: 0; border-radius: 6px; color: #5a4632; cursor: pointer; }
   .category-editor { width: 270px; padding: 12px; }
@@ -194,7 +218,7 @@
       <div class="lower-panel">
         <div class="lower-sidebar-spacer" aria-hidden="true"></div>
         <main class="content">
-          <div class="section-head"><span class="section-title wood-surface wood-3d" id="sectionTitle">厨具</span><button class="purchase-button wood-surface wood-3d" id="purchaseButton" type="button">采购清单</button><button class="section-add wood-surface wood-3d" id="sectionAddButton" type="button" aria-label="新增项目">＋</button></div>
+          <div class="section-head" id="sectionHead"><span class="section-title wood-surface wood-3d" id="sectionTitle">厨具</span><button class="travel-overview-button wood-surface wood-3d" id="travelOverviewButton" type="button" hidden>足迹概览</button><button class="purchase-button wood-surface wood-3d" id="purchaseButton" type="button">采购清单</button><button class="section-add wood-surface wood-3d" id="sectionAddButton" type="button" aria-label="新增项目">＋</button></div>
           <div class="items" id="items"></div>
         </main>
       </div>
@@ -220,6 +244,17 @@
       </table>
     </div>
     <div class="purchase-actions"><button id="purchaseClearButton">清空</button><button id="purchaseSelectAllButton">全选</button><button id="purchaseConfirmButton">确定</button></div>
+  </div>
+</div>
+
+<div class="modal travel-overview-modal" id="travelOverviewModal">
+  <div class="editor wood-surface wood-3d">
+    <h3>足迹概览</h3>
+    <div class="travel-overview-summary" id="travelOverviewSummary"></div>
+    <div class="travel-overview-table-wrap">
+      <table class="travel-overview-table"><thead><tr><th>省份</th><th>城市</th><th>备注</th></tr></thead><tbody id="travelOverviewList"></tbody></table>
+    </div>
+    <div class="editor-actions"><button id="travelOverviewCloseButton">关闭</button></div>
   </div>
 </div>
 
@@ -260,9 +295,9 @@
       <div><label class="details-label" for="nameInput">名称</label><input id="nameInput" maxlength="30" placeholder="输入名称"></div>
       </div>
       <div class="editor-stat-options">
-        <label class="editor-stat-option wood-surface wood-3d"><input id="editNewInput" type="checkbox"><span>新增</span></label>
-        <label class="editor-stat-option wood-surface wood-3d"><input id="editDiscardedInput" type="checkbox"><span>废弃</span></label>
-        <label class="editor-stat-option wood-surface wood-3d"><input id="editNeedInput" type="checkbox"><span>添置</span></label>
+        <label class="editor-stat-option wood-surface wood-3d"><input id="editNewInput" type="checkbox"><span id="editNewLabel">新增</span></label>
+        <label class="editor-stat-option wood-surface wood-3d"><input id="editDiscardedInput" type="checkbox"><span id="editDiscardedLabel">废弃</span></label>
+        <label class="editor-stat-option wood-surface wood-3d"><input id="editNeedInput" type="checkbox"><span id="editNeedLabel">添置</span></label>
       </div>
       <div class="editor-input-area">
         <label class="details-label" for="noteInput">使用记录</label>
@@ -375,6 +410,49 @@ var calendarHolidayAnnualDates = {
     5122: '2026-10-18'
   }
 };
+var travelProvinceRecords = {
+  '北京市': ['北京市'],
+  '天津市': ['天津市'],
+  '河北省': ['石家庄市', '唐山市', '秦皇岛市', '邯郸市', '邢台市', '保定市', '张家口市', '承德市', '沧州市', '廊坊市', '衡水市'],
+  '山西省': ['太原市', '大同市', '阳泉市', '长治市', '晋城市', '朔州市', '晋中市', '运城市', '忻州市', '临汾市', '吕梁市'],
+  '内蒙古自治区': ['呼和浩特市', '包头市', '乌海市', '赤峰市', '通辽市', '鄂尔多斯市', '呼伦贝尔市', '巴彦淖尔市', '乌兰察布市', '兴安盟', '锡林郭勒盟', '阿拉善盟'],
+  '辽宁省': ['沈阳市', '大连市', '鞍山市', '抚顺市', '本溪市', '丹东市', '锦州市', '营口市', '阜新市', '辽阳市', '盘锦市', '铁岭市', '朝阳市', '葫芦岛市'],
+  '吉林省': ['长春市', '吉林市', '四平市', '辽源市', '通化市', '白山市', '松原市', '白城市', '延边朝鲜族自治州'],
+  '黑龙江省': ['哈尔滨市', '齐齐哈尔市', '鸡西市', '鹤岗市', '双鸭山市', '大庆市', '伊春市', '佳木斯市', '七台河市', '牡丹江市', '黑河市', '绥化市', '大兴安岭地区'],
+  '上海市': ['上海市'],
+  '江苏省': ['南京市', '无锡市', '徐州市', '常州市', '苏州市', '南通市', '连云港市', '淮安市', '盐城市', '扬州市', '镇江市', '泰州市', '宿迁市'],
+  '浙江省': ['杭州市', '宁波市', '温州市', '嘉兴市', '湖州市', '绍兴市', '金华市', '衢州市', '舟山市', '台州市', '丽水市'],
+  '安徽省': ['合肥市', '芜湖市', '蚌埠市', '淮南市', '马鞍山市', '淮北市', '铜陵市', '安庆市', '黄山市', '滁州市', '阜阳市', '宿州市', '六安市', '亳州市', '池州市', '宣城市'],
+  '福建省': ['福州市', '厦门市', '莆田市', '三明市', '泉州市', '漳州市', '南平市', '龙岩市', '宁德市'],
+  '江西省': ['南昌市', '景德镇市', '萍乡市', '九江市', '新余市', '鹰潭市', '赣州市', '吉安市', '宜春市', '抚州市', '上饶市'],
+  '山东省': ['济南市', '青岛市', '淄博市', '枣庄市', '东营市', '烟台市', '潍坊市', '济宁市', '泰安市', '威海市', '日照市', '临沂市', '德州市', '聊城市', '滨州市', '菏泽市'],
+  '河南省': ['郑州市', '开封市', '洛阳市', '平顶山市', '安阳市', '鹤壁市', '新乡市', '焦作市', '濮阳市', '许昌市', '漯河市', '三门峡市', '南阳市', '商丘市', '信阳市', '周口市', '驻马店市'],
+  '湖北省': ['武汉市', '黄石市', '十堰市', '宜昌市', '襄阳市', '鄂州市', '荆门市', '孝感市', '荆州市', '黄冈市', '咸宁市', '随州市', '恩施土家族苗族自治州'],
+  '湖南省': ['长沙市', '株洲市', '湘潭市', '衡阳市', '邵阳市', '岳阳市', '常德市', '张家界市', '益阳市', '郴州市', '永州市', '怀化市', '娄底市', '湘西土家族苗族自治州'],
+  '广东省': ['广州市', '韶关市', '深圳市', '珠海市', '汕头市', '佛山市', '江门市', '湛江市', '茂名市', '肇庆市', '惠州市', '梅州市', '汕尾市', '河源市', '阳江市', '清远市', '东莞市', '中山市', '潮州市', '揭阳市', '云浮市'],
+  '广西壮族自治区': ['南宁市', '柳州市', '桂林市', '梧州市', '北海市', '防城港市', '钦州市', '贵港市', '玉林市', '百色市', '贺州市', '河池市', '来宾市', '崇左市'],
+  '海南省': ['海口市', '三亚市', '三沙市', '儋州市'],
+  '重庆市': ['重庆市'],
+  '四川省': ['成都市', '自贡市', '攀枝花市', '泸州市', '德阳市', '绵阳市', '广元市', '遂宁市', '内江市', '乐山市', '南充市', '眉山市', '宜宾市', '广安市', '达州市', '雅安市', '巴中市', '资阳市', '阿坝藏族羌族自治州', '甘孜藏族自治州', '凉山彝族自治州'],
+  '贵州省': ['贵阳市', '六盘水市', '遵义市', '安顺市', '毕节市', '铜仁市', '黔西南布依族苗族自治州', '黔东南苗族侗族自治州', '黔南布依族苗族自治州'],
+  '云南省': ['昆明市', '曲靖市', '玉溪市', '保山市', '昭通市', '丽江市', '普洱市', '临沧市', '楚雄彝族自治州', '红河哈尼族彝族自治州', '文山壮族苗族自治州', '西双版纳傣族自治州', '大理白族自治州', '德宏傣族景颇族自治州', '怒江傈僳族自治州', '迪庆藏族自治州'],
+  '西藏自治区': ['拉萨市', '日喀则市', '昌都市', '林芝市', '山南市', '那曲市', '阿里地区'],
+  '陕西省': ['西安市', '铜川市', '宝鸡市', '咸阳市', '渭南市', '延安市', '汉中市', '榆林市', '安康市', '商洛市'],
+  '甘肃省': ['兰州市', '嘉峪关市', '金昌市', '白银市', '天水市', '武威市', '张掖市', '平凉市', '酒泉市', '庆阳市', '定西市', '陇南市', '临夏回族自治州', '甘南藏族自治州'],
+  '青海省': ['西宁市', '海东市', '海北藏族自治州', '黄南藏族自治州', '海南藏族自治州', '果洛藏族自治州', '玉树藏族自治州', '海西蒙古族藏族自治州'],
+  '宁夏回族自治区': ['银川市', '石嘴山市', '吴忠市', '固原市', '中卫市'],
+  '新疆维吾尔自治区': ['乌鲁木齐市', '克拉玛依市', '吐鲁番市', '哈密市', '昌吉回族自治州', '博尔塔拉蒙古自治州', '巴音郭楞蒙古自治州', '阿克苏地区', '克孜勒苏柯尔克孜自治州', '喀什地区', '和田地区', '伊犁哈萨克自治州', '塔城地区', '阿勒泰地区'],
+  '香港特别行政区': ['香港岛', '九龙', '新界'],
+  '澳门特别行政区': ['澳门半岛', '氹仔', '路环'],
+  '台湾省': ['台北市', '新北市', '桃园市', '台中市', '台南市', '高雄市', '基隆市', '新竹市', '嘉义市', '新竹县', '苗栗县', '彰化县', '南投县', '云林县', '嘉义县', '屏东县', '宜兰县', '花莲县', '台东县', '澎湖县', '金门县', '连江县']
+};
+var travelProvinceNames = Object.keys(travelProvinceRecords);
+var travelRecords = [];
+travelProvinceNames.forEach(function(province, provinceIndex) {
+  travelProvinceRecords[province].forEach(function(city, cityIndex) {
+    travelRecords.push({ id: 600000 + provinceIndex * 1000 + cityIndex, category: province, name: city, created: '2000-01-01', status: 'normal' });
+  });
+});
 var pageConfigs = {
   kitchen: {
     title: '食材厨具', categories: ['厨具', '食材'], storageKey: 'personal-life-hub-kitchen-template-v1', returnSub: 'sub1b', records: [
@@ -424,6 +502,9 @@ var pageConfigs = {
   },
   calendar: {
     title: '节日节气', categories: ['十二节气', '重要节日', '纪念日', '生日', '特殊日记录'], storageKey: 'personal-life-hub-calendar-v1', returnSub: 'sub2c', records: calendarSolarTerms.concat(calendarHolidays)
+  },
+  travel: {
+    title: '旅行标记', categories: travelProvinceNames, storageKey: 'personal-life-hub-travel-v1', returnSub: 'sub2e', records: travelRecords
   }
 };
 var pageConfig = pageConfigs[pageType];
@@ -474,6 +555,10 @@ var newAssignmentsByMonth = {};
 var monthlyStats = {};
 var purchaseChecked = {};
 var purchaseCleared = {};
+var travelPlanChecked = {};
+var travelPlanCleared = {};
+var travelPlanNotes = {};
+var travelFootprintHistory = {};
 var purchaseDraft = null;
 var audioContext = null;
 var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -514,6 +599,7 @@ function playWoodClick() {
 
 document.querySelector('h2').textContent = pageTitle + ' — 记录模板';
 document.querySelector('.title').textContent = pageTitle;
+document.getElementById('purchaseButton').textContent = pageType === 'travel' ? '计划出行' : '采购清单';
 function calendarHeaderDateText(date) {
   return date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日';
 }
@@ -536,7 +622,7 @@ function renderCategories() {
   categoryContainer.textContent = '';
   categoryNames.forEach(function(name) {
     var button = document.createElement('div');
-     button.className = 'category wood-surface wood-3d' + (name === currentCategory ? ' active' : '') + (categoryHasNeed(name) ? ' need-category' : '');
+     button.className = 'category wood-surface wood-3d' + (name === currentCategory ? ' active' : '') + (pageType === 'travel' ? categoryTravelClass(name) : (categoryHasNeed(name) ? ' need-category' : ''));
     button.dataset.category = name;
     button.textContent = name;
      button.addEventListener('click', function() {
@@ -595,7 +681,12 @@ function finishCategoryDrag(button) {
   categoryDragTarget = null;
 }
 
-function visibleRecords() { return records.filter(function(record) { return record.category === currentCategory; }); }
+function travelRecordsForProvince(province) {
+  return records.filter(function(record) { return record.category === province; });
+}
+function visibleRecords() {
+  return pageType === 'travel' ? travelRecordsForProvince(currentCategory) : records.filter(function(record) { return record.category === currentCategory; });
+}
 function dateKey(year, month) { return year + '-' + String(month).padStart(2, '0'); }
 function currentMonthKey() { var now = new Date(); return dateKey(now.getFullYear(), now.getMonth() + 1); }
 function currentMonthName() { return monthNames[new Date().getMonth()]; }
@@ -737,6 +828,11 @@ function renderAnnualDetail() {
   document.getElementById('annualYearLabel').textContent = annualSelectedYear;
   var table = document.getElementById('annualTable');
   table.textContent = '';
+  table.classList.toggle('travel-annual-table', pageType === 'travel');
+  if (pageType === 'travel') {
+    renderTravelAnnualDetail(table);
+    return;
+  }
   ['月份', '厨具总数', '本月新增', '已废弃', '需添置'].forEach(function(label) {
     var header = document.createElement('div');
     header.className = 'annual-cell head wood-surface wood-3d';
@@ -785,19 +881,20 @@ function openAnnualDetail() {
   document.getElementById('annualModal').classList.add('show');
 }
 function closeAnnualDetail() { document.getElementById('annualModal').classList.remove('show'); }
-function startNoteEdit(record, noteCell) {
+function startNoteEdit(record, noteCell, noteStore) {
   noteCell.textContent = '';
   var input = document.createElement('input');
   input.className = 'purchase-note-input';
   input.type = 'text';
-  input.value = record.note || '';
+  input.value = noteStore ? (noteStore[record.id] || '') : (record.note || '');
   input.placeholder = '输入备注';
   var finished = false;
   function finish(save) {
     if (finished) return;
     finished = true;
     if (save) {
-      record.note = input.value.trim();
+      if (noteStore) noteStore[record.id] = input.value.trim();
+      else record.note = input.value.trim();
     }
     renderPurchaseList();
     render();
@@ -814,25 +911,35 @@ function startNoteEdit(record, noteCell) {
 function renderPurchaseList() {
   var list = document.getElementById('purchaseList');
   list.textContent = '';
-  var needIds = statIds('need');
-  var needRecords = records.filter(function(record) { return !purchaseCleared[record.id] && (needIds.indexOf(record.id) !== -1 || purchaseChecked[record.id]); });
-  if (!needRecords.length) {
-    list.innerHTML = '<tr><td class="purchase-empty" colspan="4">暂无需添置物品</td></tr>';
+  var isTravel = pageType === 'travel';
+  var sourceIds = isTravel ? statIds('new') : statIds('need');
+  var checkedStore = isTravel ? travelPlanChecked : purchaseChecked;
+  var clearedStore = isTravel ? travelPlanCleared : purchaseCleared;
+  var sourceRecords = records.filter(function(record) { return !clearedStore[record.id] && (sourceIds.indexOf(record.id) !== -1 || checkedStore[record.id]); });
+  var headers = isTravel ? ['勾选', '城市', '备注', '所属省份'] : ['勾选框', '名称', '备注', '类别'];
+  document.querySelector('#purchaseModal h3').textContent = isTravel ? '计划出行' : '采购清单';
+  document.querySelectorAll('#purchaseModal .purchase-table th').forEach(function(cell, index) { cell.textContent = headers[index]; });
+  if (!sourceRecords.length) {
+    list.innerHTML = '<tr><td class="purchase-empty" colspan="4">' + (isTravel ? '暂无本月足迹' : '暂无需添置物品') + '</td></tr>';
     return;
   }
-  needRecords.forEach(function(record) {
+  sourceRecords.forEach(function(record) {
     var row = document.createElement('tr');
     var checkboxCell = document.createElement('td');
     var checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.dataset.id = record.id;
-    checkbox.checked = Boolean(purchaseChecked[record.id]);
+    checkbox.checked = Boolean(checkedStore[record.id]);
       checkbox.addEventListener('change', function() {
         var id = Number(this.dataset.id);
-        if (this.checked) {
+        if (!isTravel && this.checked) {
           purchaseChecked[id] = true;
-        } else {
+        } else if (!isTravel) {
           delete purchaseChecked[id];
+        } else if (this.checked) {
+          travelPlanChecked[id] = true;
+        } else {
+          delete travelPlanChecked[id];
         }
         renderPurchaseList();
       });
@@ -842,10 +949,13 @@ function renderPurchaseList() {
     var noteCell = document.createElement('td');
     var noteButton = document.createElement('button');
     noteButton.type = 'button';
-    noteButton.textContent = record.note || '✎';
-    noteButton.title = record.note || '添加备注';
+    var note = isTravel ? travelPlanNotes[record.id] : record.note;
+    if (isTravel) noteButton.textContent = travelPlanNotes[record.id] || '✎';
+    else noteButton.textContent = record.note || '✎';
+    noteButton.title = note || '添加备注';
     noteButton.addEventListener('click', function() {
-      startNoteEdit(record, noteCell);
+      if (isTravel) startNoteEdit(record, noteCell, travelPlanNotes);
+      else startNoteEdit(record, noteCell);
     });
     noteCell.appendChild(noteButton);
     var categoryCell = document.createElement('td');
@@ -857,31 +967,123 @@ function renderPurchaseList() {
     list.appendChild(row);
   });
 }
-function purchaseRows() { return records.filter(function(record) { return !purchaseCleared[record.id] && (statIds('need').indexOf(record.id) !== -1 || purchaseChecked[record.id]); }); }
+function travelAnnualDetail(year, month) {
+  var ids = Array.isArray(newAssignmentsByMonth[dateKey(year, month)]) ? newAssignmentsByMonth[dateKey(year, month)] : [];
+  var grouped = {};
+  records.forEach(function(record) {
+    if (ids.indexOf(record.id) === -1) return;
+    if (!grouped[record.category]) grouped[record.category] = [];
+    grouped[record.category].push(record.name);
+  });
+  var provinces = Object.keys(grouped);
+  return {
+    provinceCount: provinces.length,
+    cityCount: provinces.reduce(function(total, province) { return total + grouped[province].length; }, 0),
+    cityInfo: provinces.map(function(province) {
+      var provinceName = province.replace(/省|自治区|特别行政区|市$/, '');
+      var cities = grouped[province].map(function(city) { return city.replace(/市$/, ''); });
+      return provinceName + cities.join('/');
+    }).join('、')
+  };
+}
+function renderTravelAnnualDetail(table) {
+  ['月份', '省份', '城市', '城市信息'].forEach(function(label) {
+    var header = document.createElement('div');
+    header.className = 'annual-cell head wood-surface wood-3d';
+    header.textContent = label;
+    table.appendChild(header);
+  });
+  monthNames.forEach(function(name, index) {
+    var stats = travelAnnualDetail(annualSelectedYear, index + 1);
+    [name, stats.provinceCount, stats.cityCount, stats.cityInfo].forEach(function(value) {
+      var cell = document.createElement('div');
+      cell.className = 'annual-cell';
+      cell.textContent = value;
+      table.appendChild(cell);
+    });
+  });
+}
+function rememberTravelVisitDate(id, date) {
+  if (pageType !== 'travel' || !date) return;
+  if (!Array.isArray(travelFootprintHistory[id])) travelFootprintHistory[id] = [];
+  if (travelFootprintHistory[id].indexOf(date) === -1) travelFootprintHistory[id].push(date);
+}
+function travelFootprintOverview() {
+  var visitedIds = statAssignments.discarded.concat(statAssignments.need).filter(function(id, index, ids) { return ids.indexOf(id) === index; });
+  var visitedRecords = records.filter(function(record) { return visitedIds.indexOf(record.id) !== -1; });
+  var provinceNames = visitedRecords.map(function(record) { return record.category; }).filter(function(category, index, categories) { return categories.indexOf(category) === index; });
+  return {
+    provinceCount: provinceNames.length,
+    cityCount: visitedRecords.length,
+    records: visitedRecords.map(function(record) {
+      var dates = Array.isArray(travelFootprintHistory[record.id]) ? travelFootprintHistory[record.id].slice() : [];
+      if (record.time && dates.indexOf(record.time) === -1) dates.unshift(record.time);
+      return { province: record.category, city: record.name, note: dates.join('、') };
+    })
+  };
+}
+function renderTravelOverview() {
+  var overview = travelFootprintOverview();
+  document.getElementById('travelOverviewSummary').innerHTML = '<div>省份总数 ' + travelProvinceNames.length + '，已出行 ' + overview.provinceCount + '</div><div>城市总数 ' + Object.keys(travelProvinceRecords).reduce(function(total, province) { return total + travelProvinceRecords[province].length; }, 0) + '，已出行 ' + overview.cityCount + '</div>';
+  var list = document.getElementById('travelOverviewList');
+  list.textContent = '';
+  overview.records.forEach(function(item) {
+    var row = document.createElement('tr');
+    [item.province, item.city, item.note].forEach(function(value) {
+      var cell = document.createElement('td');
+      cell.textContent = value;
+      row.appendChild(cell);
+    });
+    list.appendChild(row);
+  });
+}
+function openTravelOverview() {
+  renderTravelOverview();
+  document.getElementById('travelOverviewModal').classList.add('show');
+}
+function closeTravelOverview() { document.getElementById('travelOverviewModal').classList.remove('show'); }
+function purchaseRows() {
+  var sourceIds = pageType === 'travel' ? statIds('new') : statIds('need');
+  var checkedStore = pageType === 'travel' ? travelPlanChecked : purchaseChecked;
+  var clearedStore = pageType === 'travel' ? travelPlanCleared : purchaseCleared;
+  return records.filter(function(record) { return !clearedStore[record.id] && (sourceIds.indexOf(record.id) !== -1 || checkedStore[record.id]); });
+}
 function setPurchaseChecked(checked) {
+  var checkedStore = pageType === 'travel' ? travelPlanChecked : purchaseChecked;
   purchaseRows().forEach(function(record) {
     if (checked) {
-      purchaseChecked[record.id] = true;
+      checkedStore[record.id] = true;
     } else {
-      delete purchaseChecked[record.id];
+      delete checkedStore[record.id];
     }
   });
   renderPurchaseList();
 }
 function clearPurchaseList() {
-  purchaseRows().forEach(function(record) {
-    if (purchaseChecked[record.id]) {
-      purchaseCleared[record.id] = true;
-      delete purchaseChecked[record.id];
-      setStatAssignment('need', record.id, false);
-    }
-  });
+  if (pageType !== 'travel') {
+    purchaseRows().forEach(function(record) {
+      if (purchaseChecked[record.id]) {
+        purchaseCleared[record.id] = true;
+        delete purchaseChecked[record.id];
+        setStatAssignment('need', record.id, false);
+      }
+    });
+  } else {
+    purchaseRows().forEach(function(record) {
+      if (travelPlanChecked[record.id]) {
+        travelPlanCleared[record.id] = true;
+        delete travelPlanChecked[record.id];
+        setStatAssignment('new', record.id, false);
+      }
+    });
+  }
   renderPurchaseList();
   render();
 }
 function selectAllPurchaseList() {
   var rows = purchaseRows();
-  var allChecked = rows.length > 0 && rows.every(function(record) { return Boolean(purchaseChecked[record.id]); });
+  var checkedStore = pageType === 'travel' ? travelPlanChecked : purchaseChecked;
+  var allChecked = rows.length > 0 && rows.every(function(record) { return Boolean(checkedStore[record.id]); });
   setPurchaseChecked(!allChecked);
 }
 function clonePurchaseRecords() { return records.map(function(record) { return Object.assign({}, record); }); }
@@ -890,7 +1092,10 @@ function openPurchaseDraft() {
     records: clonePurchaseRecords(),
     statAssignments: JSON.parse(JSON.stringify(statAssignments)),
     purchaseChecked: Object.assign({}, purchaseChecked),
-    purchaseCleared: Object.assign({}, purchaseCleared)
+    purchaseCleared: Object.assign({}, purchaseCleared),
+    travelPlanChecked: Object.assign({}, travelPlanChecked),
+    travelPlanCleared: Object.assign({}, travelPlanCleared),
+    travelPlanNotes: Object.assign({}, travelPlanNotes)
   };
 }
 function restorePurchaseDraft() {
@@ -899,6 +1104,9 @@ function restorePurchaseDraft() {
   statAssignments = purchaseDraft.statAssignments;
   purchaseChecked = purchaseDraft.purchaseChecked;
   purchaseCleared = purchaseDraft.purchaseCleared;
+  travelPlanChecked = purchaseDraft.travelPlanChecked;
+  travelPlanCleared = purchaseDraft.travelPlanCleared;
+  travelPlanNotes = purchaseDraft.travelPlanNotes;
   purchaseDraft = null;
 }
 function confirmPurchaseList() { saveState(); purchaseDraft = null; closePurchaseList(); }
@@ -918,9 +1126,12 @@ function removeFromNewStats(id) {
     if (!newAssignmentsByMonth[key].length) delete newAssignmentsByMonth[key];
   });
 }
+function storageState() {
+  return { records: records, categories: categoryNames, currentCategory: currentCategory, calendarCategoryRoles: calendarCategoryRoles, statAssignments: statAssignments, newAssignmentsByMonth: newAssignmentsByMonth, monthlyStats: monthlyStats, purchaseChecked: purchaseChecked, purchaseCleared: purchaseCleared, travelPlanChecked: travelPlanChecked, travelPlanCleared: travelPlanCleared, travelPlanNotes: travelPlanNotes, travelFootprintHistory: travelFootprintHistory };
+}
 function saveState() {
   try { refreshCurrentMonthSnapshot(); } catch (error) {}
-  var serialized = JSON.stringify({ records: records, categories: categoryNames, currentCategory: currentCategory, calendarCategoryRoles: calendarCategoryRoles, statAssignments: statAssignments, newAssignmentsByMonth: newAssignmentsByMonth, monthlyStats: monthlyStats, purchaseChecked: purchaseChecked, purchaseCleared: purchaseCleared });
+  var serialized = JSON.stringify(storageState());
   try { localStorage.setItem(storageKey, serialized); } catch (error) {}
   try { sessionStorage.setItem(storageKey, serialized); } catch (error) {}
 }
@@ -946,6 +1157,10 @@ function loadState() {
     if (saved && saved.purchaseChecked && typeof saved.purchaseChecked === 'object') purchaseChecked = saved.purchaseChecked;
     else if (saved && saved.statAssignments && Array.isArray(saved.statAssignments.new) && saved.statAssignments.new.length) newAssignmentsByMonth[currentMonthKey()] = saved.statAssignments.new.slice();
     if (saved && saved.purchaseCleared && typeof saved.purchaseCleared === 'object') purchaseCleared = saved.purchaseCleared;
+    if (saved && saved.travelPlanChecked && typeof saved.travelPlanChecked === 'object') travelPlanChecked = saved.travelPlanChecked;
+    if (saved && saved.travelPlanCleared && typeof saved.travelPlanCleared === 'object') travelPlanCleared = saved.travelPlanCleared;
+    if (saved && saved.travelPlanNotes && typeof saved.travelPlanNotes === 'object') travelPlanNotes = saved.travelPlanNotes;
+    if (saved && saved.travelFootprintHistory && typeof saved.travelFootprintHistory === 'object') travelFootprintHistory = saved.travelFootprintHistory;
     if (pageType === 'other' && returnSub !== 'sub1e') {
       categoryNames = ['其他'];
       records.forEach(function(record) { record.category = '其他'; });
@@ -1029,7 +1244,16 @@ function deleteCategory(category) {
   render();
   return true;
 }
-function statTitle(stat) { if (stat.key === 'total') return currentCategory + '总数'; if (stat.key === 'new') return currentMonthChineseName() + '新增'; return stat.name; }
+function statTitle(stat) {
+  if (stat.key === 'total') return currentCategory + '总数';
+  if (pageType === 'travel') {
+    if (stat.key === 'new') return currentMonthChineseName() + '足迹';
+    if (stat.key === 'discarded') return '首次踏足';
+    if (stat.key === 'need') return '多次踏足';
+  }
+  if (stat.key === 'new') return currentMonthChineseName() + '新增';
+  return stat.name;
+}
 function orderedStats() { return statTypes.slice(); }
 function countFor(key) {
   var list = visibleRecords();
@@ -1045,6 +1269,14 @@ function categoryHasNeed(category) {
   var needIds = statIds('need');
   return records.some(function(record) { return record.category === category && needIds.indexOf(record.id) !== -1; });
 }
+function categoryTravelClass(category) {
+  var categoryRecords = records.filter(function(record) { return record.category === category; });
+  var needIds = statIds('need');
+  if (categoryRecords.some(function(record) { return needIds.indexOf(record.id) !== -1; })) return ' need-category';
+  var firstVisitIds = statIds('discarded');
+  if (categoryRecords.some(function(record) { return firstVisitIds.indexOf(record.id) !== -1; })) return ' travel-first-category';
+  return '';
+}
 function setStatAssignment(key, id, checked) {
   if (key === 'new') {
     var monthKey = currentMonthKey();
@@ -1056,6 +1288,10 @@ function setStatAssignment(key, id, checked) {
     if (key === 'need' && checked) delete purchaseCleared[id];
     if (checked && statAssignments[key].indexOf(id) === -1) statAssignments[key].push(id);
     if (!checked) statAssignments[key] = statAssignments[key].filter(function(recordId) { return recordId !== id; });
+    if (checked && pageType === 'travel') {
+      var visitedRecord = records.find(function(record) { return record.id === id; });
+      if (visitedRecord) rememberTravelVisitDate(id, visitedRecord.time);
+    }
   }
   saveState();
   var card = document.querySelector('.stat[data-key="' + key + '"]');
@@ -1063,7 +1299,9 @@ function setStatAssignment(key, id, checked) {
 }
 function render(skipCategories) {
   if (!skipCategories) renderCategories();
-  document.getElementById('sectionTitle').textContent = currentCategory;
+  document.getElementById('sectionTitle').textContent = pageType === 'travel' ? '年度明细' : currentCategory;
+  document.getElementById('sectionHead').classList.toggle('travel-section-head', pageType === 'travel');
+  document.getElementById('travelOverviewButton').hidden = pageType !== 'travel';
   var stats = document.getElementById('stats');
   if (pageType === 'calendar') renderCalendarStats();
   if (pageType !== 'calendar') stats.textContent = '';
@@ -1078,8 +1316,9 @@ function render(skipCategories) {
       stats.appendChild(card);
    });
   }
-  var items = document.getElementById('items');
-   var currentCalendarRole = pageType === 'calendar' ? calendarRoleForCategory(currentCategory) : '';
+   var items = document.getElementById('items');
+    items.classList.toggle('travel-items', pageType === 'travel');
+    var currentCalendarRole = pageType === 'calendar' ? calendarRoleForCategory(currentCategory) : '';
    items.classList.toggle('calendar-solar-items', currentCalendarRole === 'solar');
    items.classList.toggle('calendar-holiday-items', currentCalendarRole === 'holiday');
    items.classList.toggle('calendar-date-items', ['memorial', 'birthday', 'special'].indexOf(currentCalendarRole) !== -1);
@@ -1092,8 +1331,11 @@ function render(skipCategories) {
     var item = document.createElement('div');
     item.className = 'item wood-surface wood-3d';
      if (!record.name) item.classList.add('empty');
-    if (statIds('need').indexOf(record.id) !== -1) item.classList.add('need-item');
-    if (statIds('discarded').indexOf(record.id) !== -1) item.classList.add('discarded-item');
+     if (statIds('need').indexOf(record.id) !== -1) item.classList.add('need-item');
+     if (pageType === 'travel') {
+       if (statIds('new').indexOf(record.id) !== -1) item.classList.add('discarded-item');
+       if (statIds('discarded').indexOf(record.id) !== -1) item.classList.add('travel-first-item');
+     } else if (statIds('discarded').indexOf(record.id) !== -1) item.classList.add('discarded-item');
     var itemName = document.createElement('span');
     itemName.className = 'item-name';
      itemName.textContent = pageType === 'calendar' ? calendarRecordName(record) : record.name;
@@ -1109,7 +1351,7 @@ function render(skipCategories) {
        item.addEventListener('dblclick', function(event) {
         event.preventDefault();
         event.stopPropagation();
-         openItemActionEditor(record.id);
+          pageType === 'calendar' ? openItemActionEditor(record.id) : openEditor(record.id);
       });
     item.addEventListener('dragstart', function() { dragMode = 'item'; dragId = record.id; item.classList.add('dragging'); });
     item.addEventListener('dragend', function() { item.classList.remove('dragging'); clearDropIndicators(); dragMode = null; dragId = null; });
@@ -1167,6 +1409,18 @@ function reorderRecord(id, targetId, before) {
   saveState();
   render();
 }
+function updateEditorStatLabels() {
+  var isTravel = pageType === 'travel';
+  var editor = document.querySelector('.record-editor');
+  editor.classList.toggle('travel-editor', isTravel);
+  document.getElementById('editNewLabel').textContent = isTravel ? currentMonthChineseName() + '足迹' : '新增';
+  document.getElementById('editDiscardedLabel').textContent = isTravel ? '首次踏足' : '废弃';
+  document.getElementById('editNeedLabel').textContent = isTravel ? '多次踏足' : '添置';
+  Array.prototype.forEach.call(editor.querySelectorAll('.editor-stat-option'), function(option) {
+    option.classList.remove('compact');
+    if (isTravel && option.scrollWidth > option.clientWidth) option.classList.add('compact');
+  });
+}
 function openEditor(id, assignmentKey) {
   editingId = id;
   editingAssignment = null;
@@ -1187,6 +1441,7 @@ function openEditor(id, assignmentKey) {
   document.getElementById('editNewInput').checked = record ? statIds('new').indexOf(record.id) !== -1 : false;
   document.getElementById('editDiscardedInput').checked = record ? statIds('discarded').indexOf(record.id) !== -1 : false;
   document.getElementById('editNeedInput').checked = record ? statIds('need').indexOf(record.id) !== -1 : false;
+  updateEditorStatLabels();
   document.getElementById('editorTitle').textContent = isDailyMeal ? (record ? '编辑餐食记录' : '新增餐食记录') : (record ? '编辑记录' : '新增记录');
   document.getElementById('deleteButton').hidden = !record;
   document.getElementById('deleteButton').textContent = '删除';
@@ -1223,7 +1478,7 @@ document.addEventListener('click', function(event) {
   var target = event.target.closest('button, .category, .item, .mini-item, .stat, .back');
   if (target) playWoodClick();
 });
-document.getElementById('sectionTitle').addEventListener('click', openAnnualDetail);
+if (pageType !== 'calendar') document.getElementById('sectionTitle').addEventListener('click', openAnnualDetail);
 document.getElementById('sectionAddButton').addEventListener('click', function() { pageType === 'calendar' ? openCalendarAddEditor() : openEditor(null); });
 document.getElementById('calendarAddCancelButton').addEventListener('click', closeCalendarAddEditor);
 document.getElementById('calendarAddSaveButton').addEventListener('click', function() {
@@ -1263,6 +1518,9 @@ document.getElementById('itemActionDeleteButton').addEventListener('click', func
 });
 document.getElementById('itemActionModal').addEventListener('click', function(event) { if (event.target === this) closeItemActionEditor(); });
 document.getElementById('purchaseButton').addEventListener('click', openPurchaseList);
+document.getElementById('travelOverviewButton').addEventListener('click', openTravelOverview);
+document.getElementById('travelOverviewCloseButton').addEventListener('click', closeTravelOverview);
+document.getElementById('travelOverviewModal').addEventListener('click', function(event) { if (event.target === this) closeTravelOverview(); });
 document.getElementById('purchaseClearButton').addEventListener('click', clearPurchaseList);
 document.getElementById('purchaseSelectAllButton').addEventListener('click', selectAllPurchaseList);
 document.getElementById('purchaseConfirmButton').addEventListener('click', confirmPurchaseList);
@@ -1305,6 +1563,7 @@ document.getElementById('saveButton').addEventListener('click', function() {
   var savedId = editingId;
   if (editingId) {
     var editingRecord = records.find(function(item) { return item.id === editingId; });
+    if (pageType === 'travel' && (statAssignments.discarded.indexOf(editingId) !== -1 || statAssignments.need.indexOf(editingId) !== -1)) rememberTravelVisitDate(editingId, editingRecord.time);
     editingRecord.name = name;
     editingRecord.time = time;
     editingRecord.note = note;
