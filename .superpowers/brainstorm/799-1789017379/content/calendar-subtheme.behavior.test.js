@@ -12,6 +12,8 @@ assert.match(source, /calendarCategoryRoles/, '序列名称修改后应保留稳
 assert.match(source, /function renameCategory[\s\S]{0,360}calendarCategoryRoles/, '重命名序列时应同步更新稳定分类标识');
 assert.match(source, /function calendarWeekdayText[\s\S]{0,180}星期/, '第一个方块应显示星期');
 assert.match(source, /function calendarLunarDateText[\s\S]{0,260}u-ca-chinese/, '第一个方块应使用浏览器农历日期');
+assert.match(source, /function calendarLunarDateText[\s\S]{0,260}month:\s*'numeric'/, '第一个方块的农历月份应使用阿拉伯数字');
+assert.match(source, /function calendarLunarDateText[\s\S]{0,500}formatToParts[\s\S]{0,300}'月'[\s\S]{0,100}'日'/, '第一个方块的农历日期应显示为数字月日格式');
 assert.match(source, /calendarStatData[\s\S]{0,1800}calendarRecords\(\['solar'\][\s\S]{0,300}calendarRecords\(\['holiday'\][\s\S]{0,500}calendarRecords\(\['memorial'\][\s\S]{0,300}calendarRecords\(\['birthday'\][\s\S]{0,500}calendarRecords\(\['special'\]/, '四个方块应分别匹配节气、节日、纪念日、生日和特殊日');
 assert.match(source, /\.calendar-stat\s*\{[^}]*height:\s*69px/, '四个日历方块应使用统一高度');
 assert.match(source, /\.calendar-stat \.stat-count\s*\{[^}]*font-size:\s*12px/, '日历方块文字过长时应缩小字号');

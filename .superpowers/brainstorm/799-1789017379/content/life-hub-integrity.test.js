@@ -23,3 +23,4 @@ assert.match(server, /path\.resolve|path\.normalize/, '服务应限制在生活�
 assert.match(server, /Cache-Control.*no-store/, '固定服务应禁止浏览器缓存页面');
 assert.match(main, /life-hub-manifest\.json/, '主界面应加载页面清单');
 assert.match(main, /完整性检查|integrity/, '主界面应显示完整性检查状态');
+assert.doesNotMatch(main, /\ncheckLifeHubIntegrity\(\);\s*\n/, '导入数据前不应自动执行完整性检查');

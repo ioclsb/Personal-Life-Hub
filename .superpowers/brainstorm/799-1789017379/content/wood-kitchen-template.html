@@ -161,6 +161,75 @@
   .item.travel-first-item { background-color: #f2dfc1; background-blend-mode: multiply; }
   .item.discarded-item { outline: 1px dashed #b85149; outline-offset: 1px; }
   .item.empty { color: #a18e72; font-weight: 500; border-style: dashed; }
+  .good-habit-page .sleep-table-panel { margin-top: -10px; }
+  .good-habit-page #moodTablePanel { margin-left: 5px; }
+  .action-good-habit-page #sectionTitle,
+  .action-good-habit-page #purchaseButton,
+  .action-good-habit-page #sectionAddButton { display: none !important; }
+  .good-habit-page .sleep-table-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .good-habit-page .sleep-table-title { font-size: 13px; font-weight: 800; }
+  .good-habit-page .sleep-month-control { display: flex; align-items: center; gap: 5px; }
+  .good-habit-page .sleep-month-control button { padding: 2px 5px; border: 0; border-radius: 4px; background: rgba(255,255,255,0.28); color: #5a4632; cursor: pointer; }
+  .good-habit-page .sleep-month-label { min-width: 66px; font-size: 11px; text-align: center; }
+  .good-habit-page .sleep-table-wrap { overflow-x: auto; }
+  .good-habit-page .sleep-table { width: 100%; min-width: 390px; border-collapse: separate; border-spacing: 2px; color: #5a4632; font-size: 9px; table-layout: fixed; }
+  .good-habit-page .sleep-table th, .good-habit-page .sleep-table td { height: 29px; padding: 2px 1px; background: rgba(255,240,215,0.28); text-align: center; }
+  .good-habit-page .sleep-table th { height: 36px; font-weight: 800; line-height: 1.2; white-space: nowrap; }
+  .good-habit-page .sleep-table th:first-child, .good-habit-page .sleep-table td:first-child { width: 34px; }
+  .good-habit-page .sleep-table th:nth-child(2), .good-habit-page .sleep-table td:nth-child(2) { width: 36px; }
+  .good-habit-page .mood-table { width: auto; min-width: 0; }
+  .good-habit-page .mood-table th, .good-habit-page .mood-table td { width: 40px; }
+  .good-habit-page .mood-table th:first-child, .good-habit-page .mood-table td:first-child { width: 40px; padding-left: 4px; }
+  .good-habit-page .mood-table th:last-child, .good-habit-page .mood-table td:last-child { padding-right: 4px; }
+  .good-habit-page .mood-table th:nth-child(2), .good-habit-page .mood-table th:nth-child(3), .good-habit-page .mood-table th:nth-child(4), .good-habit-page .mood-table th:nth-child(5),
+  .good-habit-page .mood-table td:nth-child(2), .good-habit-page .mood-table td:nth-child(3), .good-habit-page .mood-table td:nth-child(4), .good-habit-page .mood-table td:nth-child(5) { width: 43px; }
+  .good-habit-page .sleep-table.diet-table { width: auto; min-width: 0; }
+  .good-habit-page .sleep-table.diet-table th, .good-habit-page .sleep-table.diet-table td { width: 50px; }
+  .good-habit-page .sleep-table.diet-table th:first-child, .good-habit-page .sleep-table.diet-table td:first-child { width: 44px; padding-left: 4px; }
+  .good-habit-page .sleep-table.diet-table th:last-child, .good-habit-page .sleep-table.diet-table td:last-child { width: 60px; padding-right: 4px; }
+  .good-habit-page .sleep-dot.diet-light { background: #4a9a52; box-shadow: inset 0 0 0 3px rgba(255,255,255,0.4); }
+  .good-habit-page .sleep-dot.diet-heavy { background: #c0504a; box-shadow: inset 0 0 0 3px rgba(255,255,255,0.4); }
+  .good-habit-page .sleep-dot.diet-eaten { background: #806b52; box-shadow: inset 0 0 0 3px #d8c4a0; }
+  .good-habit-page .sleep-table.exercise-table { width: auto; min-width: 0; }
+  .good-habit-page .sleep-table.exercise-table th,
+  .good-habit-page .sleep-table.exercise-table td { width: auto; }
+  .good-habit-page .sleep-table.exercise-table th:first-child,
+  .good-habit-page .sleep-table.exercise-table td:first-child { width: 44px; padding-left: 4px; }
+  .good-habit-page .sleep-table.exercise-table th:nth-child(2),
+  .good-habit-page .sleep-table.exercise-table td:nth-child(2) { width: 56px; }
+  .good-habit-page .sleep-table.exercise-table th:nth-child(3),
+  .good-habit-page .sleep-table.exercise-table td:nth-child(3) { width: 76px; }
+  .good-habit-page .sleep-table.exercise-table th:last-child,
+  .good-habit-page .sleep-table.exercise-table td:last-child { width: 96px; padding-right: 4px; }
+  .good-habit-page .exercise-cell-input { width: 100%; height: 100%; min-height: 20px; padding: 0; border: 0; background: transparent; color: #5a4632; font: inherit; font-size: 9px; text-align: center; outline: none; }
+  .good-habit-page .sleep-table.exercise-table th { font-size: 11px; letter-spacing: 0.06em; }
+  .good-habit-page .sleep-table.weight-table { width: auto; min-width: 0; }
+  .good-habit-page .sleep-table.weight-table th:first-child,
+  .good-habit-page .sleep-table.weight-table td:first-child { width: 44px; padding-left: 4px; }
+  .good-habit-page .sleep-table.weight-table th:nth-child(2),
+  .good-habit-page .sleep-table.weight-table td:nth-child(2) { width: 80px; }
+  .good-habit-page .sleep-table.weight-table th:last-child,
+  .good-habit-page .sleep-table.weight-table td:last-child { width: 180px; padding-right: 4px; }
+  .good-habit-page .weight-cell-input { width: 100%; height: 100%; min-height: 20px; padding: 0; border: 0; background: transparent; color: #5a4632; font: inherit; font-size: 9px; text-align: center; outline: none; }
+  .good-habit-page .sleep-table.weight-table th { font-size: 11px; letter-spacing: 0.06em; }
+  .good-habit-page .sleep-table.learn-table { width: auto; min-width: 0; }
+  .good-habit-page .sleep-table.learn-table th,
+  .good-habit-page .sleep-table.learn-table td { width: auto; }
+  .good-habit-page .sleep-table.learn-table th:first-child,
+  .good-habit-page .sleep-table.learn-table td:first-child { width: 44px; padding-left: 4px; }
+  .good-habit-page .sleep-table.learn-table th:nth-child(2),
+  .good-habit-page .sleep-table.learn-table td:nth-child(2),
+  .good-habit-page .sleep-table.learn-table th:nth-child(3),
+  .good-habit-page .sleep-table.learn-table td:nth-child(3),
+  .good-habit-page .sleep-table.learn-table th:nth-child(4),
+  .good-habit-page .sleep-table.learn-table td:nth-child(4) { width: 50px; }
+  .good-habit-page .sleep-table.learn-table th:last-child,
+  .good-habit-page .sleep-table.learn-table td:last-child { width: 120px; padding-right: 4px; }
+  .good-habit-page .learn-cell-input { width: 100%; height: 100%; min-height: 20px; padding: 0; border: 0; background: transparent; color: #5a4632; font: inherit; font-size: 9px; text-align: center; outline: none; }
+  .good-habit-page .sleep-table.learn-table th { font-size: 11px; letter-spacing: 0.06em; }
+  .stat-count.compact { font-size: 11px; line-height: 1.35; white-space: normal; word-break: break-all; max-width: 100%; }
+  .good-habit-page .sleep-dot { width: 16px; height: 16px; padding: 0; border: 1px solid #806b52; border-radius: 50%; background: transparent; cursor: pointer; vertical-align: middle; }
+  .good-habit-page .sleep-dot.checked { background: #806b52; box-shadow: inset 0 0 0 3px #d8c4a0; }
   .modal { position: fixed; inset: 0; display: none; place-items: center; background: rgba(40,25,12,0.32); z-index: 5; }
   .modal.show { display: grid; }
   .editor { width: 300px; padding: 16px; border-radius: 12px; }
@@ -218,9 +287,15 @@
       <div class="lower-panel">
         <div class="lower-sidebar-spacer" aria-hidden="true"></div>
         <main class="content">
-          <div class="section-head" id="sectionHead"><span class="section-title wood-surface wood-3d" id="sectionTitle">厨具</span><button class="travel-overview-button wood-surface wood-3d" id="travelOverviewButton" type="button" hidden>足迹概览</button><button class="purchase-button wood-surface wood-3d" id="purchaseButton" type="button">采购清单</button><button class="section-add wood-surface wood-3d" id="sectionAddButton" type="button" aria-label="新增项目">＋</button></div>
-          <div class="items" id="items"></div>
-        </main>
+           <div class="section-head" id="sectionHead"><span class="section-title wood-surface wood-3d" id="sectionTitle">厨具</span><button class="travel-overview-button wood-surface wood-3d" id="travelOverviewButton" type="button" hidden>足迹概览</button><button class="purchase-button wood-surface wood-3d" id="purchaseButton" type="button">采购清单</button><button class="section-add wood-surface wood-3d" id="sectionAddButton" type="button" aria-label="新增项目">＋</button></div>
+           <div class="items" id="items"></div>
+            <div class="sleep-table-panel" id="sleepTablePanel" hidden></div>
+             <div class="sleep-table-panel" id="moodTablePanel" hidden></div>
+             <div class="sleep-table-panel" id="dietTablePanel" hidden></div>
+             <div class="sleep-table-panel" id="exerciseTablePanel" hidden></div>
+             <div class="sleep-table-panel" id="weightTablePanel" hidden></div>
+             <div class="sleep-table-panel" id="learnTablePanel" hidden></div>
+         </main>
       </div>
     </div>
   </div>
@@ -524,12 +599,18 @@ var returnSub = queryParams.get('return') || pageConfig.returnSub;
 var calendarCategoryRoles = pageType === 'calendar' ? {
   '十二节气': 'solar', '重要节日': 'holiday', '纪念日': 'memorial', '生日': 'birthday', '特殊日记录': 'special'
 } : {};
+var goodHabitRoles = {};
+var goodHabitRoleDefaults = { '睡眠': 'sleep', '情绪': 'mood', '饮食': 'diet', '运动': 'exercise', '体重': 'weight', '学习': 'learn' };
 if (pageType === 'other' && returnSub === 'sub1e') {
   storageKey = 'personal-life-hub-sub1e-v1';
   migrateStorage('personal-life-hub-other-template-v1', storageKey);
 }
 var savedReturnTitle = getSavedParentTitle(returnSub);
 if (savedReturnTitle) pageConfig.title = savedReturnTitle;
+var isActionGoodHabitPage = queryParams.get('habit') === '1' || returnSub === 'cell3-sub-1790089557201-1' || storageKey === 'personal-life-hub-custom-cell3-sub-1790089557201-1-v1';
+var isGoodHabitPage = (queryParams.get('habit') === '1' || isActionGoodHabitPage || savedReturnTitle === '好习惯追踪' || customTitle === '好习惯追踪');
+if (isGoodHabitPage) document.body.classList.add('good-habit-page');
+if (isActionGoodHabitPage) document.body.classList.add('action-good-habit-page');
 var pageTitle = pageConfig.title;
 var records = pageConfig.records;
 var currentCategory = categoryNames[0];
@@ -559,6 +640,26 @@ var travelPlanChecked = {};
 var travelPlanCleared = {};
 var travelPlanNotes = {};
 var travelFootprintHistory = {};
+var sleepChecks = {};
+var moodChecks = {};
+var moodPeriods = ['开心', '平常', '伤心', '生气', '焦虑'];
+var moodTableVisible = false;
+var dietChecks = {};
+var dietMeals = ['早餐', '中餐', '晚餐', '加餐/零食'];
+var dietTableVisible = false;
+var exerciseChecks = {};
+var exerciseDurations = {};
+var exerciseMethods = {};
+var exerciseTableVisible = false;
+var weightValues = {};
+var weightNotes = {};
+var weightTableVisible = false;
+var learnFields = ['技能', '画画', '练习'];
+var learnChecks = {};
+var learnNotes = {};
+var learnTableVisible = false;
+var sleepMonthCursor = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+var sleepTableVisible = false;
 var purchaseDraft = null;
 var audioContext = null;
 var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -599,7 +700,7 @@ function playWoodClick() {
 
 document.querySelector('h2').textContent = pageTitle + ' — 记录模板';
 document.querySelector('.title').textContent = pageTitle;
-document.getElementById('purchaseButton').textContent = pageType === 'travel' ? '计划出行' : '采购清单';
+document.getElementById('purchaseButton').textContent = pageType === 'travel' ? '计划出行' : (['sub2d', 'sub2f'].indexOf(returnSub) !== -1 ? '清单' : '采购清单');
 function calendarHeaderDateText(date) {
   return date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日';
 }
@@ -608,7 +709,14 @@ function calendarWeekdayText(date) {
   return weekdays[date.getDay()];
 }
 function calendarLunarDateText(date) {
-  return new Intl.DateTimeFormat('zh-CN-u-ca-chinese', { month: 'long', day: 'numeric' }).format(date);
+  var parts = new Intl.DateTimeFormat('zh-CN-u-ca-chinese', { month: 'numeric', day: 'numeric' }).formatToParts(date);
+  var month = '';
+  var day = '';
+  parts.forEach(function(part) {
+    if (part.type === 'month') month = part.value;
+    if (part.type === 'day') day = part.value;
+  });
+  return month + '月' + day + '日';
 }
 if (pageType === 'calendar') {
   var calendarDate = document.querySelector('.calendar-date');
@@ -833,7 +941,7 @@ function renderAnnualDetail() {
     renderTravelAnnualDetail(table);
     return;
   }
-  ['月份', '厨具总数', '本月新增', '已废弃', '需添置'].forEach(function(label) {
+  ['月份', '总数', '本月新增', '已废弃', '需添置'].forEach(function(label) {
     var header = document.createElement('div');
     header.className = 'annual-cell head wood-surface wood-3d';
     header.textContent = label;
@@ -917,7 +1025,7 @@ function renderPurchaseList() {
   var clearedStore = isTravel ? travelPlanCleared : purchaseCleared;
   var sourceRecords = records.filter(function(record) { return !clearedStore[record.id] && (sourceIds.indexOf(record.id) !== -1 || checkedStore[record.id]); });
   var headers = isTravel ? ['勾选', '城市', '备注', '所属省份'] : ['勾选框', '名称', '备注', '类别'];
-  document.querySelector('#purchaseModal h3').textContent = isTravel ? '计划出行' : '采购清单';
+  document.querySelector('#purchaseModal h3').textContent = isTravel ? '计划出行' : (['sub2d', 'sub2f'].indexOf(returnSub) !== -1 ? '清单' : '采购清单');
   document.querySelectorAll('#purchaseModal .purchase-table th').forEach(function(cell, index) { cell.textContent = headers[index]; });
   if (!sourceRecords.length) {
     list.innerHTML = '<tr><td class="purchase-empty" colspan="4">' + (isTravel ? '暂无本月足迹' : '暂无需添置物品') + '</td></tr>';
@@ -1127,7 +1235,18 @@ function removeFromNewStats(id) {
   });
 }
 function storageState() {
-  return { records: records, categories: categoryNames, currentCategory: currentCategory, calendarCategoryRoles: calendarCategoryRoles, statAssignments: statAssignments, newAssignmentsByMonth: newAssignmentsByMonth, monthlyStats: monthlyStats, purchaseChecked: purchaseChecked, purchaseCleared: purchaseCleared, travelPlanChecked: travelPlanChecked, travelPlanCleared: travelPlanCleared, travelPlanNotes: travelPlanNotes, travelFootprintHistory: travelFootprintHistory };
+  var state = { records: records, categories: categoryNames, currentCategory: currentCategory, calendarCategoryRoles: calendarCategoryRoles, goodHabitRoles: goodHabitRoles, statAssignments: statAssignments, newAssignmentsByMonth: newAssignmentsByMonth, monthlyStats: monthlyStats, purchaseChecked: purchaseChecked, purchaseCleared: purchaseCleared, travelPlanChecked: travelPlanChecked, travelPlanCleared: travelPlanCleared, travelPlanNotes: travelPlanNotes, travelFootprintHistory: travelFootprintHistory };
+  if (isGoodHabitPage) state.sleepChecks = sleepChecks;
+  if (isGoodHabitPage) state.moodChecks = moodChecks;
+  if (isGoodHabitPage) state.dietChecks = dietChecks;
+  if (isGoodHabitPage) state.exerciseChecks = exerciseChecks;
+  if (isGoodHabitPage) state.exerciseDurations = exerciseDurations;
+  if (isGoodHabitPage) state.exerciseMethods = exerciseMethods;
+  if (isGoodHabitPage) state.weightValues = weightValues;
+  if (isGoodHabitPage) state.weightNotes = weightNotes;
+  if (isGoodHabitPage) state.learnChecks = learnChecks;
+  if (isGoodHabitPage) state.learnNotes = learnNotes;
+  return state;
 }
 function saveState() {
   try { refreshCurrentMonthSnapshot(); } catch (error) {}
@@ -1144,6 +1263,12 @@ function loadState() {
     if (pageType === 'calendar') records = records.filter(function(record) { return !(pageType === 'calendar' && !record.name && record.time); });
     if (saved && Array.isArray(saved.categories) && saved.categories.length) categoryNames = saved.categories;
     if (pageType === 'calendar' && saved && saved.calendarCategoryRoles) calendarCategoryRoles = saved.calendarCategoryRoles;
+    if (isGoodHabitPage && saved && saved.goodHabitRoles && typeof saved.goodHabitRoles === 'object') goodHabitRoles = saved.goodHabitRoles;
+    if (isActionGoodHabitPage) {
+      categoryNames.forEach(function(name) {
+        if (!goodHabitRoles[name] && goodHabitRoleDefaults[name]) goodHabitRoles[name] = goodHabitRoleDefaults[name];
+      });
+    }
     if (pageType === 'calendar') {
       var defaultCalendarRoles = ['solar', 'holiday', 'memorial', 'birthday', 'special'];
       categoryNames.forEach(function(name, index) {
@@ -1161,6 +1286,16 @@ function loadState() {
     if (saved && saved.travelPlanCleared && typeof saved.travelPlanCleared === 'object') travelPlanCleared = saved.travelPlanCleared;
     if (saved && saved.travelPlanNotes && typeof saved.travelPlanNotes === 'object') travelPlanNotes = saved.travelPlanNotes;
     if (saved && saved.travelFootprintHistory && typeof saved.travelFootprintHistory === 'object') travelFootprintHistory = saved.travelFootprintHistory;
+    if (isGoodHabitPage && saved && saved.sleepChecks && typeof saved.sleepChecks === 'object') sleepChecks = saved.sleepChecks;
+    if (isGoodHabitPage && saved && saved.moodChecks && typeof saved.moodChecks === 'object') moodChecks = saved.moodChecks;
+    if (isGoodHabitPage && saved && saved.dietChecks && typeof saved.dietChecks === 'object') dietChecks = saved.dietChecks;
+    if (isGoodHabitPage && saved && saved.exerciseChecks && typeof saved.exerciseChecks === 'object') exerciseChecks = saved.exerciseChecks;
+    if (isGoodHabitPage && saved && saved.exerciseDurations && typeof saved.exerciseDurations === 'object') exerciseDurations = saved.exerciseDurations;
+    if (isGoodHabitPage && saved && saved.exerciseMethods && typeof saved.exerciseMethods === 'object') exerciseMethods = saved.exerciseMethods;
+    if (isGoodHabitPage && saved && saved.weightValues && typeof saved.weightValues === 'object') weightValues = saved.weightValues;
+    if (isGoodHabitPage && saved && saved.weightNotes && typeof saved.weightNotes === 'object') weightNotes = saved.weightNotes;
+    if (isGoodHabitPage && saved && saved.learnChecks && typeof saved.learnChecks === 'object') learnChecks = saved.learnChecks;
+    if (isGoodHabitPage && saved && saved.learnNotes && typeof saved.learnNotes === 'object') learnNotes = saved.learnNotes;
     if (pageType === 'other' && returnSub !== 'sub1e') {
       categoryNames = ['其他'];
       records.forEach(function(record) { record.category = '其他'; });
@@ -1217,6 +1352,10 @@ function renameCategory(oldName, newName) {
     calendarCategoryRoles[newName] = calendarCategoryRoles[oldName];
     delete calendarCategoryRoles[oldName];
   }
+  if (goodHabitRoles[oldName]) {
+    goodHabitRoles[newName] = goodHabitRoles[oldName];
+    delete goodHabitRoles[oldName];
+  }
   records.forEach(function(record) { if (record.category === oldName) record.category = newName; });
   if (currentCategory === oldName) currentCategory = newName;
   return true;
@@ -1230,6 +1369,7 @@ function reorderCategory(name, targetName, before) {
   categoryNames.splice(before ? target : target + 1, 0, name);
   saveState();
   renderCategories();
+  render();
 }
 function deleteCategory(category) {
   if (categoryNames.length <= 1) return false;
@@ -1245,18 +1385,60 @@ function deleteCategory(category) {
   return true;
 }
 function statTitle(stat) {
-  if (stat.key === 'total') return currentCategory + '总数';
+  if (stat.key === 'total' && isSleepStatSequence()) return '睡眠时长';
+  if (stat.key === 'total' && isMoodStatSequence()) return '闲鱼开心日';
   if (pageType === 'travel') {
     if (stat.key === 'new') return currentMonthChineseName() + '足迹';
     if (stat.key === 'discarded') return '首次踏足';
     if (stat.key === 'need') return '多次踏足';
   }
+  if (isSleepStatSequence()) {
+    if (stat.key === 'new') return '咸鱼翻身';
+    if (stat.key === 'discarded') return '咸鱼日常';
+    if (stat.key === 'need') return '烂命一条';
+  }
+  if (isMoodStatSequence()) {
+    if (stat.key === 'new') return '伤心';
+    if (stat.key === 'discarded') return '生气';
+    if (stat.key === 'need') return '焦虑';
+  }
+  if (stat.key === 'total' && isDietStatSequence()) return '清淡饮食';
+  if (isDietStatSequence()) {
+    if (stat.key === 'new') return '重油重盐';
+    if (stat.key === 'discarded') return '未吃次数';
+    if (stat.key === 'need') return '零食次数';
+  }
+  if (isExerciseStatSequence()) {
+    if (stat.key === 'new') return '运动总时长';
+    if (stat.key === 'discarded') return '最常坚持';
+    if (stat.key === 'need') return '最难坚持';
+  }
+  if (isWeightStatSequence()) {
+    if (stat.key === 'total') return '记录天数';
+    if (stat.key === 'new') return '平均体重';
+    if (stat.key === 'discarded') return '最低体重';
+    if (stat.key === 'need') return '最重体重';
+  }
+  if (isLearnStatSequence()) {
+    if (stat.key === 'total') return '技能天数';
+    if (stat.key === 'new') return '画画天数';
+    if (stat.key === 'discarded') return '练习天数';
+    if (stat.key === 'need') return '其他天数';
+  }
+  if (stat.key === 'total') return currentCategory + '总数';
   if (stat.key === 'new') return currentMonthChineseName() + '新增';
   return stat.name;
 }
 function orderedStats() { return statTypes.slice(); }
 function countFor(key) {
   var list = visibleRecords();
+  if (key === 'total' && isSleepStatSequence()) return sleepDurationText();
+  if (isSleepStatSequence() && sleepStatPairs[key]) return sleepPairCount(key);
+  if (isMoodStatSequence()) return moodCount(key);
+  if (isDietStatSequence()) return dietCount(key);
+  if (isExerciseStatSequence()) return exerciseCount(key);
+  if (isWeightStatSequence()) return weightCount(key);
+  if (isLearnStatSequence()) return learnCount(key);
   if (key === 'total') return activeRecords().length;
   if (key === 'new') return list.filter(function(record) { return statIds(key).indexOf(record.id) !== -1; }).length;
   return list.filter(function(record) { return statAssignments[key].indexOf(record.id) !== -1; }).length;
@@ -1297,11 +1479,574 @@ function setStatAssignment(key, id, checked) {
   var card = document.querySelector('.stat[data-key="' + key + '"]');
   if (card) card.querySelector('.stat-count').textContent = countFor(key);
 }
+var sleepPeriods = ['8:00前', '8:00-9:00', '9:00后', '23:00前', '23:00-24:00', '24:00后'];
+function sleepMonthKey() { return sleepMonthCursor.getFullYear() + '-' + String(sleepMonthCursor.getMonth() + 1).padStart(2, '0'); }
+function sleepCheckKey(day, period) { return sleepMonthKey() + '-' + String(day).padStart(2, '0') + '|' + period; }
+function habitRole(name) { return goodHabitRoles[name] || ''; }
+function isSleepStatSequence() { return isActionGoodHabitPage && habitRole(currentCategory) === 'sleep'; }
+function isMoodStatSequence() { return isActionGoodHabitPage && habitRole(currentCategory) === 'mood'; }
+function isDietStatSequence() { return isActionGoodHabitPage && habitRole(currentCategory) === 'diet'; }
+function isExerciseStatSequence() { return isActionGoodHabitPage && habitRole(currentCategory) === 'exercise'; }
+function isWeightStatSequence() { return isActionGoodHabitPage && habitRole(currentCategory) === 'weight'; }
+function isLearnStatSequence() { return isActionGoodHabitPage && habitRole(currentCategory) === 'learn'; }
+function sleepPeriodWidth(period) { return period.indexOf('-') !== -1 ? 64 : 46; }
+var sleepStatPairs = {
+  new: ['8:00前', '23:00前'],
+  discarded: ['8:00-9:00', '23:00-24:00'],
+  need: ['9:00后', '24:00后']
+};
+function sleepPairCount(key) {
+  var periods = sleepStatPairs[key];
+  if (!periods) return 0;
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  var total = 0;
+  for (let day = 1; day <= days; day++) {
+    periods.forEach(function(period) {
+      if (sleepChecks[sleepCheckKey(day, period)]) total += 1;
+    });
+  }
+  return total;
+}
+var moodStatPairs = {
+  total: ['开心', '平常'],
+  new: ['伤心'],
+  discarded: ['生气'],
+  need: ['焦虑']
+};
+function moodCount(key) {
+  var moods = moodStatPairs[key];
+  if (!moods) return 0;
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  var total = 0;
+  for (let day = 1; day <= days; day++) {
+    if (moods.some(function(mood) { return moodChecks[moodCheckKey(day, mood)]; })) total += 1;
+  }
+  return total;
+}
+function dietCount(key) {
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  var total = 0;
+  if (key === 'need') {
+    for (let day = 1; day <= days; day++) {
+      if (dietChecks[dietCheckKey(day, '加餐/零食')] === 'eaten') total += 1;
+    }
+    return total;
+  }
+  var meals = ['早餐', '中餐', '晚餐'];
+  for (let day = 1; day <= days; day++) {
+    meals.forEach(function(meal) {
+      var value = dietChecks[dietCheckKey(day, meal)] || '';
+      if (key === 'total' && value === 'light') total += 1;
+      if (key === 'new' && value === 'heavy') total += 1;
+      if (key === 'discarded' && !value) total += 1;
+    });
+  }
+  return total;
+}
+function exerciseCount(key) {
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  if (key === 'total') {
+    var total = 0;
+    for (let day = 1; day <= days; day++) {
+      if (exerciseChecks[exerciseCheckKey(day)]) total += 1;
+    }
+    return total;
+  }
+  if (key === 'new') {
+    var minutes = 0;
+    for (let day = 1; day <= days; day++) {
+      var duration = parseFloat(exerciseDurations[exerciseCheckKey(day)]);
+      if (!isNaN(duration)) minutes += duration;
+    }
+    return minutes;
+  }
+  var counts = {};
+  for (let day = 1; day <= days; day++) {
+    var method = (exerciseMethods[exerciseCheckKey(day)] || '').trim();
+    if (method) counts[method] = (counts[method] || 0) + 1;
+  }
+  if (!Object.keys(counts).length) return '';
+  var names = Object.keys(counts);
+  if (key === 'discarded') {
+    var max = Math.max.apply(null, names.map(function(name) { return counts[name]; }));
+    return names.filter(function(name) { return counts[name] === max; }).join(' ');
+  }
+  if (key === 'need') {
+    var min = Math.min.apply(null, names.map(function(name) { return counts[name]; }));
+    return names.filter(function(name) { return counts[name] === min; }).join(' ');
+  }
+  return '';
+}
+function weightCount(key) {
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  var values = [];
+  for (let day = 1; day <= days; day++) {
+    var value = parseFloat(weightValues[weightCheckKey(day)]);
+    if (!isNaN(value)) values.push(value);
+  }
+  if (!values.length) return '';
+  var count = values.length;
+  var sum = values.reduce(function(acc, item) { return acc + item; }, 0);
+  if (key === 'total') return count;
+  if (key === 'new') return sum / count;
+  if (key === 'discarded') return Math.min.apply(null, values);
+  if (key === 'need') return Math.max.apply(null, values);
+  return '';
+}
+function learnCount(key) {
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  var total = 0;
+  if (key === 'total') {
+    for (let day = 1; day <= days; day++) {
+      if (learnChecks[learnCheckKey(day, '技能')]) total += 1;
+    }
+    return total;
+  }
+  if (key === 'new') {
+    for (let day = 1; day <= days; day++) {
+      if (learnChecks[learnCheckKey(day, '画画')]) total += 1;
+    }
+    return total;
+  }
+  if (key === 'discarded') {
+    for (let day = 1; day <= days; day++) {
+      if (learnChecks[learnCheckKey(day, '练习')]) total += 1;
+    }
+    return total;
+  }
+  if (key === 'need') {
+    for (let day = 1; day <= days; day++) {
+      if (learnNotes[learnCheckKey(day, 'note')]) total += 1;
+    }
+    return total;
+  }
+  return total;
+}
+function statCountShouldCompact(key) {
+  if (!isExerciseStatSequence()) return false;
+  if (key !== 'discarded' && key !== 'need') return false;
+  return String(countFor(key) || '').indexOf(' ') !== -1;
+}
+function sleepPeriodMinutes(period) {
+  if (period === '8:00前') return 480;
+  if (period === '8:00-9:00') return 510;
+  if (period === '9:00后') return 540;
+  if (period === '23:00前') return 1380;
+  if (period === '23:00-24:00') return 1410;
+  if (period === '24:00后') return 1440;
+  return null;
+}
+function sleepTodayKey() {
+  var now = new Date();
+  return now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+}
+function sleepDurationText() { return sleepDurationTextFor(sleepTodayKey()); }
+function sleepDurationTextFor(dateKey) {
+  var wake = null;
+  var sleep = null;
+  ['8:00前', '8:00-9:00', '9:00后'].forEach(function(period) {
+    if (wake === null && sleepChecks[dateKey + '|' + period]) wake = sleepPeriodMinutes(period);
+  });
+  ['23:00前', '23:00-24:00', '24:00后'].forEach(function(period) {
+    if (sleep === null && sleepChecks[dateKey + '|' + period]) sleep = sleepPeriodMinutes(period);
+  });
+  if (wake === null || sleep === null) return '--';
+  var duration = wake - sleep;
+  if (duration <= 0) duration += 24 * 60;
+  return (duration / 60) + 'h';
+}
+function updateSleepStatCards() {
+  statTypes.forEach(function(stat) {
+    var card = document.querySelector('.stat[data-key="' + stat.key + '"]');
+    if (!card) return;
+    card.querySelector('.stat-name').textContent = statTitle(stat);
+    card.querySelector('.stat-count').textContent = countFor(stat.key);
+    card.querySelector('.stat-count').classList.toggle('compact', statCountShouldCompact(stat.key));
+  });
+}
+function toggleSleepCheck(day, period) {
+  var key = sleepCheckKey(day, period);
+  if (sleepChecks[key]) delete sleepChecks[key];
+  else sleepChecks[key] = true;
+  saveState();
+  renderSleepTable();
+  updateSleepStatCards();
+}
+function shiftSleepMonth(delta) {
+  sleepMonthCursor = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + delta, 1);
+  renderSleepTable();
+  renderMoodTable();
+  renderDietTable();
+  renderExerciseTable();
+  renderWeightTable();
+  renderLearnTable();
+  updateSleepStatCards();
+}
+function renderSleepTable() {
+  if (!isGoodHabitPage) return;
+  var panel = document.getElementById('sleepTablePanel');
+  panel.hidden = !sleepTableVisible;
+  if (!sleepTableVisible) return;
+  panel.textContent = '';
+  var head = document.createElement('div');
+  head.className = 'sleep-table-head';
+  head.innerHTML = '<span class="sleep-table-title">睡眠检测表</span><span class="sleep-month-control"><button type="button" data-sleep-month="-1">‹</button><span class="sleep-month-label">' + sleepMonthCursor.getFullYear() + '年' + (sleepMonthCursor.getMonth() + 1) + '月</span><button type="button" data-sleep-month="1">›</button></span>';
+  head.querySelector('[data-sleep-month="-1"]').addEventListener('click', function() { shiftSleepMonth(-1); });
+  head.querySelector('[data-sleep-month="1"]').addEventListener('click', function() { shiftSleepMonth(1); });
+  panel.appendChild(head);
+  var wrap = document.createElement('div');
+  wrap.className = 'sleep-table-wrap';
+  var table = document.createElement('table');
+  table.className = 'sleep-table';
+  var header = '<thead><tr><th>日期</th><th>时长</th>' + sleepPeriods.map(function(period) { return '<th style="width:' + sleepPeriodWidth(period) + 'px">' + period + '</th>'; }).join('') + '</tr></thead><tbody></tbody>';
+  table.innerHTML = header;
+  var body = table.querySelector('tbody');
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  for (let day = 1; day <= days; day++) {
+    var row = document.createElement('tr');
+    var dateCell = document.createElement('td');
+    dateCell.textContent = day;
+    row.appendChild(dateCell);
+    var durationCell = document.createElement('td');
+    durationCell.className = 'sleep-duration-cell';
+    durationCell.textContent = sleepDurationTextFor(sleepMonthKey() + '-' + String(day).padStart(2, '0'));
+    row.appendChild(durationCell);
+    sleepPeriods.forEach(function(period) {
+      var cell = document.createElement('td');
+      var dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'sleep-dot' + (sleepChecks[sleepCheckKey(day, period)] ? ' checked' : '');
+      dot.setAttribute('aria-label', day + '日 ' + period);
+      dot.addEventListener('click', function() { toggleSleepCheck(day, period); });
+      cell.appendChild(dot);
+      row.appendChild(cell);
+    });
+    body.appendChild(row);
+  }
+  wrap.appendChild(table);
+  panel.appendChild(wrap);
+}
+function moodCheckKey(day, mood) { return sleepMonthKey() + '-' + String(day).padStart(2, '0') + '|' + mood; }
+function toggleMoodCheck(day, mood) {
+  var key = moodCheckKey(day, mood);
+  if (moodChecks[key]) delete moodChecks[key];
+  else moodChecks[key] = true;
+  saveState();
+  renderMoodTable();
+  updateSleepStatCards();
+}
+function renderMoodTable() {
+  if (!isGoodHabitPage) return;
+  var panel = document.getElementById('moodTablePanel');
+  panel.hidden = !moodTableVisible;
+  if (!moodTableVisible) return;
+  panel.textContent = '';
+  var head = document.createElement('div');
+  head.className = 'sleep-table-head';
+  head.innerHTML = '<span class="sleep-table-title">情绪检测表</span><span class="sleep-month-control"><button type="button" data-sleep-month="-1">‹</button><span class="sleep-month-label">' + sleepMonthCursor.getFullYear() + '年' + (sleepMonthCursor.getMonth() + 1) + '月</span><button type="button" data-sleep-month="1">›</button></span>';
+  head.querySelector('[data-sleep-month="-1"]').addEventListener('click', function() { shiftSleepMonth(-1); });
+  head.querySelector('[data-sleep-month="1"]').addEventListener('click', function() { shiftSleepMonth(1); });
+  panel.appendChild(head);
+  var wrap = document.createElement('div');
+  wrap.className = 'sleep-table-wrap';
+  var table = document.createElement('table');
+  table.className = 'sleep-table mood-table';
+  var header = '<thead><tr><th>日期</th>' + moodPeriods.map(function(mood) { return '<th>' + mood + '</th>'; }).join('') + '</tr></thead><tbody></tbody>';
+  table.innerHTML = header;
+  var body = table.querySelector('tbody');
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  for (let day = 1; day <= days; day++) {
+    var row = document.createElement('tr');
+    var dateCell = document.createElement('td');
+    dateCell.textContent = day;
+    row.appendChild(dateCell);
+    moodPeriods.forEach(function(mood) {
+      var cell = document.createElement('td');
+      var dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'sleep-dot' + (moodChecks[moodCheckKey(day, mood)] ? ' checked' : '');
+      dot.setAttribute('aria-label', day + '日 ' + mood);
+      dot.addEventListener('click', function() { toggleMoodCheck(day, mood); });
+      cell.appendChild(dot);
+      row.appendChild(cell);
+    });
+    body.appendChild(row);
+  }
+  wrap.appendChild(table);
+  panel.appendChild(wrap);
+}
+function dietCheckKey(day, meal) { return sleepMonthKey() + '-' + String(day).padStart(2, '0') + '|' + meal; }
+function nextDietState(value, meal) {
+  if (meal === '加餐/零食') return value ? '' : 'eaten';
+  if (value === 'light') return 'heavy';
+  if (value === 'heavy') return '';
+  return 'light';
+}
+function toggleDietCheck(day, meal) {
+  var key = dietCheckKey(day, meal);
+  var next = nextDietState(dietChecks[key] || '', meal);
+  if (next) dietChecks[key] = next;
+  else delete dietChecks[key];
+  saveState();
+  renderDietTable();
+  updateSleepStatCards();
+}
+function renderDietTable() {
+  if (!isGoodHabitPage) return;
+  var panel = document.getElementById('dietTablePanel');
+  panel.hidden = !dietTableVisible;
+  if (!dietTableVisible) return;
+  panel.textContent = '';
+  var head = document.createElement('div');
+  head.className = 'sleep-table-head';
+  head.innerHTML = '<span class="sleep-table-title">饮食记录表</span><span class="sleep-month-control"><button type="button" data-sleep-month="-1">‹</button><span class="sleep-month-label">' + sleepMonthCursor.getFullYear() + '年' + (sleepMonthCursor.getMonth() + 1) + '月</span><button type="button" data-sleep-month="1">›</button></span>';
+  head.querySelector('[data-sleep-month="-1"]').addEventListener('click', function() { shiftSleepMonth(-1); });
+  head.querySelector('[data-sleep-month="1"]').addEventListener('click', function() { shiftSleepMonth(1); });
+  panel.appendChild(head);
+  var wrap = document.createElement('div');
+  wrap.className = 'sleep-table-wrap';
+  var table = document.createElement('table');
+  table.className = 'sleep-table diet-table';
+  var header = '<thead><tr><th>日期</th>' + dietMeals.map(function(meal) { return '<th>' + meal + '</th>'; }).join('') + '</tr></thead><tbody></tbody>';
+  table.innerHTML = header;
+  var body = table.querySelector('tbody');
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  for (let day = 1; day <= days; day++) {
+    var row = document.createElement('tr');
+    var dateCell = document.createElement('td');
+    dateCell.textContent = day;
+    row.appendChild(dateCell);
+    dietMeals.forEach(function(meal) {
+      var cell = document.createElement('td');
+      var dot = document.createElement('button');
+      dot.type = 'button';
+      var value = dietChecks[dietCheckKey(day, meal)] || '';
+      dot.className = 'sleep-dot' + (value ? ' diet-' + value : '');
+      dot.setAttribute('aria-label', day + '日 ' + meal);
+      dot.addEventListener('click', function() { toggleDietCheck(day, meal); });
+      cell.appendChild(dot);
+      row.appendChild(cell);
+    });
+    body.appendChild(row);
+  }
+  wrap.appendChild(table);
+  panel.appendChild(wrap);
+}
+function exerciseCheckKey(day) { return sleepMonthKey() + '-' + String(day).padStart(2, '0'); }
+function toggleExerciseCheck(day) {
+  var key = exerciseCheckKey(day);
+  if (exerciseChecks[key]) delete exerciseChecks[key];
+  else exerciseChecks[key] = true;
+  saveState();
+  renderExerciseTable();
+  updateSleepStatCards();
+}
+function setExerciseField(day, field, value) {
+  var key = exerciseCheckKey(day);
+  if (value) {
+    if (field === 'duration') exerciseDurations[key] = value;
+    else exerciseMethods[key] = value;
+  } else {
+    if (field === 'duration') delete exerciseDurations[key];
+    else delete exerciseMethods[key];
+  }
+  saveState();
+  updateSleepStatCards();
+}
+function renderExerciseTable() {
+  if (!isGoodHabitPage) return;
+  var panel = document.getElementById('exerciseTablePanel');
+  panel.hidden = !exerciseTableVisible;
+  if (!exerciseTableVisible) return;
+  panel.textContent = '';
+  var head = document.createElement('div');
+  head.className = 'sleep-table-head';
+  head.innerHTML = '<span class="sleep-table-title">运动记录表</span><span class="sleep-month-control"><button type="button" data-sleep-month="-1">‹</button><span class="sleep-month-label">' + sleepMonthCursor.getFullYear() + '年' + (sleepMonthCursor.getMonth() + 1) + '月</span><button type="button" data-sleep-month="1">›</button></span>';
+  head.querySelector('[data-sleep-month="-1"]').addEventListener('click', function() { shiftSleepMonth(-1); });
+  head.querySelector('[data-sleep-month="1"]').addEventListener('click', function() { shiftSleepMonth(1); });
+  panel.appendChild(head);
+  var wrap = document.createElement('div');
+  wrap.className = 'sleep-table-wrap';
+  var table = document.createElement('table');
+  table.className = 'sleep-table exercise-table';
+  var header = '<thead><tr><th>日期</th><th>是否运动</th><th>运动时长</th><th>运动方式</th></tr></thead><tbody></tbody>';
+  table.innerHTML = header;
+  var body = table.querySelector('tbody');
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  for (let day = 1; day <= days; day++) {
+    var row = document.createElement('tr');
+    var dateCell = document.createElement('td');
+    dateCell.textContent = day;
+    row.appendChild(dateCell);
+    var checkCell = document.createElement('td');
+    var dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'sleep-dot' + (exerciseChecks[exerciseCheckKey(day)] ? ' checked' : '');
+    dot.setAttribute('aria-label', day + '日 是否运动');
+    dot.addEventListener('click', function() { toggleExerciseCheck(day); });
+    checkCell.appendChild(dot);
+    row.appendChild(checkCell);
+    var durationCell = document.createElement('td');
+    var durationInput = document.createElement('input');
+    durationInput.type = 'text';
+    durationInput.className = 'exercise-cell-input';
+    durationInput.value = exerciseDurations[exerciseCheckKey(day)] || '';
+    durationInput.setAttribute('aria-label', day + '日 运动时长');
+    durationInput.addEventListener('input', function(event) { setExerciseField(day, 'duration', event.target.value); });
+    durationCell.appendChild(durationInput);
+    row.appendChild(durationCell);
+    var methodCell = document.createElement('td');
+    var methodInput = document.createElement('input');
+    methodInput.type = 'text';
+    methodInput.className = 'exercise-cell-input';
+    methodInput.value = exerciseMethods[exerciseCheckKey(day)] || '';
+    methodInput.setAttribute('aria-label', day + '日 运动方式');
+    methodInput.addEventListener('input', function(event) { setExerciseField(day, 'method', event.target.value); });
+    methodCell.appendChild(methodInput);
+    row.appendChild(methodCell);
+    body.appendChild(row);
+  }
+  wrap.appendChild(table);
+  panel.appendChild(wrap);
+}
+function weightCheckKey(day) { return sleepMonthKey() + '-' + String(day).padStart(2, '0'); }
+function setWeightField(day, field, value) {
+  var key = weightCheckKey(day);
+  var store = field === 'weight' ? weightValues : weightNotes;
+  if (value) store[key] = value;
+  else delete store[key];
+  saveState();
+  updateSleepStatCards();
+}
+function renderWeightTable() {
+  if (!isGoodHabitPage) return;
+  var panel = document.getElementById('weightTablePanel');
+  panel.hidden = !weightTableVisible;
+  if (!weightTableVisible) return;
+  panel.textContent = '';
+  var head = document.createElement('div');
+  head.className = 'sleep-table-head';
+  head.innerHTML = '<span class="sleep-table-title">体重记录表</span><span class="sleep-month-control"><button type="button" data-sleep-month="-1">‹</button><span class="sleep-month-label">' + sleepMonthCursor.getFullYear() + '年' + (sleepMonthCursor.getMonth() + 1) + '月</span><button type="button" data-sleep-month="1">›</button></span>';
+  head.querySelector('[data-sleep-month="-1"]').addEventListener('click', function() { shiftSleepMonth(-1); });
+  head.querySelector('[data-sleep-month="1"]').addEventListener('click', function() { shiftSleepMonth(1); });
+  panel.appendChild(head);
+  var wrap = document.createElement('div');
+  wrap.className = 'sleep-table-wrap';
+  var table = document.createElement('table');
+  table.className = 'sleep-table weight-table';
+  var header = '<thead><tr><th>日期</th><th>空腹体重</th><th>备注</th></tr></thead><tbody></tbody>';
+  table.innerHTML = header;
+  var body = table.querySelector('tbody');
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  for (let day = 1; day <= days; day++) {
+    var row = document.createElement('tr');
+    var dateCell = document.createElement('td');
+    dateCell.textContent = day;
+    row.appendChild(dateCell);
+    var weightCell = document.createElement('td');
+    var weightInput = document.createElement('input');
+    weightInput.type = 'text';
+    weightInput.className = 'weight-cell-input';
+    weightInput.value = weightValues[weightCheckKey(day)] || '';
+    weightInput.setAttribute('aria-label', day + '日 空腹体重');
+    weightInput.addEventListener('input', function(event) { setWeightField(day, 'weight', event.target.value); });
+    weightCell.appendChild(weightInput);
+    row.appendChild(weightCell);
+    var noteCell = document.createElement('td');
+    var noteInput = document.createElement('input');
+    noteInput.type = 'text';
+    noteInput.className = 'weight-cell-input';
+    noteInput.value = weightNotes[weightCheckKey(day)] || '';
+    noteInput.setAttribute('aria-label', day + '日 备注');
+    noteInput.addEventListener('input', function(event) { setWeightField(day, 'note', event.target.value); });
+    noteCell.appendChild(noteInput);
+    row.appendChild(noteCell);
+    body.appendChild(row);
+  }
+  wrap.appendChild(table);
+  panel.appendChild(wrap);
+}
+function learnCheckKey(day, field) { return sleepMonthKey() + '-' + String(day).padStart(2, '0') + '|' + field; }
+function toggleLearnCheck(day, field) {
+  var key = learnCheckKey(day, field);
+  if (learnChecks[key]) delete learnChecks[key];
+  else learnChecks[key] = true;
+  saveState();
+  renderLearnTable();
+  updateSleepStatCards();
+}
+function setLearnNote(day, value) {
+  var key = learnCheckKey(day, 'note');
+  if (value) learnNotes[key] = value;
+  else delete learnNotes[key];
+  saveState();
+  updateSleepStatCards();
+}
+function renderLearnTable() {
+  if (!isGoodHabitPage) return;
+  var panel = document.getElementById('learnTablePanel');
+  panel.hidden = !learnTableVisible;
+  if (!learnTableVisible) return;
+  panel.textContent = '';
+  var head = document.createElement('div');
+  head.className = 'sleep-table-head';
+  head.innerHTML = '<span class="sleep-table-title">学习记录表</span><span class="sleep-month-control"><button type="button" data-sleep-month="-1">‹</button><span class="sleep-month-label">' + sleepMonthCursor.getFullYear() + '年' + (sleepMonthCursor.getMonth() + 1) + '月</span><button type="button" data-sleep-month="1">›</button></span>';
+  head.querySelector('[data-sleep-month="-1"]').addEventListener('click', function() { shiftSleepMonth(-1); });
+  head.querySelector('[data-sleep-month="1"]').addEventListener('click', function() { shiftSleepMonth(1); });
+  panel.appendChild(head);
+  var wrap = document.createElement('div');
+  wrap.className = 'sleep-table-wrap';
+  var table = document.createElement('table');
+  table.className = 'sleep-table learn-table';
+  var header = '<thead><tr><th>日期</th><th>技能</th><th>画画</th><th>练习</th><th>其他</th></tr></thead><tbody></tbody>';
+  table.innerHTML = header;
+  var body = table.querySelector('tbody');
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  for (let day = 1; day <= days; day++) {
+    var row = document.createElement('tr');
+    var dateCell = document.createElement('td');
+    dateCell.textContent = day;
+    row.appendChild(dateCell);
+    learnFields.forEach(function(field) {
+      var cell = document.createElement('td');
+      var dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'sleep-dot' + (learnChecks[learnCheckKey(day, field)] ? ' checked' : '');
+      dot.setAttribute('aria-label', day + '日 ' + field);
+      dot.addEventListener('click', function() { toggleLearnCheck(day, field); });
+      cell.appendChild(dot);
+      row.appendChild(cell);
+    });
+    var noteCell = document.createElement('td');
+    var noteInput = document.createElement('input');
+    noteInput.type = 'text';
+    noteInput.className = 'learn-cell-input';
+    noteInput.value = learnNotes[learnCheckKey(day, 'note')] || '';
+    noteInput.setAttribute('aria-label', day + '日 其他');
+    noteInput.addEventListener('input', function(event) { setLearnNote(day, event.target.value); });
+    noteCell.appendChild(noteInput);
+    row.appendChild(noteCell);
+    body.appendChild(row);
+  }
+  wrap.appendChild(table);
+  panel.appendChild(wrap);
+}
 function render(skipCategories) {
+  if (isGoodHabitPage) sleepTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'sleep';
+  if (isGoodHabitPage) moodTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'mood';
+  if (isGoodHabitPage) dietTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'diet';
+  if (isGoodHabitPage) exerciseTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'exercise';
+  if (isGoodHabitPage) weightTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'weight';
+  if (isGoodHabitPage) learnTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'learn';
   if (!skipCategories) renderCategories();
   document.getElementById('sectionTitle').textContent = pageType === 'travel' ? '年度明细' : currentCategory;
   document.getElementById('sectionHead').classList.toggle('travel-section-head', pageType === 'travel');
-  document.getElementById('travelOverviewButton').hidden = pageType !== 'travel';
+  var hideGoodHabitControls = isActionGoodHabitPage;
+  var hideSleepControls = hideGoodHabitControls && habitRole(currentCategory) === 'sleep';
+  document.getElementById('sectionTitle').hidden = hideGoodHabitControls;
+  document.getElementById('travelOverviewButton').hidden = pageType !== 'travel' || hideGoodHabitControls;
+  document.getElementById('purchaseButton').hidden = hideGoodHabitControls;
+  document.getElementById('sectionAddButton').hidden = hideGoodHabitControls;
   var stats = document.getElementById('stats');
   if (pageType === 'calendar') renderCalendarStats();
   if (pageType !== 'calendar') stats.textContent = '';
@@ -1312,8 +2057,9 @@ function render(skipCategories) {
      var card = document.createElement('div');
      card.className = 'stat wood-surface wood-3d';
      card.dataset.key = stat.key;
-      card.innerHTML = '<div class="stat-head"><div class="stat-label"><span class="stat-name">' + statTitle(stat) + '</span><span class="stat-count">' + countFor(stat.key) + '</span></div></div>';
-      stats.appendChild(card);
+       card.innerHTML = '<div class="stat-head"><div class="stat-label"><span class="stat-name">' + statTitle(stat) + '</span><span class="stat-count">' + countFor(stat.key) + '</span></div></div>';
+       card.querySelector('.stat-count').classList.toggle('compact', statCountShouldCompact(stat.key));
+       stats.appendChild(card);
    });
   }
    var items = document.getElementById('items');
@@ -1348,11 +2094,11 @@ function render(skipCategories) {
       }
      item.draggable = true;
     item.dataset.id = record.id;
-       item.addEventListener('dblclick', function(event) {
+     item.addEventListener('dblclick', function(event) {
         event.preventDefault();
         event.stopPropagation();
           pageType === 'calendar' ? openItemActionEditor(record.id) : openEditor(record.id);
-      });
+       });
     item.addEventListener('dragstart', function() { dragMode = 'item'; dragId = record.id; item.classList.add('dragging'); });
     item.addEventListener('dragend', function() { item.classList.remove('dragging'); clearDropIndicators(); dragMode = null; dragId = null; });
     item.addEventListener('pointerdown', function() {
@@ -1365,8 +2111,14 @@ function render(skipCategories) {
     });
     item.addEventListener('pointerup', function(event) { finishTouchDrag(event, item); });
     item.addEventListener('pointercancel', function(event) { finishTouchDrag(event, item); });
-     items.appendChild(item);
-   });
+      items.appendChild(item);
+    });
+    renderSleepTable();
+    renderMoodTable();
+    renderDietTable();
+    renderExerciseTable();
+    renderWeightTable();
+    renderLearnTable();
 }
 function removeAssignment(key, id) {
   statAssignments[key] = statAssignments[key].filter(function(recordId) { return recordId !== id; });
@@ -1608,6 +2360,7 @@ document.getElementById('deleteButton').addEventListener('click', function() {
   closeEditor();
 });
 loadState();
+if (isActionGoodHabitPage && categoryNames.indexOf('学习') === -1) categoryNames.push('学习');
 loadCalendarHolidayAnnualCache();
 var calendarDataChanged = ensureCalendarSolarTerms();
 if (calendarDataChanged) saveState();

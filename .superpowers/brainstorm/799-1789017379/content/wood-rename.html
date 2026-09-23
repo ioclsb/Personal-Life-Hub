@@ -3,7 +3,7 @@
 <div class="data-tools">
   <button id="exportDataButton" type="button">导出全部数据</button>
   <button id="importDataButton" type="button">导入数据</button>
-  <span id="integrityStatus">完整性检查中</span>
+  <span id="integrityStatus">等待导入数据</span>
   <input id="importDataInput" type="file" accept="application/json,.json" hidden>
 </div>
 
@@ -151,7 +151,7 @@
   .bar-arrow { font-size: 11px; color: #a09080; }
   .rename-input { width: 100%; padding: 2px 6px; border: 1px solid rgba(0,0,0,0.15); border-radius: 4px; background: rgba(255,255,255,0.5); color: #5a4632; outline: none; font-family: inherit; }
 
-  .add-sub-button { display: block; width: calc(100% - 16px); margin: 5px 8px 0; flex-shrink: 0; padding: 8px; border: 0; border-radius: 7px; background: rgba(255,255,255,0.25); color: #806b52; cursor: pointer; font-size: 11px; }
+  .add-sub-button { display: block; order: 999; width: calc(100% - 16px); margin: 5px 8px 0; flex-shrink: 0; padding: 8px; border: 0; border-radius: 7px; background: rgba(255,255,255,0.25); color: #806b52; cursor: pointer; font-size: 11px; }
   .cell:not(.expanded) .add-sub-button { display: none; }
   .sub-bar[hidden] { display: none; }
   .sub-editor-modal { position: fixed; inset: 0; display: none; place-items: center; padding: 16px; background: rgba(40,25,12,0.32); z-index: 10; }
@@ -365,7 +365,10 @@ function openGenericSubTemplate(e, labelId) {
 function customSubTemplate(labelId) {
   var label = document.getElementById(labelId);
   var title = label ? label.textContent.trim() : '';
-  return 'wood-kitchen-template.html?type=custom&return=' + encodeURIComponent(labelId) + '&title=' + encodeURIComponent(title);
+  var bar = label ? label.closest('.sub-bar') : null;
+  var list = bar ? bar.parentElement : null;
+  var habitFlag = bar && bar.closest('#cell3') && list && list.firstElementChild === bar ? '&habit=1' : '';
+  return 'wood-kitchen-template.html?type=custom&return=' + encodeURIComponent(labelId) + '&title=' + encodeURIComponent(title) + habitFlag;
 }
 
 function openPersonalTemplate(e) {
@@ -542,7 +545,7 @@ function openSubEditor(labelId, cellId) {
   subAddingCell = cellId ? document.getElementById(cellId) : null;
   document.getElementById('subEditorTitle').textContent = label && label.textContent.trim() ? '编辑子主题' : '新增主题';
   document.getElementById('subEditorInput').value = label ? label.textContent : '';
-  document.getElementById('subEditorDeleteButton').hidden = !label;
+  document.getElementById('subEditorDeleteButton').hidden = false;
   document.getElementById('subEditorModal').classList.add('show');
   document.getElementById('subEditorInput').focus();
 }
@@ -554,7 +557,10 @@ function closeSubEditor() {
 }
 
 function deleteSubTheme() {
-  if (!subEditingLabel) return;
+  if (!subEditingLabel) {
+    closeSubEditor();
+    return;
+  }
   subEditingLabel.textContent = '';
   subEditingLabel.closest('.sub-bar').hidden = true;
   closeSubEditor();
@@ -580,12 +586,12 @@ function createSubBar(cell, id) {
 }
 
 function addSubTheme(cell) {
-  var emptyBar = Array.from(cell.querySelectorAll('.sub-bar')).find(function(bar) {
-    return bar.hidden && !bar.querySelector('.bar-label').textContent.trim();
-  });
-  if (!emptyBar) emptyBar = createSubBar(cell);
-  emptyBar.hidden = false;
-  openSubEditor(emptyBar.querySelector('.bar-label').id, cell.id);
+  openSubEditor(null, cell.id);
+}
+
+function placeAddSubButton(list) {
+  var addButton = list.querySelector('.add-sub-button');
+  if (addButton) list.appendChild(addButton);
 }
 
 document.querySelectorAll('.sub-list').forEach(function(list) {
@@ -600,7 +606,8 @@ document.querySelectorAll('.sub-list').forEach(function(list) {
     event.stopPropagation();
     addSubTheme(list.closest('.cell'));
   });
-   list.appendChild(addButton);
+  list.appendChild(addButton);
+  placeAddSubButton(list);
 });
 
 document.getElementById('subEditorDeleteButton').addEventListener('click', deleteSubTheme);
@@ -611,8 +618,9 @@ document.getElementById('subEditorSaveButton').addEventListener('click', functio
     subEditingLabel.textContent = value;
     subEditingLabel.closest('.sub-bar').hidden = false;
   } else if (subAddingCell) {
-    addSubTheme(subAddingCell);
-    if (subEditingLabel) subEditingLabel.textContent = value;
+    var newBar = createSubBar(subAddingCell);
+    newBar.querySelector('.bar-label').textContent = value;
+    newBar.hidden = false;
   }
   closeSubEditor();
   saveState();
@@ -654,11 +662,12 @@ function loadState() {
   Object.keys(state.orders || {}).forEach(function(cellId) {
     var list = document.querySelector('#' + cellId + ' .sub-list');
     if (!list) return;
+    if (!Array.isArray(state.orders[cellId])) return;
     state.orders[cellId].forEach(function(labelId) {
       var bar = document.getElementById(labelId);
       if (!bar) {
         var cell = document.getElementById(cellId);
-        if (cell) bar = createSubBar(cell, labelId).parentElement;
+        if (cell) bar = createSubBar(cell, labelId);
       }
       var label = document.getElementById(labelId);
       if (label && Object.prototype.hasOwnProperty.call(state.labels || {}, labelId)) label.textContent = state.labels[labelId];
@@ -667,14 +676,17 @@ function loadState() {
   });
 }
 
+document.getElementById('exportDataButton').addEventListener('click', exportAllData);
+document.getElementById('importDataButton').addEventListener('click', function() { document.getElementById('importDataInput').click(); });
+document.getElementById('importDataInput').addEventListener('change', importAllData);
+
 loadState();
 document.querySelectorAll('.sub-bar').forEach(function(bar) {
   var label = bar.querySelector('.bar-label');
   bar.hidden = Object.prototype.hasOwnProperty.call(savedSubVisibility, label.id) ? !savedSubVisibility[label.id] : !label.textContent.trim();
 });
 document.querySelectorAll('.sub-list').forEach(function(list) {
-  var addButton = list.querySelector('.add-sub-button');
-  if (addButton) list.appendChild(addButton);
+  placeAddSubButton(list);
 });
 openReturnSub();
 
@@ -739,10 +751,6 @@ function importAllData(event) {
   reader.readAsText(file);
 }
 
-document.getElementById('exportDataButton').addEventListener('click', exportAllData);
-document.getElementById('importDataButton').addEventListener('click', function() { document.getElementById('importDataInput').click(); });
-document.getElementById('importDataInput').addEventListener('change', importAllData);
-
 function checkLifeHubIntegrity() {
   var status = document.getElementById('integrityStatus');
   if (window.location.protocol === 'file:') {
@@ -767,7 +775,5 @@ function checkLifeHubIntegrity() {
     status.classList.add('error');
   });
 }
-
-checkLifeHubIntegrity();
 
 </script>
