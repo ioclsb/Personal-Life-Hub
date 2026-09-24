@@ -251,6 +251,19 @@
   .good-habit-page .leave-table-split .leave-table { flex-shrink: 0; }
   .good-habit-page .leave-table-split .leave-table + .leave-table { margin-left: -10px; }
   .good-habit-page .leave-cell-input { width: 100%; height: 100%; min-height: 22px; padding: 0 4px; border: 0; background: transparent; color: #5a4632; font: inherit; font-size: 10px; text-align: center; outline: none; }
+  .good-habit-page .sleep-table.bad-habit-table { width: auto; min-width: 0; }
+  .good-habit-page .sleep-table.bad-habit-table th,
+  .good-habit-page .sleep-table.bad-habit-table td { width: 59px; }
+  .good-habit-page .sleep-table.bad-habit-table th:first-child,
+  .good-habit-page .sleep-table.bad-habit-table td:first-child { width: 49px; padding-left: 4px; }
+  .good-habit-page .sleep-table.bad-habit-table th:last-child,
+  .good-habit-page .sleep-table.bad-habit-table td:last-child { padding-right: 4px; }
+  .good-habit-page .sleep-table.bad-habit-table th { font-size: 11px; letter-spacing: 0.06em; }
+  .action-bad-habit-page #badHabitTablePanel .sleep-table-wrap { display: flex; justify-content: center; }
+  .action-bad-habit-page #badHabitTablePanel .sleep-table-head { justify-content: center; gap: 24px; }
+  .action-bad-habit-page #badHabitTablePanel .sleep-table-title { letter-spacing: 0.2em; }
+  .action-bad-habit-page .sidebar { display: none; }
+  .action-bad-habit-page .layout { grid-template-columns: 0 minmax(0, 1fr); column-gap: 0; }
   .stat-count.compact { font-size: 11px; line-height: 1.35; white-space: normal; word-break: break-all; max-width: 100%; }
   .good-habit-page .sleep-dot { width: 16px; height: 16px; padding: 0; border: 1px solid #806b52; border-radius: 50%; background: transparent; cursor: pointer; vertical-align: middle; }
   .good-habit-page .sleep-dot.checked { background: #806b52; box-shadow: inset 0 0 0 3px #d8c4a0; }
@@ -321,6 +334,7 @@
              <div class="sleep-table-panel" id="learnTablePanel" hidden></div>
              <div class="sleep-table-panel" id="loveTablePanel" hidden></div>
              <div class="sleep-table-panel" id="leaveTablePanel" hidden></div>
+             <div class="sleep-table-panel" id="badHabitTablePanel" hidden></div>
          </main>
       </div>
     </div>
@@ -639,6 +653,7 @@ var isActionBadHabitPage = returnSub === 'sub3a' || storageKey === 'personal-lif
 if (isGoodHabitPage) document.body.classList.add('good-habit-page');
 if (isActionGoodHabitPage) document.body.classList.add('action-good-habit-page');
 if (isActionBadHabitPage) document.body.classList.add('action-bad-habit-page');
+if (isActionBadHabitPage) document.body.classList.add('good-habit-page');
 var pageTitle = pageConfig.title;
 var records = pageConfig.records;
 var currentCategory = categoryNames[0];
@@ -692,6 +707,8 @@ var loveTableVisible = false;
 var leaveChecks = {};
 var leaveReasons = {};
 var leaveTableVisible = false;
+var badHabitFields = ['暴食肥猪', '嗜糖烂脸', '嘴馋口臭', '忧思伤身', '入坑穷X'];
+var badHabitChecks = {};
 var sleepMonthCursor = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 var sleepTableVisible = false;
 var purchaseDraft = null;
@@ -1284,6 +1301,7 @@ function storageState() {
   if (isGoodHabitPage) state.loveChecks = loveChecks;
   if (isGoodHabitPage) state.leaveChecks = leaveChecks;
   if (isGoodHabitPage) state.leaveReasons = leaveReasons;
+  if (isActionBadHabitPage) state.badHabitChecks = badHabitChecks;
   return state;
 }
 function saveState() {
@@ -1337,6 +1355,7 @@ function loadState() {
     if (isGoodHabitPage && saved && saved.loveChecks && typeof saved.loveChecks === 'object') loveChecks = saved.loveChecks;
     if (isGoodHabitPage && saved && saved.leaveChecks && typeof saved.leaveChecks === 'object') leaveChecks = saved.leaveChecks;
     if (isGoodHabitPage && saved && saved.leaveReasons && typeof saved.leaveReasons === 'object') leaveReasons = saved.leaveReasons;
+    if (isActionBadHabitPage && saved && saved.badHabitChecks && typeof saved.badHabitChecks === 'object') badHabitChecks = saved.badHabitChecks;
     if (pageType === 'other' && returnSub !== 'sub1e') {
       categoryNames = ['其他'];
       records.forEach(function(record) { record.category = '其他'; });
@@ -1478,6 +1497,12 @@ function statTitle(stat) {
     if (stat.key === 'discarded') return '';
     if (stat.key === 'need') return '';
   }
+  if (isActionBadHabitPage) {
+    if (stat.key === 'total') return '哭死得快';
+    if (stat.key === 'new') return '贪吃是祸';
+    if (stat.key === 'discarded') return '爱当丑X?';
+    if (stat.key === 'need') return '钱才通用';
+  }
   if (stat.key === 'total') return currentCategory + '总数';
   if (stat.key === 'new') return currentMonthChineseName() + '新增';
   return stat.name;
@@ -1485,6 +1510,7 @@ function statTitle(stat) {
 function orderedStats() { return statTypes.slice(); }
 function countFor(key) {
   var list = visibleRecords();
+  if (isActionBadHabitPage) return badHabitCount(key);
   if (key === 'total' && isSleepStatSequence()) return sleepDurationText();
   if (isSleepStatSequence() && sleepStatPairs[key]) return sleepPairCount(key);
   if (isMoodStatSequence()) return moodCount(key);
@@ -1722,6 +1748,27 @@ function leaveCount(key) {
   }
   return '';
 }
+function badHabitCount(key) {
+  var fields;
+  if (key === 'total') fields = ['忧思伤身'];
+  else if (key === 'new') fields = ['暴食肥猪', '嘴馋口臭'];
+  else if (key === 'discarded') fields = ['嗜糖烂脸'];
+  else if (key === 'need') fields = ['入坑穷X'];
+  else return 0;
+  var year = sleepMonthCursor.getFullYear();
+  var total = 0;
+  for (let m = 1; m <= 12; m++) {
+    var monthDays = new Date(year, m, 0).getDate();
+    var monthPrefix = year + '-' + String(m).padStart(2, '0') + '-';
+    for (let day = 1; day <= monthDays; day++) {
+      var dayKey = monthPrefix + String(day).padStart(2, '0') + '|';
+      fields.forEach(function(field) {
+        if (badHabitChecks[dayKey + field]) total += 1;
+      });
+    }
+  }
+  return total;
+}
 function statCountShouldCompact(key) {
   if (!isExerciseStatSequence()) return false;
   if (key !== 'discarded' && key !== 'need') return false;
@@ -1782,6 +1829,7 @@ function shiftSleepMonth(delta) {
   renderLearnTable();
   renderLoveTable();
   renderLeaveTable();
+  renderBadHabitTable();
   updateSleepStatCards();
 }
 function renderSleepTable() {
@@ -2255,6 +2303,53 @@ function renderLoveTable() {
   });
   panel.appendChild(split);
 }
+function badHabitCheckKey(day, field) { return sleepMonthKey() + '-' + String(day).padStart(2, '0') + '|' + field; }
+function toggleBadHabitCheck(day, field) {
+  var key = badHabitCheckKey(day, field);
+  if (badHabitChecks[key]) delete badHabitChecks[key];
+  else badHabitChecks[key] = true;
+  saveState();
+  renderBadHabitTable();
+  updateSleepStatCards();
+}
+function renderBadHabitTable() {
+  var panel = document.getElementById('badHabitTablePanel');
+  panel.hidden = !isActionBadHabitPage;
+  if (!isActionBadHabitPage) return;
+  panel.textContent = '';
+  var head = document.createElement('div');
+  head.className = 'sleep-table-head';
+  head.innerHTML = '<span class="sleep-table-title">穷逼懒货十宗罪</span><span class="sleep-month-control"><button type="button" data-sleep-month="-1">‹</button><span class="sleep-month-label">' + sleepMonthCursor.getFullYear() + '年' + (sleepMonthCursor.getMonth() + 1) + '月</span><button type="button" data-sleep-month="1">›</button></span>';
+  head.querySelector('[data-sleep-month="-1"]').addEventListener('click', function() { shiftSleepMonth(-1); });
+  head.querySelector('[data-sleep-month="1"]').addEventListener('click', function() { shiftSleepMonth(1); });
+  panel.appendChild(head);
+  var wrap = document.createElement('div');
+  wrap.className = 'sleep-table-wrap';
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  var table = document.createElement('table');
+  table.className = 'sleep-table bad-habit-table';
+  table.innerHTML = '<thead><tr><th>日期</th><th>暴食肥猪</th><th>嗜糖烂脸</th><th>嘴馋口臭</th><th>忧思伤身</th><th>入坑穷X</th></tr></thead><tbody></tbody>';
+  var body = table.querySelector('tbody');
+  for (let day = 1; day <= days; day++) {
+    var row = document.createElement('tr');
+    var dateCell = document.createElement('td');
+    dateCell.textContent = day;
+    row.appendChild(dateCell);
+    badHabitFields.forEach(function(field) {
+      var cell = document.createElement('td');
+      var dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'sleep-dot' + (badHabitChecks[badHabitCheckKey(day, field)] ? ' checked' : '');
+      dot.setAttribute('aria-label', day + '日 ' + field);
+      dot.addEventListener('click', function() { toggleBadHabitCheck(day, field); });
+      cell.appendChild(dot);
+      row.appendChild(cell);
+    });
+    body.appendChild(row);
+  }
+  wrap.appendChild(table);
+  panel.appendChild(wrap);
+}
 function render(skipCategories) {
   if (isGoodHabitPage) sleepTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'sleep';
   if (isGoodHabitPage) moodTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'mood';
@@ -2347,6 +2442,7 @@ function render(skipCategories) {
     renderLearnTable();
     renderLoveTable();
     renderLeaveTable();
+    renderBadHabitTable();
   }
 function removeAssignment(key, id) {
   statAssignments[key] = statAssignments[key].filter(function(recordId) { return recordId !== id; });
