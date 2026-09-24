@@ -264,6 +264,32 @@
   .action-bad-habit-page #badHabitTablePanel .sleep-table-title { letter-spacing: 0.2em; }
   .action-bad-habit-page .sidebar { display: none; }
   .action-bad-habit-page .layout { grid-template-columns: 0 minmax(0, 1fr); column-gap: 0; }
+  .action-income-page #sectionTitle,
+  .action-income-page #purchaseButton,
+  .action-income-page #sectionAddButton { display: none !important; }
+  .action-learn-progress-page #purchaseButton { display: none !important; }
+  .action-income-page .sidebar { display: none; }
+  .action-income-page .layout { grid-template-columns: 0 minmax(0, 1fr); column-gap: 0; }
+  .action-income-page .items { display: none; }
+  .action-income-page #incomeTablePanel .sleep-table-wrap { display: flex; justify-content: center; }
+  .action-income-page #incomeTablePanel .sleep-table-head { justify-content: center; gap: 24px; transform: translateY(-8px); position: relative; z-index: 4; }
+  .action-income-page #incomeTablePanel .sleep-table-title { letter-spacing: 0.2em; }
+  .good-habit-page .sleep-table.income-table { width: 256px; min-width: 0; }
+  .good-habit-page .sleep-table.income-table th,
+  .good-habit-page .sleep-table.income-table td { width: auto; }
+  .good-habit-page .sleep-table.income-table th:first-child,
+  .good-habit-page .sleep-table.income-table td:first-child { width: 49px; padding-left: 4px; }
+  .good-habit-page .sleep-table.income-table th:nth-child(2),
+  .good-habit-page .sleep-table.income-table td:nth-child(2) { width: 49px; }
+  .good-habit-page .sleep-table.income-table th:nth-child(3),
+  .good-habit-page .sleep-table.income-table td:nth-child(3) { width: 49px; }
+  .good-habit-page .sleep-table.income-table th:last-child,
+  .good-habit-page .sleep-table.income-table td:last-child { width: 94px; padding-right: 4px; }
+  .good-habit-page .sleep-table.income-table th { font-size: 12px; letter-spacing: 0.12em; }
+  .good-habit-page #incomeTablePanel .income-summary { display: flex; justify-content: center; gap: 24px; margin-bottom: 6px; color: #806b52; font-size: 10px; font-weight: 400; letter-spacing: 0.06em; transform: translateY(-4px); }
+  .good-habit-page .income-cell-input { width: 100%; height: 100%; min-height: 20px; padding: 0; border: 0; background: transparent; color: #5a4632; font: inherit; font-size: 9px; text-align: center; outline: none; }
+  .action-income-page .stat-count.savings-editable { cursor: pointer; }
+  .action-income-page .savings-edit-input { width: 100%; border: 0; background: transparent; color: #5a4632; font: inherit; font-size: 22px; font-weight: 800; text-align: center; outline: none; }
   .stat-count.compact { font-size: 11px; line-height: 1.35; white-space: normal; word-break: break-all; max-width: 100%; }
   .good-habit-page .sleep-dot { width: 16px; height: 16px; padding: 0; border: 1px solid #806b52; border-radius: 50%; background: transparent; cursor: pointer; vertical-align: middle; }
   .good-habit-page .sleep-dot.checked { background: #806b52; box-shadow: inset 0 0 0 3px #d8c4a0; }
@@ -334,7 +360,8 @@
              <div class="sleep-table-panel" id="learnTablePanel" hidden></div>
              <div class="sleep-table-panel" id="loveTablePanel" hidden></div>
              <div class="sleep-table-panel" id="leaveTablePanel" hidden></div>
-             <div class="sleep-table-panel" id="badHabitTablePanel" hidden></div>
+              <div class="sleep-table-panel" id="badHabitTablePanel" hidden></div>
+              <div class="sleep-table-panel" id="incomeTablePanel" hidden></div>
          </main>
       </div>
     </div>
@@ -647,14 +674,19 @@ if (pageType === 'other' && returnSub === 'sub1e') {
 }
 var savedReturnTitle = getSavedParentTitle(returnSub);
 if (savedReturnTitle) pageConfig.title = savedReturnTitle;
+var pageTitle = pageConfig.title;
 var isActionGoodHabitPage = queryParams.get('habit') === '1' || returnSub === 'cell3-sub-1790089557201-1' || storageKey === 'personal-life-hub-custom-cell3-sub-1790089557201-1-v1';
 var isGoodHabitPage = (queryParams.get('habit') === '1' || isActionGoodHabitPage || savedReturnTitle === '好习惯追踪' || customTitle === '好习惯追踪');
 var isActionBadHabitPage = returnSub === 'sub3a' || storageKey === 'personal-life-hub-custom-sub3a-v1' || savedReturnTitle === '坏习惯禁止' || customTitle === '坏习惯禁止';
+var isActionIncomePage = returnSub === 'sub3c' || storageKey === 'personal-life-hub-custom-sub3c-v1' || savedReturnTitle === '收入开支' || customTitle === '收入开支';
+var isActionLearnProgressPage = returnSub === 'sub3d' || storageKey === 'personal-life-hub-custom-sub3d-v1' || savedReturnTitle === '学习进度' || customTitle === '学习进度';
 if (isGoodHabitPage) document.body.classList.add('good-habit-page');
 if (isActionGoodHabitPage) document.body.classList.add('action-good-habit-page');
 if (isActionBadHabitPage) document.body.classList.add('action-bad-habit-page');
 if (isActionBadHabitPage) document.body.classList.add('good-habit-page');
-var pageTitle = pageConfig.title;
+if (isActionIncomePage) document.body.classList.add('action-income-page');
+if (isActionIncomePage) document.body.classList.add('good-habit-page');
+if (isActionLearnProgressPage) document.body.classList.add('action-learn-progress-page');
 var records = pageConfig.records;
 var currentCategory = categoryNames[0];
 var editingId = null;
@@ -709,6 +741,10 @@ var leaveReasons = {};
 var leaveTableVisible = false;
 var badHabitFields = ['暴食肥猪', '嗜糖烂脸', '嘴馋口臭', '忧思伤身', '入坑穷X'];
 var badHabitChecks = {};
+var incomeValues = {};
+var expenseValues = {};
+var expenseNotes = {};
+var savingsBalance = 280000;
 var sleepMonthCursor = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 var sleepTableVisible = false;
 var purchaseDraft = null;
@@ -751,7 +787,7 @@ function playWoodClick() {
 
 document.querySelector('h2').textContent = pageTitle + ' — 记录模板';
 document.querySelector('.title').textContent = pageTitle;
-document.getElementById('purchaseButton').textContent = pageType === 'travel' ? '计划出行' : (['sub2d', 'sub2f'].indexOf(returnSub) !== -1 ? '清单' : '采购清单');
+document.getElementById('purchaseButton').textContent = pageType === 'travel' ? '计划出行' : (['sub2d', 'sub2f'].indexOf(returnSub) !== -1 || /^(sub3|sub4|cell3-|cell4-)/.test(returnSub) ? '清单' : '采购清单');
 function calendarHeaderDateText(date) {
   return date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日';
 }
@@ -993,7 +1029,7 @@ function renderAnnualDetail() {
     renderTravelAnnualDetail(table);
     return;
   }
-  ['月份', '总数', '本月新增', '已废弃', '需添置'].forEach(function(label) {
+  ['月份', '总数', '本月新增', '已废弃', isActionLearnProgressPage ? '已学完' : '需添置'].forEach(function(label) {
     var header = document.createElement('div');
     header.className = 'annual-cell head wood-surface wood-3d';
     header.textContent = label;
@@ -1077,7 +1113,7 @@ function renderPurchaseList() {
   var clearedStore = isTravel ? travelPlanCleared : purchaseCleared;
   var sourceRecords = records.filter(function(record) { return !clearedStore[record.id] && (sourceIds.indexOf(record.id) !== -1 || checkedStore[record.id]); });
   var headers = isTravel ? ['勾选', '城市', '备注', '所属省份'] : ['勾选框', '名称', '备注', '类别'];
-  document.querySelector('#purchaseModal h3').textContent = isTravel ? '计划出行' : (['sub2d', 'sub2f'].indexOf(returnSub) !== -1 ? '清单' : '采购清单');
+  document.querySelector('#purchaseModal h3').textContent = isTravel ? '计划出行' : (['sub2d', 'sub2f'].indexOf(returnSub) !== -1 || /^(sub3|sub4|cell3-|cell4-)/.test(returnSub) ? '清单' : '采购清单');
   document.querySelectorAll('#purchaseModal .purchase-table th').forEach(function(cell, index) { cell.textContent = headers[index]; });
   if (!sourceRecords.length) {
     list.innerHTML = '<tr><td class="purchase-empty" colspan="4">' + (isTravel ? '暂无本月足迹' : '暂无需添置物品') + '</td></tr>';
@@ -1302,6 +1338,10 @@ function storageState() {
   if (isGoodHabitPage) state.leaveChecks = leaveChecks;
   if (isGoodHabitPage) state.leaveReasons = leaveReasons;
   if (isActionBadHabitPage) state.badHabitChecks = badHabitChecks;
+  if (isActionIncomePage) state.incomeValues = incomeValues;
+  if (isActionIncomePage) state.expenseValues = expenseValues;
+  if (isActionIncomePage) state.expenseNotes = expenseNotes;
+  if (isActionIncomePage) state.savingsBalance = savingsBalance;
   return state;
 }
 function saveState() {
@@ -1356,6 +1396,10 @@ function loadState() {
     if (isGoodHabitPage && saved && saved.leaveChecks && typeof saved.leaveChecks === 'object') leaveChecks = saved.leaveChecks;
     if (isGoodHabitPage && saved && saved.leaveReasons && typeof saved.leaveReasons === 'object') leaveReasons = saved.leaveReasons;
     if (isActionBadHabitPage && saved && saved.badHabitChecks && typeof saved.badHabitChecks === 'object') badHabitChecks = saved.badHabitChecks;
+    if (isActionIncomePage && saved && saved.incomeValues && typeof saved.incomeValues === 'object') incomeValues = saved.incomeValues;
+    if (isActionIncomePage && saved && saved.expenseValues && typeof saved.expenseValues === 'object') expenseValues = saved.expenseValues;
+    if (isActionIncomePage && saved && saved.expenseNotes && typeof saved.expenseNotes === 'object') expenseNotes = saved.expenseNotes;
+    if (isActionIncomePage && saved && typeof saved.savingsBalance === 'number') savingsBalance = saved.savingsBalance;
     if (pageType === 'other' && returnSub !== 'sub1e') {
       categoryNames = ['其他'];
       records.forEach(function(record) { record.category = '其他'; });
@@ -1503,6 +1547,16 @@ function statTitle(stat) {
     if (stat.key === 'discarded') return '爱当丑X?';
     if (stat.key === 'need') return '钱才通用';
   }
+  if (isActionIncomePage) {
+    if (stat.key === 'total') return '存款总额';
+    if (stat.key === 'new') return '可支配金额';
+    if (stat.key === 'discarded') return new Date().getFullYear() + '年总收入';
+    if (stat.key === 'need') return new Date().getFullYear() + '年总消费';
+  }
+  if (isActionLearnProgressPage) {
+    if (stat.key === 'total') return '学习项目';
+    if (stat.key === 'need') return '已学完';
+  }
   if (stat.key === 'total') return currentCategory + '总数';
   if (stat.key === 'new') return currentMonthChineseName() + '新增';
   return stat.name;
@@ -1520,8 +1574,9 @@ function countFor(key) {
   if (isLearnStatSequence()) return learnCount(key);
   if (isLoveStatSequence()) return loveCount(key);
   if (isLeaveStatSequence()) return leaveCount(key);
-  if (key === 'total') return activeRecords().length;
+  if (isActionIncomePage) return incomeCount(key);
   if (key === 'new') return list.filter(function(record) { return statIds(key).indexOf(record.id) !== -1; }).length;
+  if (key === 'total') return isActionLearnProgressPage ? categoryNames.length : activeRecords().length;
   return list.filter(function(record) { return statAssignments[key].indexOf(record.id) !== -1; }).length;
 }
 function statIds(key) {
@@ -1769,6 +1824,58 @@ function badHabitCount(key) {
   }
   return total;
 }
+function incomeCount(key) {
+  var year = sleepMonthCursor.getFullYear();
+  var incomeTotal = 0;
+  var expenseTotal = 0;
+  for (let m = 1; m <= 12; m++) {
+    var monthDays = new Date(year, m, 0).getDate();
+    var monthPrefix = year + '-' + String(m).padStart(2, '0') + '-';
+    for (let day = 1; day <= monthDays; day++) {
+      var dayKey = monthPrefix + String(day).padStart(2, '0') + '|';
+      incomeTotal += Number(incomeValues[dayKey + 'income']) || 0;
+      expenseTotal += Number(expenseValues[dayKey + 'expense']) || 0;
+    }
+  }
+  if (key === 'total') return savingsBalance >= 10000 ? (savingsBalance / 10000) + 'w' : savingsBalance + '元';
+  if (key === 'new') {
+    var disposable = incomeTotal - expenseTotal;
+    return (disposable < 0 ? '-' : '') + Math.abs(disposable) + '元';
+  }
+  if (key === 'discarded') return incomeTotal + '元';
+  if (key === 'need') return expenseTotal + '元';
+  return 0;
+}
+function incomeFieldKey(day, field) {
+  return sleepMonthKey() + '-' + String(day).padStart(2, '0') + '|' + field;
+}
+function setIncomeField(day, field, value) {
+  var map = field === 'income' ? incomeValues : field === 'expense' ? expenseValues : expenseNotes;
+  var key = incomeFieldKey(day, field);
+  if (value === '') delete map[key];
+  else map[key] = field === 'note' ? value : Number(value);
+  saveState();
+  updateIncomeSummaries();
+  updateSleepStatCards();
+}
+function incomeMonthTotals() {
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  var prefix = sleepMonthKey() + '-';
+  var income = 0;
+  var expense = 0;
+  for (let day = 1; day <= days; day++) {
+    var dayKey = prefix + String(day).padStart(2, '0') + '|';
+    income += Number(incomeValues[dayKey + 'income']) || 0;
+    expense += Number(expenseValues[dayKey + 'expense']) || 0;
+  }
+  return { income: income, expense: expense };
+}
+function updateIncomeSummaries() {
+  var totals = incomeMonthTotals();
+  var texts = document.querySelectorAll('#incomeTablePanel .income-summary-text');
+  if (texts[0]) texts[0].textContent = '本月收入共计 ' + totals.income + '元';
+  if (texts[1]) texts[1].textContent = '本月消费共计 ' + totals.expense + '元';
+}
 function statCountShouldCompact(key) {
   if (!isExerciseStatSequence()) return false;
   if (key !== 'discarded' && key !== 'need') return false;
@@ -1830,6 +1937,7 @@ function shiftSleepMonth(delta) {
   renderLoveTable();
   renderLeaveTable();
   renderBadHabitTable();
+  renderIncomeTable();
   updateSleepStatCards();
 }
 function renderSleepTable() {
@@ -2350,6 +2458,50 @@ function renderBadHabitTable() {
   wrap.appendChild(table);
   panel.appendChild(wrap);
 }
+function renderIncomeTable() {
+  var panel = document.getElementById('incomeTablePanel');
+  panel.hidden = !isActionIncomePage;
+  if (!isActionIncomePage) return;
+  panel.textContent = '';
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  var totals = incomeMonthTotals();
+  var summary = document.createElement('div');
+  summary.className = 'income-summary';
+  summary.innerHTML = '<span class="income-summary-text">本月收入共计 ' + totals.income + '元</span><span class="income-summary-text">本月消费共计 ' + totals.expense + '元</span>';
+  var head = document.createElement('div');
+  head.className = 'sleep-table-head';
+  head.innerHTML = '<span class="sleep-table-title">收入开支表</span><span class="sleep-month-control"><button type="button" data-sleep-month="-1">‹</button><span class="sleep-month-label">' + sleepMonthCursor.getFullYear() + '年' + (sleepMonthCursor.getMonth() + 1) + '月</span><button type="button" data-sleep-month="1">›</button></span>';
+  head.querySelector('[data-sleep-month="-1"]').addEventListener('click', function() { shiftSleepMonth(-1); });
+  head.querySelector('[data-sleep-month="1"]').addEventListener('click', function() { shiftSleepMonth(1); });
+  panel.appendChild(head);
+  panel.appendChild(summary);
+  var wrap = document.createElement('div');
+  wrap.className = 'sleep-table-wrap';
+  var table = document.createElement('table');
+  table.className = 'sleep-table income-table';
+  table.innerHTML = '<thead><tr><th>日期</th><th>收入</th><th>消费</th><th>消费备注</th></tr></thead><tbody></tbody>';
+  var body = table.querySelector('tbody');
+  for (let day = 1; day <= days; day++) {
+    var row = document.createElement('tr');
+    var dateCell = document.createElement('td');
+    dateCell.textContent = day;
+    row.appendChild(dateCell);
+    ['income', 'expense', 'note'].forEach(function(field) {
+      var cell = document.createElement('td');
+      var input = document.createElement('input');
+      input.className = 'income-cell-input';
+      var key = incomeFieldKey(day, field);
+      var map = field === 'income' ? incomeValues : field === 'expense' ? expenseValues : expenseNotes;
+      input.value = map[key] == null ? '' : String(map[key]);
+      input.addEventListener('input', function() { setIncomeField(day, field, input.value); });
+      cell.appendChild(input);
+      row.appendChild(cell);
+    });
+    body.appendChild(row);
+  }
+  wrap.appendChild(table);
+  panel.appendChild(wrap);
+}
 function render(skipCategories) {
   if (isGoodHabitPage) sleepTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'sleep';
   if (isGoodHabitPage) moodTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'mood';
@@ -2362,7 +2514,7 @@ function render(skipCategories) {
   if (!skipCategories) renderCategories();
   document.getElementById('sectionTitle').textContent = pageType === 'travel' ? '年度明细' : currentCategory;
   document.getElementById('sectionHead').classList.toggle('travel-section-head', pageType === 'travel');
-  var hideGoodHabitControls = isActionGoodHabitPage || isActionBadHabitPage;
+  var hideGoodHabitControls = isActionGoodHabitPage || isActionBadHabitPage || isActionIncomePage;
   var hideSleepControls = hideGoodHabitControls && habitRole(currentCategory) === 'sleep';
   document.getElementById('sectionTitle').hidden = hideGoodHabitControls;
   document.getElementById('travelOverviewButton').hidden = pageType !== 'travel' || hideGoodHabitControls;
@@ -2380,6 +2532,26 @@ function render(skipCategories) {
      card.dataset.key = stat.key;
        card.innerHTML = '<div class="stat-head"><div class="stat-label"><span class="stat-name">' + statTitle(stat) + '</span><span class="stat-count">' + countFor(stat.key) + '</span></div></div>';
        card.querySelector('.stat-count').classList.toggle('compact', statCountShouldCompact(stat.key));
+       if (isActionIncomePage && stat.key === 'total') {
+         card.querySelector('.stat-count').classList.add('savings-editable');
+         card.addEventListener('dblclick', function() {
+           var countEl = card.querySelector('.stat-count');
+           if (countEl.querySelector('input')) return;
+           var input = document.createElement('input');
+           input.className = 'savings-edit-input';
+           input.value = savingsBalance;
+           countEl.textContent = '';
+           countEl.appendChild(input);
+           input.focus();
+           input.select();
+           input.addEventListener('blur', function() {
+             var parsed = parseFloat(input.value);
+             if (!isNaN(parsed)) savingsBalance = parsed;
+             saveState();
+             updateSleepStatCards();
+           });
+         });
+       }
        stats.appendChild(card);
    });
   }
@@ -2434,6 +2606,7 @@ function render(skipCategories) {
     item.addEventListener('pointercancel', function(event) { finishTouchDrag(event, item); });
       items.appendChild(item);
     });
+    renderIncomeTable();
     renderSleepTable();
     renderMoodTable();
     renderDietTable();
@@ -2491,7 +2664,7 @@ function updateEditorStatLabels() {
   editor.classList.toggle('travel-editor', isTravel);
   document.getElementById('editNewLabel').textContent = isTravel ? currentMonthChineseName() + '足迹' : '新增';
   document.getElementById('editDiscardedLabel').textContent = isTravel ? '首次踏足' : '废弃';
-  document.getElementById('editNeedLabel').textContent = isTravel ? '多次踏足' : '添置';
+  document.getElementById('editNeedLabel').textContent = isTravel ? '多次踏足' : isActionLearnProgressPage ? '已学完' : '添置';
   Array.prototype.forEach.call(editor.querySelectorAll('.editor-stat-option'), function(option) {
     option.classList.remove('compact');
     if (isTravel && option.scrollWidth > option.clientWidth) option.classList.add('compact');
@@ -2609,7 +2782,7 @@ document.getElementById('annualYearButton').addEventListener('click', function(e
 });
 document.getElementById('annualCloseButton').addEventListener('click', closeAnnualDetail);
 document.getElementById('annualModal').addEventListener('click', function(event) { if (event.target === this) closeAnnualDetail(); });
-document.getElementById('addCategoryButton').hidden = isActionBadHabitPage;
+document.getElementById('addCategoryButton').hidden = isActionBadHabitPage || isActionIncomePage;
 document.getElementById('addCategoryButton').addEventListener('click', function() { openCategoryEditor(null); });
 document.getElementById('categoryCancelButton').addEventListener('click', closeCategoryEditor);
 document.getElementById('categorySaveButton').addEventListener('click', function() {
