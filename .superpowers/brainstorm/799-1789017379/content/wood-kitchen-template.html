@@ -166,6 +166,9 @@
   .action-good-habit-page #sectionTitle,
   .action-good-habit-page #purchaseButton,
   .action-good-habit-page #sectionAddButton { display: none !important; }
+  .action-bad-habit-page #sectionTitle,
+  .action-bad-habit-page #purchaseButton,
+  .action-bad-habit-page #sectionAddButton { display: none !important; }
   .good-habit-page .sleep-table-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
   .good-habit-page .sleep-table-title { font-size: 13px; font-weight: 800; }
   .good-habit-page .sleep-month-control { display: flex; align-items: center; gap: 5px; }
@@ -227,6 +230,27 @@
   .good-habit-page .sleep-table.learn-table td:last-child { width: 120px; padding-right: 4px; }
   .good-habit-page .learn-cell-input { width: 100%; height: 100%; min-height: 20px; padding: 0; border: 0; background: transparent; color: #5a4632; font: inherit; font-size: 9px; text-align: center; outline: none; }
   .good-habit-page .sleep-table.learn-table th { font-size: 11px; letter-spacing: 0.06em; }
+  .good-habit-page .sleep-table.love-table { width: auto; min-width: 0; }
+  .good-habit-page .sleep-table.love-table th,
+  .good-habit-page .sleep-table.love-table td { width: 44px; }
+  .good-habit-page .sleep-table.love-table th:first-child,
+  .good-habit-page .sleep-table.love-table td:first-child { width: 44px; padding-left: 4px; }
+  .good-habit-page .sleep-table.love-table th { font-size: 11px; letter-spacing: 0.06em; }
+  .good-habit-page .love-table-split { display: flex; align-items: flex-start; gap: 8px; overflow-x: visible; margin-left: 8px; }
+  .good-habit-page .sleep-table.leave-table { width: auto; min-width: 0; }
+  .good-habit-page .sleep-table.leave-table th,
+  .good-habit-page .sleep-table.leave-table td { width: auto; }
+  .good-habit-page .sleep-table.leave-table th:first-child,
+  .good-habit-page .sleep-table.leave-table td:first-child,
+  .good-habit-page .sleep-table.leave-table th:nth-child(2),
+  .good-habit-page .sleep-table.leave-table td:nth-child(2) { width: 41px; padding-left: 4px; padding-right: 4px; }
+  .good-habit-page .sleep-table.leave-table th:last-child,
+  .good-habit-page .sleep-table.leave-table td:last-child { width: 50px; padding-right: 4px; }
+  .good-habit-page .sleep-table.leave-table th { font-size: 11px; letter-spacing: 0.06em; }
+  .good-habit-page .leave-table-split { display: flex; align-items: flex-start; gap: 8px; overflow-x: auto; margin-left: -13px; }
+  .good-habit-page .leave-table-split .leave-table { flex-shrink: 0; }
+  .good-habit-page .leave-table-split .leave-table + .leave-table { margin-left: -10px; }
+  .good-habit-page .leave-cell-input { width: 100%; height: 100%; min-height: 22px; padding: 0 4px; border: 0; background: transparent; color: #5a4632; font: inherit; font-size: 10px; text-align: center; outline: none; }
   .stat-count.compact { font-size: 11px; line-height: 1.35; white-space: normal; word-break: break-all; max-width: 100%; }
   .good-habit-page .sleep-dot { width: 16px; height: 16px; padding: 0; border: 1px solid #806b52; border-radius: 50%; background: transparent; cursor: pointer; vertical-align: middle; }
   .good-habit-page .sleep-dot.checked { background: #806b52; box-shadow: inset 0 0 0 3px #d8c4a0; }
@@ -295,6 +319,8 @@
              <div class="sleep-table-panel" id="exerciseTablePanel" hidden></div>
              <div class="sleep-table-panel" id="weightTablePanel" hidden></div>
              <div class="sleep-table-panel" id="learnTablePanel" hidden></div>
+             <div class="sleep-table-panel" id="loveTablePanel" hidden></div>
+             <div class="sleep-table-panel" id="leaveTablePanel" hidden></div>
          </main>
       </div>
     </div>
@@ -600,7 +626,7 @@ var calendarCategoryRoles = pageType === 'calendar' ? {
   '十二节气': 'solar', '重要节日': 'holiday', '纪念日': 'memorial', '生日': 'birthday', '特殊日记录': 'special'
 } : {};
 var goodHabitRoles = {};
-var goodHabitRoleDefaults = { '睡眠': 'sleep', '情绪': 'mood', '饮食': 'diet', '运动': 'exercise', '体重': 'weight', '学习': 'learn' };
+var goodHabitRoleDefaults = { '睡眠': 'sleep', '情绪': 'mood', '饮食': 'diet', '运动': 'exercise', '体重': 'weight', '学习': 'learn', '爱心': 'love', '休假': 'leave' };
 if (pageType === 'other' && returnSub === 'sub1e') {
   storageKey = 'personal-life-hub-sub1e-v1';
   migrateStorage('personal-life-hub-other-template-v1', storageKey);
@@ -609,8 +635,10 @@ var savedReturnTitle = getSavedParentTitle(returnSub);
 if (savedReturnTitle) pageConfig.title = savedReturnTitle;
 var isActionGoodHabitPage = queryParams.get('habit') === '1' || returnSub === 'cell3-sub-1790089557201-1' || storageKey === 'personal-life-hub-custom-cell3-sub-1790089557201-1-v1';
 var isGoodHabitPage = (queryParams.get('habit') === '1' || isActionGoodHabitPage || savedReturnTitle === '好习惯追踪' || customTitle === '好习惯追踪');
+var isActionBadHabitPage = returnSub === 'sub3a' || storageKey === 'personal-life-hub-custom-sub3a-v1' || savedReturnTitle === '坏习惯禁止' || customTitle === '坏习惯禁止';
 if (isGoodHabitPage) document.body.classList.add('good-habit-page');
 if (isActionGoodHabitPage) document.body.classList.add('action-good-habit-page');
+if (isActionBadHabitPage) document.body.classList.add('action-bad-habit-page');
 var pageTitle = pageConfig.title;
 var records = pageConfig.records;
 var currentCategory = categoryNames[0];
@@ -658,6 +686,12 @@ var learnFields = ['技能', '画画', '练习'];
 var learnChecks = {};
 var learnNotes = {};
 var learnTableVisible = false;
+var loveFields = ['假期', '爱心'];
+var loveChecks = {};
+var loveTableVisible = false;
+var leaveChecks = {};
+var leaveReasons = {};
+var leaveTableVisible = false;
 var sleepMonthCursor = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 var sleepTableVisible = false;
 var purchaseDraft = null;
@@ -736,6 +770,7 @@ function renderCategories() {
      button.addEventListener('click', function() {
        if (categoryLongPressed) { categoryLongPressed = false; return; }
        currentCategory = name;
+       saveState();
        document.querySelectorAll('.category').forEach(function(item) { item.classList.toggle('active', item.dataset.category === name); });
        render(true);
     });
@@ -1246,6 +1281,9 @@ function storageState() {
   if (isGoodHabitPage) state.weightNotes = weightNotes;
   if (isGoodHabitPage) state.learnChecks = learnChecks;
   if (isGoodHabitPage) state.learnNotes = learnNotes;
+  if (isGoodHabitPage) state.loveChecks = loveChecks;
+  if (isGoodHabitPage) state.leaveChecks = leaveChecks;
+  if (isGoodHabitPage) state.leaveReasons = leaveReasons;
   return state;
 }
 function saveState() {
@@ -1296,6 +1334,9 @@ function loadState() {
     if (isGoodHabitPage && saved && saved.weightNotes && typeof saved.weightNotes === 'object') weightNotes = saved.weightNotes;
     if (isGoodHabitPage && saved && saved.learnChecks && typeof saved.learnChecks === 'object') learnChecks = saved.learnChecks;
     if (isGoodHabitPage && saved && saved.learnNotes && typeof saved.learnNotes === 'object') learnNotes = saved.learnNotes;
+    if (isGoodHabitPage && saved && saved.loveChecks && typeof saved.loveChecks === 'object') loveChecks = saved.loveChecks;
+    if (isGoodHabitPage && saved && saved.leaveChecks && typeof saved.leaveChecks === 'object') leaveChecks = saved.leaveChecks;
+    if (isGoodHabitPage && saved && saved.leaveReasons && typeof saved.leaveReasons === 'object') leaveReasons = saved.leaveReasons;
     if (pageType === 'other' && returnSub !== 'sub1e') {
       categoryNames = ['其他'];
       records.forEach(function(record) { record.category = '其他'; });
@@ -1425,6 +1466,18 @@ function statTitle(stat) {
     if (stat.key === 'discarded') return '练习天数';
     if (stat.key === 'need') return '其他天数';
   }
+  if (isLoveStatSequence()) {
+    if (stat.key === 'total') return '月假期数';
+    if (stat.key === 'new') return '月爱心数';
+    if (stat.key === 'discarded') return '年假期数';
+    if (stat.key === 'need') return '年爱心数';
+  }
+  if (isLeaveStatSequence()) {
+    if (stat.key === 'total') return '月休假数';
+    if (stat.key === 'new') return '年休假数';
+    if (stat.key === 'discarded') return '';
+    if (stat.key === 'need') return '';
+  }
   if (stat.key === 'total') return currentCategory + '总数';
   if (stat.key === 'new') return currentMonthChineseName() + '新增';
   return stat.name;
@@ -1439,6 +1492,8 @@ function countFor(key) {
   if (isExerciseStatSequence()) return exerciseCount(key);
   if (isWeightStatSequence()) return weightCount(key);
   if (isLearnStatSequence()) return learnCount(key);
+  if (isLoveStatSequence()) return loveCount(key);
+  if (isLeaveStatSequence()) return leaveCount(key);
   if (key === 'total') return activeRecords().length;
   if (key === 'new') return list.filter(function(record) { return statIds(key).indexOf(record.id) !== -1; }).length;
   return list.filter(function(record) { return statAssignments[key].indexOf(record.id) !== -1; }).length;
@@ -1489,6 +1544,8 @@ function isDietStatSequence() { return isActionGoodHabitPage && habitRole(curren
 function isExerciseStatSequence() { return isActionGoodHabitPage && habitRole(currentCategory) === 'exercise'; }
 function isWeightStatSequence() { return isActionGoodHabitPage && habitRole(currentCategory) === 'weight'; }
 function isLearnStatSequence() { return isActionGoodHabitPage && habitRole(currentCategory) === 'learn'; }
+function isLoveStatSequence() { return isActionGoodHabitPage && habitRole(currentCategory) === 'love'; }
+function isLeaveStatSequence() { return isActionGoodHabitPage && habitRole(currentCategory) === 'leave'; }
 function sleepPeriodWidth(period) { return period.indexOf('-') !== -1 ? 64 : 46; }
 var sleepStatPairs = {
   new: ['8:00前', '23:00前'],
@@ -1622,6 +1679,49 @@ function learnCount(key) {
   }
   return total;
 }
+function loveCount(key) {
+  var field = (key === 'total' || key === 'discarded') ? '假期' : '爱心';
+  if (key === 'total' || key === 'new') {
+    var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+    var monthTotal = 0;
+    for (let day = 1; day <= days; day++) {
+      if (loveChecks[loveCheckKey(day, field)]) monthTotal += 1;
+    }
+    return monthTotal;
+  }
+  var year = sleepMonthCursor.getFullYear();
+  var yearTotal = 0;
+  for (let m = 1; m <= 12; m++) {
+    var monthDays = new Date(year, m, 0).getDate();
+    var monthPrefix = year + '-' + String(m).padStart(2, '0') + '-';
+    for (let day = 1; day <= monthDays; day++) {
+      if (loveChecks[monthPrefix + String(day).padStart(2, '0') + '|' + field]) yearTotal += 1;
+    }
+  }
+  return yearTotal;
+}
+function leaveCount(key) {
+  if (key === 'total') {
+    var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+    var monthTotal = 0;
+    for (let day = 1; day <= days; day++) {
+      if (leaveChecks[leaveCheckKey(day, '日')]) monthTotal += 1;
+    }
+    return monthTotal;
+  }
+  if (key === 'new') {
+    var year = sleepMonthCursor.getFullYear();
+    var yearTotal = 0;
+    for (let m = 1; m <= 12; m++) {
+      var monthDays = new Date(year, m, 0).getDate();
+      for (let day = 1; day <= monthDays; day++) {
+        if (leaveChecks[year + '-' + String(m).padStart(2, '0') + '-' + String(day).padStart(2, '0') + '|日']) yearTotal += 1;
+      }
+    }
+    return yearTotal;
+  }
+  return '';
+}
 function statCountShouldCompact(key) {
   if (!isExerciseStatSequence()) return false;
   if (key !== 'discarded' && key !== 'need') return false;
@@ -1680,6 +1780,8 @@ function shiftSleepMonth(delta) {
   renderExerciseTable();
   renderWeightTable();
   renderLearnTable();
+  renderLoveTable();
+  renderLeaveTable();
   updateSleepStatCards();
 }
 function renderSleepTable() {
@@ -2031,6 +2133,128 @@ function renderLearnTable() {
   wrap.appendChild(table);
   panel.appendChild(wrap);
 }
+function leaveCheckKey(day, field) { return sleepMonthKey() + '-' + String(day).padStart(2, '0') + '|' + field; }
+function toggleLeaveCheck(day, field) {
+  var key = leaveCheckKey(day, field);
+  if (leaveChecks[key]) delete leaveChecks[key];
+  else leaveChecks[key] = true;
+  saveState();
+  renderLeaveTable();
+  updateSleepStatCards();
+}
+function setLeaveReason(day, value) {
+  var key = leaveCheckKey(day, '原因');
+  if (value) leaveReasons[key] = value;
+  else delete leaveReasons[key];
+  saveState();
+  updateSleepStatCards();
+}
+function renderLeaveTable() {
+  if (!isGoodHabitPage) return;
+  var panel = document.getElementById('leaveTablePanel');
+  panel.hidden = !leaveTableVisible;
+  if (!leaveTableVisible) return;
+  panel.textContent = '';
+  var head = document.createElement('div');
+  head.className = 'sleep-table-head';
+  head.innerHTML = '<span class="sleep-table-title">休假记录表</span><span class="sleep-month-control"><button type="button" data-sleep-month="-1">‹</button><span class="sleep-month-label">' + sleepMonthCursor.getFullYear() + '年' + (sleepMonthCursor.getMonth() + 1) + '月</span><button type="button" data-sleep-month="1">›</button></span>';
+  head.querySelector('[data-sleep-month="-1"]').addEventListener('click', function() { shiftSleepMonth(-1); });
+  head.querySelector('[data-sleep-month="1"]').addEventListener('click', function() { shiftSleepMonth(1); });
+  panel.appendChild(head);
+  var split = document.createElement('div');
+  split.className = 'sleep-table-wrap leave-table-split';
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  var mid = Math.min(15, days);
+  [ [1, mid], [16, days] ].forEach(function(range) {
+    var start = range[0];
+    var end = range[1];
+    if (start > end) return;
+    var table = document.createElement('table');
+    table.className = 'sleep-table leave-table';
+    table.innerHTML = '<thead><tr><th>日期</th><th>休假日</th><th>休假原因</th></tr></thead><tbody></tbody>';
+    var body = table.querySelector('tbody');
+    for (let day = start; day <= end; day++) {
+      var row = document.createElement('tr');
+      var dateCell = document.createElement('td');
+      dateCell.textContent = day;
+      row.appendChild(dateCell);
+      var dayCell = document.createElement('td');
+      var dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'sleep-dot' + (leaveChecks[leaveCheckKey(day, '日')] ? ' checked' : '');
+      dot.setAttribute('aria-label', day + '日 休假日');
+      dot.addEventListener('click', function() { toggleLeaveCheck(day, '日'); });
+      dayCell.appendChild(dot);
+      row.appendChild(dayCell);
+      var reasonCell = document.createElement('td');
+      var reasonInput = document.createElement('input');
+      reasonInput.type = 'text';
+      reasonInput.className = 'leave-cell-input';
+      reasonInput.value = leaveReasons[leaveCheckKey(day, '原因')] || '';
+      reasonInput.setAttribute('aria-label', day + '日 休假原因');
+      reasonInput.addEventListener('input', function(event) { setLeaveReason(day, event.target.value); });
+      reasonCell.appendChild(reasonInput);
+      row.appendChild(reasonCell);
+      body.appendChild(row);
+    }
+    split.appendChild(table);
+  });
+  panel.appendChild(split);
+}
+function loveCheckKey(day, field) { return sleepMonthKey() + '-' + String(day).padStart(2, '0') + '|' + field; }
+function toggleLoveCheck(day, field) {
+  var key = loveCheckKey(day, field);
+  if (loveChecks[key]) delete loveChecks[key];
+  else loveChecks[key] = true;
+  saveState();
+  renderLoveTable();
+  updateSleepStatCards();
+}
+function renderLoveTable() {
+  if (!isGoodHabitPage) return;
+  var panel = document.getElementById('loveTablePanel');
+  panel.hidden = !loveTableVisible;
+  if (!loveTableVisible) return;
+  panel.textContent = '';
+  var head = document.createElement('div');
+  head.className = 'sleep-table-head';
+  head.innerHTML = '<span class="sleep-table-title">爱心记录表</span><span class="sleep-month-control"><button type="button" data-sleep-month="-1">‹</button><span class="sleep-month-label">' + sleepMonthCursor.getFullYear() + '年' + (sleepMonthCursor.getMonth() + 1) + '月</span><button type="button" data-sleep-month="1">›</button></span>';
+  head.querySelector('[data-sleep-month="-1"]').addEventListener('click', function() { shiftSleepMonth(-1); });
+  head.querySelector('[data-sleep-month="1"]').addEventListener('click', function() { shiftSleepMonth(1); });
+  panel.appendChild(head);
+  var split = document.createElement('div');
+  split.className = 'sleep-table-wrap love-table-split';
+  var days = new Date(sleepMonthCursor.getFullYear(), sleepMonthCursor.getMonth() + 1, 0).getDate();
+  var mid = Math.min(15, days);
+  [ [1, mid], [16, days] ].forEach(function(range) {
+    var start = range[0];
+    var end = range[1];
+    if (start > end) return;
+    var table = document.createElement('table');
+    table.className = 'sleep-table love-table';
+    table.innerHTML = '<thead><tr><th>日期</th><th>假期</th><th>爱心</th></tr></thead><tbody></tbody>';
+    var body = table.querySelector('tbody');
+    for (let day = start; day <= end; day++) {
+      var row = document.createElement('tr');
+      var dateCell = document.createElement('td');
+      dateCell.textContent = day;
+      row.appendChild(dateCell);
+      loveFields.forEach(function(field) {
+        var cell = document.createElement('td');
+        var dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'sleep-dot' + (loveChecks[loveCheckKey(day, field)] ? ' checked' : '');
+        dot.setAttribute('aria-label', day + '日 ' + field);
+        dot.addEventListener('click', function() { toggleLoveCheck(day, field); });
+        cell.appendChild(dot);
+        row.appendChild(cell);
+      });
+      body.appendChild(row);
+    }
+    split.appendChild(table);
+  });
+  panel.appendChild(split);
+}
 function render(skipCategories) {
   if (isGoodHabitPage) sleepTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'sleep';
   if (isGoodHabitPage) moodTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'mood';
@@ -2038,10 +2262,12 @@ function render(skipCategories) {
   if (isGoodHabitPage) exerciseTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'exercise';
   if (isGoodHabitPage) weightTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'weight';
   if (isGoodHabitPage) learnTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'learn';
+  if (isGoodHabitPage) loveTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'love';
+  if (isGoodHabitPage) leaveTableVisible = isActionGoodHabitPage && habitRole(currentCategory) === 'leave';
   if (!skipCategories) renderCategories();
   document.getElementById('sectionTitle').textContent = pageType === 'travel' ? '年度明细' : currentCategory;
   document.getElementById('sectionHead').classList.toggle('travel-section-head', pageType === 'travel');
-  var hideGoodHabitControls = isActionGoodHabitPage;
+  var hideGoodHabitControls = isActionGoodHabitPage || isActionBadHabitPage;
   var hideSleepControls = hideGoodHabitControls && habitRole(currentCategory) === 'sleep';
   document.getElementById('sectionTitle').hidden = hideGoodHabitControls;
   document.getElementById('travelOverviewButton').hidden = pageType !== 'travel' || hideGoodHabitControls;
@@ -2119,7 +2345,9 @@ function render(skipCategories) {
     renderExerciseTable();
     renderWeightTable();
     renderLearnTable();
-}
+    renderLoveTable();
+    renderLeaveTable();
+  }
 function removeAssignment(key, id) {
   statAssignments[key] = statAssignments[key].filter(function(recordId) { return recordId !== id; });
   saveState();
@@ -2285,7 +2513,7 @@ document.getElementById('annualYearButton').addEventListener('click', function(e
 });
 document.getElementById('annualCloseButton').addEventListener('click', closeAnnualDetail);
 document.getElementById('annualModal').addEventListener('click', function(event) { if (event.target === this) closeAnnualDetail(); });
-document.getElementById('addCategoryButton').hidden = false;
+document.getElementById('addCategoryButton').hidden = isActionBadHabitPage;
 document.getElementById('addCategoryButton').addEventListener('click', function() { openCategoryEditor(null); });
 document.getElementById('categoryCancelButton').addEventListener('click', closeCategoryEditor);
 document.getElementById('categorySaveButton').addEventListener('click', function() {
@@ -2361,6 +2589,14 @@ document.getElementById('deleteButton').addEventListener('click', function() {
 });
 loadState();
 if (isActionGoodHabitPage && categoryNames.indexOf('学习') === -1) categoryNames.push('学习');
+if (isActionGoodHabitPage && categoryNames.indexOf('休假') === -1) categoryNames.push('休假');
+if (isActionGoodHabitPage && !goodHabitRoles['休假']) goodHabitRoles['休假'] = goodHabitRoleDefaults['休假'];
+if (isActionGoodHabitPage && !goodHabitRoles['休假']) goodHabitRoles['休假'] = goodHabitRoleDefaults['休假'];
+if (isActionBadHabitPage && categoryNames.length > 1) {
+  var keepName = categoryNames.indexOf(currentCategory) !== -1 ? currentCategory : categoryNames[0];
+  categoryNames = [keepName];
+  currentCategory = keepName;
+}
 loadCalendarHolidayAnnualCache();
 var calendarDataChanged = ensureCalendarSolarTerms();
 if (calendarDataChanged) saveState();
